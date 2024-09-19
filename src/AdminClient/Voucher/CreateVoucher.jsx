@@ -14,11 +14,12 @@ const CreateVoucher = () => {
       !Voucher.Description ||
       !Voucher.Image ||
       !Voucher.RemainQuantity ||
-      !Voucher.MinValue ||
-      !Voucher.MaxValue ||
       !Voucher.PercentDiscount
     ) {
       alert("Please fill all the fields");
+    }
+    if (!Voucher.MinValue) {
+      Voucher.MinValue = 0;
     }
     try {
       const response = await fetch(
@@ -123,27 +124,37 @@ const CreateVoucher = () => {
             </div>
           </div>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center">
-              <label className="mr-2">Giá tiền tối thiểu sử dụng voucher</label>
-              <input
-                placeholder="Nhập số lượng tiền tối thiểu để áp dụng voucher"
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="number"
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, MinValue: e.target.value })
-                }
-              />
+            <div className="items-center">
+              <div className="flex">
+                <label className="mr-2">
+                  Giá tiền tối thiểu sử dụng voucher
+                </label>
+                <input
+                  placeholder="Nhập số lượng tiền tối thiểu để áp dụng voucher"
+                  className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                  type="number"
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, MinValue: e.target.value })
+                  }
+                />
+              </div>
+
+              <p className="text-red-500 ">*bỏ trống nếu áp dụng mọi giá</p>
             </div>
-            <div className="flex items-center">
-              <label className="mr-2">Mức giảm giá tối đa:</label>
-              <input
-                placeholder="Nhập số lượng tiền tối đa để áp dụng voucher"
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="number"
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, MaxValue: e.target.value })
-                }
-              />
+            <div className="items-center">
+              <div className="flex">
+                <label className="mr-2">Mức giảm giá tối đa:</label>
+                <input
+                  placeholder="Nhập số lượng tiền tối thiểu để áp dụng voucher"
+                  className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                  type="number"
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, MaxValue: e.target.value })
+                  }
+                />
+              </div>
+
+              <p className="text-red-500">*bỏ trống nếu áp dụng mọi giá</p>
             </div>
           </div>
           <div className="flex mt-8 items-center">

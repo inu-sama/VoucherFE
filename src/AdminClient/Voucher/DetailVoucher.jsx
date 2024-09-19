@@ -126,14 +126,14 @@ const DetailVoucher = () => {
                 <span className="font-bold mr-1">
                   Giá trị tối thiểu để áp dụng voucher:{" "}
                 </span>
-                {data.MinValue}
+                {data.MinValue}đ
               </p>
               <p className="text-xl my-2">
                 <span className="font-bold mr-1">Giá trị giảm tối đa: </span>
-                {data.MaxValue}
+                {data.MaxValue}đ
               </p>
               <p className="text-xl my-2">
-                <span className="font-bold mr-1">Phần trăm giảm: </span>{" "}
+                <span className="font-bold mr-1">Phần trăm giảm: </span>
                 {data.PercentDiscount}%
               </p>
             </div>

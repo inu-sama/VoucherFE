@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 
 const EditVoucher = () => {
@@ -9,11 +9,12 @@ const EditVoucher = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Voucher, setVoucher] = useState({});
+  const URL = "http://localhost:3000/api";
   const navigate = useNavigate();
 
   const handleState = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/updateState/${id}`, {
+      const res = await fetch(`${URL}/updateState/${id}`, {
         method: "POST",
       });
       const data = await res.json();
@@ -29,7 +30,7 @@ const EditVoucher = () => {
 
   const DetailFetch = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/Detailvoucher/${id}`);
+      const res = await fetch(`${URL}/Detailvoucher/${id}`);
       const data = await res.json();
       setData(data);
     } catch (error) {
@@ -45,21 +46,41 @@ const EditVoucher = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!Voucher.PercentDiscount) {
-      Voucher.PercentDiscount = data.PercentDiscount;
-    }
-    if (!Voucher.Description) {
-      Voucher.Description = data.Description;
-    }
+    const updatedVoucher = {
+      PercentDiscount: Voucher.PercentDiscount || data.PercentDiscount,
+      Description: Voucher.Description || data.Description,
+      ExpiredTime: Voucher.ExpiredTime || data.ExpiredTime,
+      ReleaseTime: Voucher.ReleaseTime || data.ReleaseTime,
+      Image: Voucher.Image || data.Image,
+      RemainQuantity: Voucher.RemainQuantity || data.RemainQuantity,
+      MinValue: Voucher.MinValue || data.MinValue,
+      MaxValue: Voucher.MaxValue || data.MaxValue,
+    };
+
     try {
-      await fetch(`http://localhost:3000/api/updateVoucher/${id}`, {
+      const res = await fetch(`${URL}/updateVoucher/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(Voucher),
+        body: JSON.stringify(updatedVoucher),
       });
+      const result = await res.json();
+      if (!res.ok) {
+        alert("Error: " + (result.message || "Failed to update voucher"));
+      } else {
+        const res1 = await fetch(`${URL}/updateState/${id}`, {
+          method: "POST",
+        });
+        const data = await res1.json();
+        if (res.status === 400) {
+          alert("Error: " + (data?.message || "Failed to update state"));
+        }
+        alert("Voucher updated successfully");
+        navigate("/Listvoucher");
+      }
     } catch (err) {
+      alert("Error: " + (err.message || "Failed to update voucher"));
       console.log(err);
     }
   };
@@ -86,7 +107,7 @@ const EditVoucher = () => {
         <p className="my-4 text-red-500 w-full text-xl ">
           Chú ý: Sửa những trường voucher mà bạn muốn
         </p>
-        <div className="grid sm:grid-cols-2 grid-cols-1">
+        <div className="grid lg:grid-cols-2 grid-cols-1">
           <img
             className="w-auto rounded-xl h-auto object-cover"
             src={data.Image}
@@ -171,7 +192,7 @@ const EditVoucher = () => {
                 <div className="flex items-center">
                   <label className="mr-2">Quantity:</label>
                   <input
-                    placeholder="Nhập số lượng"
+                    placeholder={`Số lượng còn lại: ${data.RemainQuantity}`}
                     className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
                     type="number"
                     onChange={(e) =>
@@ -180,10 +201,42 @@ const EditVoucher = () => {
                   />
                 </div>
               </div>
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <label className="mr-2">
+                    Giá tiền tối thiểu sử dụng voucher
+                  </label>
+                  <input
+                    placeholder={data.MinValue}
+                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                    type="number"
+                    onChange={(e) =>
+                      setVoucher({ ...Voucher, MinValue: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="flex items-center">
+                  <label className="mr-2">Mức giảm giá tối đa:</label>
+                  <input
+                    placeholder={data.MaxValue}
+                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                    type="number"
+                    onChange={(e) =>
+                      setVoucher({ ...Voucher, MaxValue: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
             </form>
           </div>
         </div>
         <div className="flex w-full justify-center space-x-4 m-2">
+          <button
+            onClick={handleSubmit}
+            className="bg-yellow-500 my-8 px-4 py-2 hover:bg-yellow-700 text-white font-bold rounded"
+          >
+            <FontAwesomeIcon icon={faEdit} /> Sửa
+          </button>
           <button
             onClick={() => handleState(id)}
             className="my-8 mx-4 bg-blue-500 text-white px-4 py-2 rounded-lg"

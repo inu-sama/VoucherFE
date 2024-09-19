@@ -1,7 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartLine, faTicket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartLine,
+  faTicket,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
   return (
@@ -25,6 +29,14 @@ const Nav = () => {
               className="route text-black text-xl font-extrabold hover:text-black"
             >
               <FontAwesomeIcon icon={faTicket} /> Voucher
+            </a>
+          </li>
+          <li className="mt-4">
+            <a
+              href="/ServicePartner"
+              className="route text-black text-xl font-extrabold hover:text-black"
+            >
+              <FontAwesomeIcon icon={faUser} /> Service_Partner
             </a>
           </li>
         </ul>
