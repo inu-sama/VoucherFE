@@ -82,7 +82,7 @@ const ListVoucher = () => {
   }
 
   return (
-    <div className="w-auto my-2">
+    <div className="w-full my-2">
       <h1 className=" text-3xl my-4 w-full text-center font-bold">
         Danh sách voucher
       </h1>
@@ -103,8 +103,8 @@ const ListVoucher = () => {
             <h2 className="text-2xl font-bold">{voucher.Name}</h2>
             <p>{voucher.Description}</p>
             <p>Giá trị giảm: {voucher.PercentDiscount}%</p>
-            <p>Giá trị tối thiểu: {voucher.MinValue}</p>
-            <p>Giá trị tối đa: {voucher.MaxValue}</p>
+            <p>Giá trị tối thiểu: {voucher.MinValue}đ</p>
+            <p>Giá trị tối đa: {voucher.MaxValue}đ</p>
             <p>Số lượng còn lại: {voucher.RemainQuantity}</p>
             <p>
               Thời gian hết hạn:

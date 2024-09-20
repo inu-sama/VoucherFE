@@ -6,12 +6,13 @@ import CreateVoucher from "../AdminClient/Voucher/CreateVoucher.jsx";
 import ListVoucher from "../AdminClient/Voucher/ListVoucher.jsx";
 import EditVoucher from "../AdminClient/Voucher/EditVoucher.jsx";
 import DetailVoucher from "../AdminClient/Voucher/DetailVoucher.jsx";
+import Service_Partner from "../AdminClient/Serivce_Partner/Service_Partner.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <ErrorPage />, // Use ErrorPage here
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "Detailvoucher/:id",
         element: <DetailVoucher />,
+      },
+      {
+        path: "ServicePartner",
+        element: <Service_Partner />,
       },
     ],
   },
