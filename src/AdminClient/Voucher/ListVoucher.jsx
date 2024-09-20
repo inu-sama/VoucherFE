@@ -82,7 +82,7 @@ const ListVoucher = () => {
   }
 
   return (
-    <div className="w-auto my-2">
+    <div className="w-full my-2">
       <h1 className=" text-3xl my-4 w-full text-center font-bold">
         Danh sách voucher
       </h1>
