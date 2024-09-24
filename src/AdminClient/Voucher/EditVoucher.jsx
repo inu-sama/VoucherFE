@@ -32,7 +32,7 @@ const EditVoucher = () => {
     try {
       const res = await fetch(`${URL}/Detailvoucher/${id}`);
       const data = await res.json();
-      setData(data);
+      setData(data[0]);
     } catch (error) {
       setError("Không thể lấy dữ liệu từ máy chủ");
     } finally {
@@ -120,10 +120,10 @@ const EditVoucher = () => {
               <span className="text-2xl">{data._id}</span>
               <span
                 className={`float-right text-xl text-black ${
-                  data.Status === "enable" ? "text-green-500" : "text-red-500"
+                  data.States === "enable" ? "text-green-500" : "text-red-500"
                 }`}
               >
-                Trạng thái: {data.Status}
+                Trạng thái: {data.States}
               </span>
             </div>
             <form onSubmit={handleSubmit}>
