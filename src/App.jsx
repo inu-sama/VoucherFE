@@ -4,11 +4,17 @@ import Nav from "./Header_Footer/Nav.jsx";
 
 function App() {
   return (
-    <div className="container mx-auto flex flex-col items-center">
+    <div className="mx-auto flex flex-col items-center">
       <Hearder className="w-full" />
-      <div className=" w-full mt-20 bg-slate-100 flex">
-        <Nav className=" w-1/4" />
-        <Outlet className="w-3/4" />
+      <div className="grid grid-cols-12 gap-0 w-full pt-20 bg-white">
+        <div className="col-span-12 lg:col-span-3">
+          <Nav />
+        </div>
+        <div className="col-span-12 lg:col-span-9">
+          <Outlet />
+        </div>
+        {/* <Nav className=" w-1/4" />
+        <Outlet className="w-3/4" /> */}
       </div>
     </div>
   );

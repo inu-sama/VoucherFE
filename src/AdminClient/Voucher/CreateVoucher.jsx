@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateVoucher = () => {
-  const URL = "http://localhost:3000/api";
+  // const URL = "http://localhost:3000/api";
+  const URL = "https://servervoucher.vercel.app/api";
 
   const [Voucher, setVoucher] = useState({
     Name: "",
@@ -125,181 +126,249 @@ const CreateVoucher = () => {
   };
 
   return (
-    <div className="w-full px-4">
-      <div className="w-full">
-        <h1 className="text-3xl my-4 w-full text-center font-bold">
-          Create Voucher
+    <div className="lg:bg-[#eaf9e7] bg-[#4ca771]">
+      <div className="w-full bg-[#eaf9e7] p-4 px-10 rounded-t-xl">
+        <h1 className="text-4xl text-[#2F4F4F] mb-10 mt-4 w-full text-center font-bold">
+          Tạo voucher
         </h1>
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center">
-              <label className="mr-2">Name:</label>
-              <input
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="text"
-                placeholder="Nhập tên voucher"
-                value={Voucher.Name}
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, Name: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="mr-2">Description:</label>
-              <input
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="text"
-                placeholder="Nhập mô tả"
-                value={Voucher.Description}
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, Description: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center">
-              <label className="mr-2">Expired Time:</label>
-              <input
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="date"
-                value={Voucher.ExpiredTime}
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, ExpiredTime: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="mr-2">Release Time:</label>
-              <input
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="date"
-                value={Voucher.ReleaseTime}
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, ReleaseTime: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center">
-              <label className="mr-2">Image</label>
-              <input
-                placeholder="Nhập link ảnh"
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="text"
-                value={Voucher.Image}
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, Image: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="mr-2">Quantity:</label>
-              <input
-                placeholder="Nhập số lượng"
-                className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                type="number"
-                value={Voucher.RemainQuantity}
-                onChange={(e) =>
-                  setVoucher({ ...Voucher, RemainQuantity: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="items-center">
-              <div className="flex">
-                <label className="mr-2">Min Value:</label>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-12">
+                <label className="font-bold">Name</label>
+              </div>
+              <div className="col-span-12">
                 <input
-                  placeholder="Nhập giá trị tối thiểu"
-                  className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  type="text"
+                  placeholder="Nhập tên voucher"
+                  value={Voucher.Name}
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, Name: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-12">
+                <label className="font-bold">Description</label>
+              </div>
+              <div className="col-span-12">
+                <input
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  type="text"
+                  placeholder="Nhập mô tả"
+                  value={Voucher.Description}
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, Description: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-12">
+                <label className="font-bold">Release Time</label>
+              </div>
+              <div className="col-span-12">
+                <input
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  type="date"
+                  value={Voucher.ReleaseTime}
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, ReleaseTime: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-12">
+                <label className="font-bold">Expired Time</label>
+              </div>
+              <div className="col-span-12">
+                <input
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  type="date"
+                  value={Voucher.ExpiredTime}
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, ExpiredTime: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-5">
+                <label className="font-bold">Image</label>
+              </div>
+              <div className="col-span-12">
+                <input
+                  placeholder="Nhập link ảnh"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  type="text"
+                  value={Voucher.Image}
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, Image: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] pl-4 rounded-lg h-12">
+              <div className="col-span-5">
+                <label className="font-bold">Quantity</label>
+              </div>
+              <div className="col-span-12">
+                <input
+                  placeholder="Nhập số lượng"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  type="number"
+                  value={Voucher.RemainQuantity}
+                  onChange={(e) =>
+                    setVoucher({ ...Voucher, RemainQuantity: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-10 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center border border-transparent border-t-[#c0e6ba]">
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-4">
+                <label className="font-bold line-clamp-1">Min Value</label>
+              </div>
+              <div className="col-span-8 text-right pr-4 line-clamp-1 text-[#2F4F4F]">
+                *bỏ trống nếu áp dụng mọi giá
+              </div>
+              <div className="col-span-12">
+                <input
+                  placeholder="Nhập giá trị đơn hàng tối thiểu"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                   type="number"
                   name="MinValue"
                   value={condition.MinValue}
                   onChange={handleConditionChange}
                 />
               </div>
-              <p className="text-red-500">*bỏ trống nếu áp dụng mọi giá</p>
             </div>
-            <div className="items-center">
-              <div className="flex">
-                <label className="mr-2">Max Value:</label>
+            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="col-span-4">
+                <label className="font-bold line-clamp-1">Max Discount</label>
+              </div>
+              <div className="col-span-8 text-right pr-4 line-clamp-1 text-[#2F4F4F]">
+                *bỏ trống nếu áp dụng mọi giá
+              </div>
+              <div className="col-span-12">
                 <input
-                  placeholder="Nhập giá trị tối đa"
-                  className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                  placeholder="Nhập giá trị tối đa được giảm"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                   type="number"
                   name="MaxValue"
                   value={condition.MaxValue}
                   onChange={handleConditionChange}
                 />
               </div>
-              <p className="text-red-500">*bỏ trống nếu áp dụng mọi giá</p>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="col-span-5">
+              <label className="font-bold line-clamp-1">Discount Percentage</label>
+            </div>
+            <div className="col-span-12">
+              <input
+                placeholder="Nhập phần trăm giảm giá"
+                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                type="number"
+                name="PercentDiscount"
+                value={condition.PercentDiscount}
+                onChange={handleConditionChange}
+              />
             </div>
           </div>
 
-          <div className="flex mt-8 items-center">
-            <label className="mr-2">Percent Discount:</label>
-            <input
-              placeholder="Nhập phần trăm giảm giá"
-              className="border border-gray-300 outline-none px-2 py-2 h-full w-full rounded-lg"
-              type="number"
-              name="PercentDiscount"
-              value={condition.PercentDiscount}
-              onChange={handleConditionChange}
-            />
-            <button
-              type="button"
-              className="ml-4 bg-green-500 text-white px-4 py-2 rounded-lg"
-              onClick={addCondition}
-            >
-              Add Condition
-            </button>
-          </div>
-
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold">Conditions:</h2>
-            <ul>
-              {Voucher.Conditions.map((cond, index) => (
-                <li key={index} className="mb-2">
-                  Min: {cond.MinValue} | Max: {cond.MaxValue} | Discount:{" "}
-                  {cond.PercentDiscount}%
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold">Select Services:</h2>
-            {services.map((service) => (
-              <div key={service._id} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={service._id}
-                  value={service._id}
-                  checked={selectedServices.includes(service._id)}
-                  onChange={handleServiceChange}
-                />
-                <label htmlFor={service._id} className="ml-2">
-                  {service.ServiceName}
-                </label>
+          <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center">
+            <div className="border-8 border-[#4ca771] rounded-lg h-fit">
+              <div className="grid grid-cols-2 items-center">
+                <div>
+                  <h2 className="text-xl font-bold text-[#2F4F4F] ml-4">
+                    Conditions:
+                  </h2>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    className="lg:col-span-2 border-2 border-[#4ca771] bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] px-4 py-2 rounded-bl-lg"
+                    onClick={addCondition}
+                  >
+                    Add Condition
+                  </button>
+                </div>
               </div>
-            ))}
+              <div className="mt-5 px-4">
+                <ul>
+                  {Voucher.Conditions.map((cond, index) => (
+                    <li
+                      key={index}
+                      className="mb-2 text-[#4ca771] font-semibold"
+                    >
+                      <span className="text-[#2F4F4F] font-bold text-xl">
+                        •{" "}
+                      </span>
+                      Giảm {cond.PercentDiscount}%, tối đa {cond.MaxValue}đ cho
+                      đơn hàng từ {cond.MinValue}đ
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div className="collapse">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg text-[#eaf9e7] font-bold bg-[#4ca771] w-fit rounded-t-2xl px-10">
+                  Select Services:
+                </div>
+                <div className="collapse-content bg-[#4ca771] rounded-r-2xl">
+                  <div className="bg-[#eaf9e7] p-4 rounded-xl text-lg mt-4">
+                    {services.map((service) => (
+                      <div
+                        key={service._id}
+                        className="flex items-center text-[#2F4F4F]"
+                      >
+                        <input
+                          type="checkbox"
+                          id={service._id}
+                          value={service._id}
+                          checked={selectedServices.includes(service._id)}
+                          onChange={handleServiceChange}
+                          className="accent-[#4ac771]"
+                        />
+                        <label htmlFor={service._id} className="ml-2">
+                          {service.ServiceName}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className=" w-full flex justify-center">
-            <button className="my-8 bg-blue-500 text-white px-4 py-2 rounded-lg">
-              CreateVoucher
-            </button>
-            <Link
-              to="/Listvoucher"
-              className=" bg-yellow-500 my-8 text-white px-4 py-2 ml-2  rounded-lg"
-            >
-              Back to Home
-            </Link>
+          <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center">
+            <div className="col-span-1"></div>
+            <div className="col-span-5">
+              <button className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg flex items-center justify-center w-full">
+                Create
+              </button>
+            </div>
+            <div className="col-span-5">
+              <Link
+                to="/Listvoucher"
+                className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
+              >
+                Back
+              </Link>
+            </div>
+            <div className="col-span-1"></div>
           </div>
         </form>
       </div>

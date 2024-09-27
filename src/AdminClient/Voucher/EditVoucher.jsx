@@ -9,7 +9,8 @@ const EditVoucher = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Voucher, setVoucher] = useState({});
-  const URL = "http://localhost:3000/api";
+  // const URL = "http://localhost:3000/api";
+  const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
 
   const handleState = async (id) => {
@@ -102,19 +103,15 @@ const EditVoucher = () => {
 
   return (
     <div>
-      <div className="w-auto h-full bg-white p-4">
-        <h1 className="text-black text-4xl">Sửa voucher</h1>
+      <div className="w-auto h-full bg-[#eaf9e7] p-4">
+        <h1 className="text-4xl text-[#2F4F4F] mb-10 mt-4 w-full text-left font-bold">
+          Sửa voucher
+        </h1>
         <p className="my-4 text-red-500 w-full text-xl ">
           Chú ý: Sửa những trường voucher mà bạn muốn
         </p>
-        <div className="grid lg:grid-cols-2 grid-cols-1">
-          <img
-            className="w-auto rounded-xl h-auto object-cover"
-            src={data.Image}
-            alt="Car"
-          />
-
-          <div className=" w-full ml-4">
+        <div className="grid lg:grid-cols-12 grid-cols-1">
+          <div className=" w-full ml-4 col-span-8">
             <h1 className="text-2xl font-bold ">{data.Name}</h1>
             <div className="w-full border-b-2">
               <span className="text-2xl">{data._id}</span>
@@ -129,42 +126,18 @@ const EditVoucher = () => {
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 my-2 gap-4">
                 <div className="flex items-center">
-                  <label className="mr-2">PercentDiscount:</label>
-                  <input
-                    className="border border-gray-300 outline-none px-2 h-full py-2 w-3/4 rounded-lg ml-auto"
-                    type="text"
-                    placeholder={`${data.PercentDiscount}%`}
-                    onChange={(e) =>
-                      setVoucher({
-                        ...Voucher,
-                        PercentDiscount: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="flex items-center">
                   <label className="mr-2">Description:</label>
                   <input
                     className="border border-gray-300 outline-none px-2 h-full w-3/4 rounded-lg ml-auto"
                     type="text"
-                    placeholder="Nhập mô tả"
+                    placeholder={data.Description}
                     onChange={(e) =>
                       setVoucher({ ...Voucher, Description: e.target.value })
                     }
-                  />
+                  ></input>
                 </div>
               </div>
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <label className="mr-2">Expired Time:</label>
-                  <input
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="date"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, ExpiredTime: e.target.value })
-                    }
-                  />
-                </div>
                 <div className="flex items-center">
                   <label className="mr-2">Release Time:</label>
                   <input
@@ -175,19 +148,29 @@ const EditVoucher = () => {
                     }
                   />
                 </div>
+                <div className="flex items-center">
+                  <label className="mr-2">Expired Time:</label>
+                  <input
+                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
+                    type="date"
+                    onChange={(e) =>
+                      setVoucher({ ...Voucher, ExpiredTime: e.target.value })
+                    }
+                  />
+                </div>
               </div>
 
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center">
                   <label className="mr-2">Image</label>
                   <input
-                    placeholder="Nhập link ảnh"
+                    placeholder={data.Image}
                     className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
                     type="text"
                     onChange={(e) =>
                       setVoucher({ ...Voucher, Image: e.target.value })
                     }
-                  />
+                  ></input>
                 </div>
                 <div className="flex items-center">
                   <label className="mr-2">Quantity:</label>
@@ -201,33 +184,14 @@ const EditVoucher = () => {
                   />
                 </div>
               </div>
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <label className="mr-2">
-                    Giá tiền tối thiểu sử dụng voucher
-                  </label>
-                  <input
-                    placeholder={data.MinValue}
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="number"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, MinValue: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center">
-                  <label className="mr-2">Mức giảm giá tối đa:</label>
-                  <input
-                    placeholder={data.MaxValue}
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="number"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, MaxValue: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
             </form>
+          </div>
+          <div className="p-10 lg:col-span-4">
+            <img
+              className="w-auto rounded-xl h-auto object-cover"
+              src={data.Image}
+              alt="Car"
+            />
           </div>
         </div>
         <div className="flex w-full justify-center space-x-4 m-2">
