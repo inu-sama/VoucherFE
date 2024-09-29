@@ -100,8 +100,8 @@ const DetailVoucher = () => {
       <div className="w-full bg-[#eaf9e7] p-4 rounded-t-xl">
         <div className="grid grid-cols-12 text-[#4ca771]">
           <div className="col-span-11 flex items-center">
-            <h1 className="text-4xl mt-4 mb-10 w-full text-left font-bold">
-              Danh sách voucher
+            <h1 className="text-4xl mt-4 mb-10 w-full text-left font-bold px-10">
+              Chi tiết voucher
             </h1>
           </div>
           <div className="col-span-1 flex items-center ">
@@ -119,10 +119,18 @@ const DetailVoucher = () => {
               src={voucher.Image}
               alt="Voucher"
             />
+            <p className="text-xl my-2 flex justify-between">
+              <span className="font-bold text-[#4ca771]">Hạn sử dụng:</span>
+              <span>
+                {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
+                <span> - </span>
+                {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
+              </span>
+            </p>
           </div>
           <div className="w-full text-[#2F4F4F]">
-            <h1 className="text-3xl font-bold">{voucher.Name}</h1>
-            <div className="w-full border-b-2">
+            <h1 className="text-3xl font-bold mb-2">{voucher.Name}</h1>
+            <div className="w-full border-b border-[#4ca771] mb-10">
               <span className="text-xl text-[#4ca771]">{voucher._id}</span>
               <span className="float-right font-bold text-xl text-[#4ca771]">
                 Trạng thái:{" "}
@@ -138,25 +146,15 @@ const DetailVoucher = () => {
               </span>
             </div>
             <div>
-              <p className="text-xl my-2">
-                <span className="font-bold text-[#4ca771]">
-                  Ngày phát hành:{" "}
-                </span>
-                {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
-              </p>
-              <p className="text-xl my-2">
-                <span className="font-bold text-[#4ca771]">Ngày hết hạn: </span>
-                {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
-              </p>
-              <p className="text-xl my-2">
-                <span className="font-bold text-[#4ca771]">Mô tả: </span>
-                {voucher.Description || "N/A"}
-              </p>
-              <p className="text-xl my-2">
+              <p className="text-xl my-2 flex justify-between pr-10">
                 <span className="font-bold text-[#4ca771]">
                   Số lượng còn lại:{" "}
                 </span>
                 {voucher.RemainQuantity || "N/A"}
+              </p>
+              <p className="text-xl my-2 flex justify-between pr-10">
+                <span className="font-bold text-[#4ca771]">Mô tả: </span>
+                {voucher.Description || "N/A"}
               </p>
               <div className="my-4">
                 {voucher.conditions && voucher.conditions.length > 0 ? (
@@ -189,13 +187,10 @@ const DetailVoucher = () => {
                   <p>Không có điều kiện áp dụng.</p>
                 )}
               </div>
-              <div className="my-4 bg-white">
+              <div className="my-4 bg-white shadow-inner shadow-[#c0e6ba] rounded-lg p-2 mb-5">
                 {voucher.haveVouchers && voucher.haveVouchers.length > 0 ? (
                   voucher.haveVouchers.map((haveVoucher) => (
-                    <div
-                      key={haveVoucher._id}
-                      className="shadow-inner shadow-[#c0e6ba] rounded-lg p-2 mb-2"
-                    >
+                    <div key={haveVoucher._id}>
                       <p>
                         <span className="text-[#4ca771] font-semibold">
                           Service:
@@ -205,7 +200,9 @@ const DetailVoucher = () => {
                     </div>
                   ))
                 ) : (
-                  <p>Toàn bộ service</p>
+                  <p className="text-[#4ca771] font-semibold">
+                    Toàn bộ service
+                  </p>
                 )}
               </div>
             </div>

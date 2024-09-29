@@ -8,12 +8,28 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 const ListVoucher = () => {
+  const [services, setServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
+
+  const fetchServices = async () => {
+    try {
+      const response = await fetch(`${URL}/getService`);
+      const data = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
 
   const handleState = async (id) => {
     try {
@@ -56,9 +72,7 @@ const ListVoucher = () => {
 
   const handleDeleteVoucher = async (id) => {
     try {
-      const res = await fetch(`${URL}/deleteVoucher/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`${URL}/deleteVoucher/${id}`);
       const data = await res.json();
       if (res.status === 200) {
         alert("Xóa voucher thành công");
@@ -96,10 +110,40 @@ const ListVoucher = () => {
         <h1 className="text-4xl text-[#2F4F4F] mb-4 w-full text-center font-bold">
           Danh sách voucher
         </h1>
-        <div className="float-right m-2 h-fit w-full">
+        <div className="flex justify-between my-2 h-fit w-full p-2">
+          <div className="dropdown">
+            <div
+              tabIndex={0}
+              role="button"
+              className="font-semibold bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] outline-none px-4 py-2 rounded-lg"
+            >
+              Sort by Service
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4ca771] mt-2"
+            >
+              {services.map((service) => (
+                <li
+                  key={service._id}
+                  className="flex items-center text-[#2F4F4F] text-lg"
+                >
+                  <a
+                    onClick={() => {
+                      setSelectedServices(service.ServiceName);
+                      console.log(selectedServices);
+                    }}
+                    className="w-full hover:bg-[#4ca771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
+                    {service.ServiceName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
           <Link
             to="/Createvoucher"
-            className="float-right font-semibold bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg"
+            className="font-semibold bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg"
           >
             Create Voucher
           </Link>

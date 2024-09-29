@@ -23,26 +23,9 @@ const Partner = () => {
     }
   };
 
-  const fetchService = async (serviceId) => {
-    try {
-      const res = await fetch(`${Url}/getServiceID/${serviceId}`);
-      const data = await res.json();
-      setService(data);
-    } catch (error) {
-      alert("Error: " + (error?.message || "Failed to get service"));
-      setError("Không thể lấy dữ liệu từ máy chủ");
-    }
-  };
-
   useEffect(() => {
     fetchPartner();
   }, []);
-
-  useEffect(() => {
-    if (partner.length > 0) {
-      fetchService(partner[0]?.Service_ID);
-    }
-  }, [partner]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -57,9 +40,6 @@ const Partner = () => {
         <div className="w-full my-4 grid grid-cols-4" key={item._id}>
           <span className="text-black text-xl">ID: {item._id}</span>
           <span className="text-black mx-4 text-xl">Name: {item.Name}</span>
-          <span className="text-black mx-4 text-xl">
-            Service: {service?.ServiceName || "Loading..."}
-          </span>
           <span className="text-xl mx-4">
             <FontAwesomeIcon icon={faCircleInfo} />
           </span>

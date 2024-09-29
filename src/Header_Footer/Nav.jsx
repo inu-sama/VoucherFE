@@ -9,7 +9,7 @@ import {
 
 const Nav = () => {
   return (
-    <div className="sticky top-0 bg-[#4ca771] text-[#eaf9e7] w-full h-full p-0 m-0">
+    <div className="sticky top-0 bg-[#4ca771] text-[#eaf9e7] w-full h-full min-h-[90vh] p-0 m-0">
       <h1 className="font-extrabold text-xl text-center pt-8 pb-10">
         DANH MỤC QUẢN LÝ
       </h1>

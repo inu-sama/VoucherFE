@@ -272,7 +272,9 @@ const CreateVoucher = () => {
           </div>
           <div className="mt-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
             <div className="col-span-5">
-              <label className="font-bold line-clamp-1">Discount Percentage</label>
+              <label className="font-bold line-clamp-1">
+                Discount Percentage
+              </label>
             </div>
             <div className="col-span-12">
               <input

@@ -104,85 +104,183 @@ const EditVoucher = () => {
   return (
     <div>
       <div className="w-auto h-full bg-[#eaf9e7] p-4">
-        <h1 className="text-4xl text-[#2F4F4F] mb-10 mt-4 w-full text-left font-bold">
+        <h1 className="text-4xl text-[#2F4F4F] px-4 mt-4 w-full text-left font-bold">
           Sửa voucher
         </h1>
-        <p className="my-4 text-red-500 w-full text-xl ">
-          Chú ý: Sửa những trường voucher mà bạn muốn
+        <p className="p-4 text-[#4ca771] w-full text-xl mb-10">
+          <span className="font-bold">Chú ý:</span> Sửa những trường voucher mà
+          bạn muốn
         </p>
         <div className="grid lg:grid-cols-12 grid-cols-1">
-          <div className=" w-full ml-4 col-span-8">
-            <h1 className="text-2xl font-bold ">{data.Name}</h1>
+          <div className="w-full px-4 col-span-8">
+            <h1 className="text-3xl font-bold text-[#2F4F4F] mb-5">
+              {data.Name}
+            </h1>
             <div className="w-full border-b-2">
-              <span className="text-2xl">{data._id}</span>
-              <span
-                className={`float-right text-xl text-black ${
-                  data.States === "enable" ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                Trạng thái: {data.States}
+              <span className="text-xl text-[#4ca771]">{data._id}</span>
+              <span className="float-right font-bold text-xl text-[#4ca771]">
+                Trạng thái:{" "}
+                <span
+                  className={`font-normal ${
+                    data.States === "enable" ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {data.States}
+                </span>
               </span>
             </div>
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 my-2 gap-4">
-                <div className="flex items-center">
-                  <label className="mr-2">Description:</label>
+              <div className="my-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                <div className="col-span-12">
+                  <label className="font-bold">Description</label>
+                </div>
+                <div className="col-span-12">
                   <input
-                    className="border border-gray-300 outline-none px-2 h-full w-3/4 rounded-lg ml-auto"
+                    className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                     type="text"
-                    placeholder={data.Description}
+                    value={data.Description}
+                    placeholder="Mô tả"
                     onChange={(e) =>
                       setVoucher({ ...Voucher, Description: e.target.value })
                     }
-                  ></input>
-                </div>
-              </div>
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <label className="mr-2">Release Time:</label>
-                  <input
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="date"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, ReleaseTime: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="flex items-center">
-                  <label className="mr-2">Expired Time:</label>
-                  <input
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="date"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, ExpiredTime: e.target.value })
-                    }
                   />
                 </div>
               </div>
-
-              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <label className="mr-2">Image</label>
-                  <input
-                    placeholder={data.Image}
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="text"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, Image: e.target.value })
-                    }
-                  ></input>
+              <div className="mb-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                  <div className="col-span-12">
+                    <label className="font-bold">Release Time</label>
+                  </div>
+                  <div className="col-span-12">
+                    <input
+                      value={data.ReleaseTime}
+                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                      type="date"
+                      onChange={(e) =>
+                        setVoucher({ ...Voucher, ReleaseTime: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <label className="mr-2">Quantity:</label>
-                  <input
-                    placeholder={`Số lượng còn lại: ${data.RemainQuantity}`}
-                    className="border border-gray-300 outline-none px-2 py-2 h-full w-3/4 rounded-lg ml-auto"
-                    type="number"
-                    onChange={(e) =>
-                      setVoucher({ ...Voucher, RemainQuantity: e.target.value })
-                    }
-                  />
+                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                  <div className="col-span-12">
+                    <label className="font-bold">Expired Time</label>
+                  </div>
+                  <div className="col-span-12">
+                    <input
+                      value={data.ExpiredTime}
+                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                      type="date"
+                      onChange={(e) =>
+                        setVoucher({ ...Voucher, ExpiredTime: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
+              </div>
+              <div className="mb-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                  <div className="col-span-12">
+                    <label className="font-bold">Image</label>
+                  </div>
+                  <div className="col-span-12">
+                    <input
+                      placeholder="Ảnh minh họa"
+                      value={data.Image}
+                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                      type="text"
+                      onChange={(e) =>
+                        setVoucher({ ...Voucher, Image: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                  <div className="col-span-12">
+                    <label className="font-bold">Quantity</label>
+                  </div>
+                  <div className="col-span-12">
+                    <input
+                      value={data.RemainQuantity}
+                      placeholder={`Số lượng còn lại: ${data.RemainQuantity}`}
+                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                      type="number"
+                      onChange={(e) =>
+                        setVoucher({
+                          ...Voucher,
+                          RemainQuantity: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="my-4">
+                {data.conditions && data.conditions.length > 0 ? (
+                  data.conditions.map((condition) => (
+                    <div
+                      key={condition._id}
+                      className="grid grid-cols-12 shadow-inner shadow-[#c0e6ba] rounded-lg py-2 px-4 mb-2 font-semibold bg-white"
+                    >
+                      <div className="col-span-5 grid grid-rows-3 gap-2">
+                        <p>
+                          Giá trị tối thiểu:{" "}
+                          <span className="text-[#4ca771] font-normal" id="min">
+                            {condition.MinValue}đ
+                          </span>
+                        </p>
+                        <p>
+                          Giá trị tối đa:{" "}
+                          <span className="text-[#4ca771] font-normal" id="max">
+                            {condition.MaxValue}đ
+                          </span>
+                        </p>
+                        <p>
+                          Giảm giá:{" "}
+                          <span
+                            className="text-[#4ca771] font-normal"
+                            id="percentage"
+                          >
+                            {condition.PercentDiscount}%
+                          </span>
+                        </p>
+                      </div>
+                      <div className="col-span-4 grid grid-rows-3 gap-2">
+                        <input
+                          type="number"
+                          id="updateMin"
+                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] px-4 rounded-lg"
+                        />
+                        <input
+                          type="number"
+                          id="updateMax"
+                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] px-4 rounded-lg"
+                        />
+                        <input
+                          type="number"
+                          id="updatePercentage"
+                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] px-4 rounded-lg"
+                        />
+                      </div>
+                      <div className="col-span-3 flex items-center justify-end">
+                        <div
+                          id="updateCondition"
+                          className="py-4 px-8 bg-[#c0e6ba] rounded-lg text-[#4ca771] font-bold cursor-pointer"
+                          // onClick={() => {
+                          //   document.getElementsByClassName("conditions").t;
+                          //   document
+                          //     .getElementById("#updateCondition")
+                          //     .textContent("Lock");
+                          // }}
+                        >
+                          Update
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>Không có điều kiện áp dụng.</p>
+                )}
               </div>
             </form>
           </div>
@@ -194,19 +292,25 @@ const EditVoucher = () => {
             />
           </div>
         </div>
-        <div className="flex w-full justify-center space-x-4 m-2">
-          <button
-            onClick={handleSubmit}
-            className="bg-yellow-500 my-8 px-4 py-2 hover:bg-yellow-700 text-white font-bold rounded"
-          >
-            <FontAwesomeIcon icon={faEdit} /> Sửa
-          </button>
-          <button
-            onClick={() => handleState(id)}
-            className="my-8 mx-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-          >
-            <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
-          </button>
+
+        <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center px-4">
+          <div className="col-span-4">
+            <button
+              onClick={handleSubmit}
+              className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg flex items-center justify-center w-full"
+            >
+              <FontAwesomeIcon icon={faEdit} /> Sửa
+            </button>
+          </div>
+          <div className="col-span-4">
+            <button
+              onClick={() => handleState(id)}
+              className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
+            >
+              <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
+            </button>
+          </div>
+          <div className="col-span-4"></div>
         </div>
       </div>
     </div>
