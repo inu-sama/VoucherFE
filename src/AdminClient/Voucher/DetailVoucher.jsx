@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEdit, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faEdit,
+  faXmark,
+  faBug,
+} from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -219,7 +224,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Edit</span>
             </button>
           </div>
-          <div className="col-span-5">
+          <div className="col-span-5 gap-10">
             <button
               className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
@@ -9,6 +9,9 @@ const EditVoucher = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Voucher, setVoucher] = useState({});
+  const [description, setDescription] = useState({
+    value: Voucher.Description,
+  });
   // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
@@ -22,7 +25,7 @@ const EditVoucher = () => {
       if (res.status === 400) {
         alert("Error: " + (data?.message || "Failed to update state"));
       } else {
-        navigate("/Listvoucher");
+        navigate(`/Detailvoucher/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -138,7 +141,8 @@ const EditVoucher = () => {
                   <input
                     className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                     type="text"
-                    value={data.Description}
+                    value={description.value}
+                    // ref={input}
                     placeholder="Mô tả"
                     onChange={(e) =>
                       setVoucher({ ...Voucher, Description: e.target.value })

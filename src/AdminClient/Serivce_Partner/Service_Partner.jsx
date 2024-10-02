@@ -10,27 +10,27 @@ const Service_Partner = () => {
     setSelected(value);
   };
   return (
-    <div className="w-full ">
-      <h1 className=" text-3xl my-4 w-full text-center font-bold">
-        Thư mục quản lí người dùng
+    <div className="w-full min-h-[90vh]">
+      <h1 className=" text-4xl text-[#2F4F4F] my-4 w-full text-center font-bold">
+        Quản lí người dùng
       </h1>
-      <div className="flex w-full h-fit border mt-6 font-bold p-4 justify-center bg-white">
+      <div className="grid grid-cols-2 w-full gap-10 h-fit mt-6 font-bold px-4 justify-center bg-[#4ca771] text">
         <span
           onClick={() => handleClick("Service")}
-          className={`cursor-pointer text-2xl px-2 ${
+          className={`cursor-pointer text-2xl py-2 px-4 rounded-xl text-center ${
             selected === "Service"
-              ? "border-b-2 border-[#0094F3] text-[#0094F3]"
-              : "text-gray-500"
+              ? "bg-[#eaf9e7] text-[#4ca771]"
+              : "text-[#eaf9e7]"
           }`}
         >
           <FontAwesomeIcon icon={faHandshake} /> Service
         </span>
         <span
           onClick={() => handleClick("Partner")}
-          className={`mx-9 px-2 text-2xl cursor-pointer ${
+          className={`py-2 px-4 text-2xl cursor-pointer rounded-xl text-center ${
             selected === "Partner"
-              ? "border-b-2 border-[#0094F3] text-[#0094F3]"
-              : "text-gray-500"
+              ? "bg-[#eaf9e7] text-[#4ca771]"
+              : "text-[#eaf9e7]"
           }`}
         >
           <FontAwesomeIcon icon={faStore} /> Partner

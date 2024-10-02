@@ -356,13 +356,13 @@ const CreateVoucher = () => {
           </div>
 
           <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center">
-            <div className="col-span-1"></div>
-            <div className="col-span-5">
+            {/* <div className="col-span-1"></div> */}
+            <div className="col-span-6">
               <button className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg flex items-center justify-center w-full">
                 Create
               </button>
             </div>
-            <div className="col-span-5">
+            <div className="col-span-3">
               <Link
                 to="/Listvoucher"
                 className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
@@ -370,7 +370,47 @@ const CreateVoucher = () => {
                 Back
               </Link>
             </div>
-            <div className="col-span-1"></div>
+            <div className="col-span-3">
+              <div>
+                <div
+                  className="hover:bg-[#c0e6ba] bg-[#eaf9e7] font-bold text-lg hover:text-[#eaf9e7] text-[#c0e6ba] border-2 border-[#c0e6ba] p-2 rounded-lg flex items-center justify-center w-full"
+                  onClick={() =>
+                    document.getElementById("my_modal_1").showModal()
+                  }
+                >
+                  {/* <FontAwesomeIcon icon={faBug} /> */}
+                  <span className="ml-2">Report</span>
+                </div>
+                <dialog id="my_modal_1" className="modal">
+                  <div className="modal-box bg-[#2F4F4F]">
+                    <h3 className="font-bold text-xl text-[#eaf9e7]">
+                      What's wrong?
+                    </h3>
+                    <div className="grid grid-cols-4 items-center bg-gradient-to-r from-[#eaf9e7] from-10% to-[#2F4F4F] text-[#2F4F4F] py-1 pl-4 rounded-lg h-12">
+                      <div className="col-span-4">
+                        <label className="font-bold">Lỗi gặp phải</label>
+                      </div>
+                      <div className="col-span-2 h-24">
+                        <textarea
+                          className="border-l-4 border-[#2F4F4F] bg-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-2xl text-wrap resize-none"
+                          placeholder="Mô tả vấn đề"
+                          rows={5}
+                          onChange={() => {}}
+                        />
+                      </div>
+                    </div>
+                    <div className="modal-action mt-7">
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn bg-[#eaf9e7] hover:bg-[#2F4F4F] border-2 border-[#eaf9e7] text-[#2F4F4F] hover:text-[#eaf9e7]">
+                          Close
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
+              </div>
+            </div>
           </div>
         </form>
       </div>
