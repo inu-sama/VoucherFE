@@ -330,7 +330,7 @@ const CreateVoucher = () => {
                   Select Services:
                 </div>
                 <div className="collapse-content bg-[#4ca771] rounded-r-2xl">
-                  <div className="bg-[#eaf9e7] p-4 rounded-xl text-lg mt-4">
+                  <div className="bg-gradient-to-r from-[#eaf9e7] to-[#4ca771] p-4 rounded-xl text-lg mt-4 max-h-36 overflow-scroll">
                     {services.map((service) => (
                       <div
                         key={service._id}

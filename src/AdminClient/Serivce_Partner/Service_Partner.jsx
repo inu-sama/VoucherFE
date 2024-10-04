@@ -14,10 +14,10 @@ const Service_Partner = () => {
       <h1 className=" text-4xl text-[#2F4F4F] my-4 w-full text-center font-bold">
         Quản lí người dùng
       </h1>
-      <div className="grid grid-cols-2 w-full gap-10 h-fit mt-6 font-bold px-4 justify-center bg-[#4ca771] text">
+      <div className="grid grid-cols-2 w-full gap-10 h-fit mt-6 font-bold justify-center bg-[#4ca771] text">
         <span
           onClick={() => handleClick("Service")}
-          className={`cursor-pointer text-2xl py-2 px-4 rounded-xl text-center ${
+          className={`cursor-pointer text-2xl py-2 px-4 text-center ${
             selected === "Service"
               ? "bg-[#eaf9e7] text-[#4ca771]"
               : "text-[#eaf9e7]"
@@ -27,7 +27,7 @@ const Service_Partner = () => {
         </span>
         <span
           onClick={() => handleClick("Partner")}
-          className={`py-2 px-4 text-2xl cursor-pointer rounded-xl text-center ${
+          className={`py-2 px-4 text-2xl cursor-pointer text-center ${
             selected === "Partner"
               ? "bg-[#eaf9e7] text-[#4ca771]"
               : "text-[#eaf9e7]"

@@ -31,12 +31,20 @@ const EditVoucher = () => {
       console.log(error);
     }
   };
+  const date = (a) => {
+    return new Date(a).toLocaleDateString("en-CA", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
 
   const DetailFetch = async () => {
     try {
       const res = await fetch(`${URL}/Detailvoucher/${id}`);
       const data = await res.json();
       setData(data[0]);
+      setVoucher(data[0]);
     } catch (error) {
       setError("Không thể lấy dữ liệu từ máy chủ");
     } finally {
@@ -47,6 +55,30 @@ const EditVoucher = () => {
   useEffect(() => {
     DetailFetch();
   }, [id]);
+
+  const updateCondition = async (id) => {
+    try {
+      const res = await fetch(`${URL}/updateCondition/:${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          MinValue: document.getElementById("updateMin").value,
+          MaxValue: document.getElementById("updateMax").value,
+          PercentDiscount: document.getElementById("updatePercentage").value,
+        }),
+      });
+      const data = await res.json();
+      if (res.status === 400) {
+        alert("Error: " + (data?.message || "Failed to update condition"));
+      } else {
+        alert("Condition updated successfully");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -141,7 +173,7 @@ const EditVoucher = () => {
                   <input
                     className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                     type="text"
-                    value={description.value}
+                    value={`${Voucher.Description}`}
                     // ref={input}
                     placeholder="Mô tả"
                     onChange={(e) =>
@@ -157,7 +189,7 @@ const EditVoucher = () => {
                   </div>
                   <div className="col-span-12">
                     <input
-                      value={data.ReleaseTime}
+                      value={date(Voucher.ReleaseTime)}
                       className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="date"
                       onChange={(e) =>
@@ -172,7 +204,7 @@ const EditVoucher = () => {
                   </div>
                   <div className="col-span-12">
                     <input
-                      value={data.ExpiredTime}
+                      value={date(data.ExpiredTime)}
                       className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="date"
                       onChange={(e) =>
@@ -190,7 +222,7 @@ const EditVoucher = () => {
                   <div className="col-span-12">
                     <input
                       placeholder="Ảnh minh họa"
-                      value={data.Image}
+                      value={Voucher.Image}
                       className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="text"
                       onChange={(e) =>
@@ -205,7 +237,7 @@ const EditVoucher = () => {
                   </div>
                   <div className="col-span-12">
                     <input
-                      value={data.RemainQuantity}
+                      value={Voucher.RemainQuantity}
                       placeholder={`Số lượng còn lại: ${data.RemainQuantity}`}
                       className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="number"
