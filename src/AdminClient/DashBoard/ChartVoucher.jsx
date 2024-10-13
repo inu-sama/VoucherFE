@@ -1,10 +1,10 @@
-import { memo, useState, useEffect } from 'react';
-import { Line, Pie } from 'react-chartjs-2';
-import { Chart } from 'chart.js/auto';
+import { memo, useState, useEffect } from "react";
+import { Line, Pie } from "react-chartjs-2";
+import { Chart } from "chart.js/auto";
 
 const ChartVoucher = () => {
-  const [selectedMonth, setSelectedMonth] = useState(''); // Lưu tháng được chọn
-  const [selectedYear, setSelectedYear] = useState('');   // Lưu năm được chọn
+  const [selectedMonth, setSelectedMonth] = useState(""); // Lưu tháng được chọn
+  const [selectedYear, setSelectedYear] = useState(""); // Lưu năm được chọn
   const [history, setHistory] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,9 +13,11 @@ const ChartVoucher = () => {
   // Hàm fetch dữ liệu từ API
   const fetchHistory = async () => {
     try {
-      const res = await fetch('https://server-voucher.vercel.app/api/Statistical_Voucher');
+      const res = await fetch(
+        "https://server-voucher.vercel.app/api/Statistical_Voucher"
+      );
       if (!res.ok) {
-        throw new Error('Failed to fetch data');
+        throw new Error("Failed to fetch data");
       }
       const data = await res.json();
       setHistory(data);
@@ -45,11 +47,11 @@ const ChartVoucher = () => {
   const filterDataByMonthAndYear = () => {
     if (!selectedMonth || !selectedYear || !history.length) return;
 
-    const filtered = history.filter(item => {
+    const filtered = history.filter((item) => {
       const voucherDate = new Date(item.Date);
       return (
-        voucherDate.getMonth() + 1 === parseInt(selectedMonth) &&  // Lọc theo tháng
-        voucherDate.getFullYear() === parseInt(selectedYear)       // Lọc theo năm
+        voucherDate.getMonth() + 1 === parseInt(selectedMonth) && // Lọc theo tháng
+        voucherDate.getFullYear() === parseInt(selectedYear) // Lọc theo năm
       );
     });
     setFilteredData(filtered);
@@ -81,59 +83,64 @@ const ChartVoucher = () => {
   // Chuẩn bị dữ liệu cho biểu đồ
   const voucherTotalDiscount = {}; // Tổng tiền giảm giá của mỗi voucher
   const pieChartData = {
-    labels: [],  // Nhãn cho Pie chart
+    labels: [], // Nhãn cho Pie chart
     datasets: [
       {
-        label: 'Tổng tiền giảm giá của Voucher',
-        data: [],  // Dữ liệu cho Pie chart (tổng tiền giảm giá)
+        label: "Tổng tiền giảm giá của Voucher",
+        data: [], // Dữ liệu cho Pie chart (tổng tiền giảm giá)
         backgroundColor: [
-          'rgba(75,192,192,0.4)',
-          'rgba(255,99,132,0.4)',
-          'rgba(255,206,86,0.4)',
-          'rgba(54,162,235,0.4)',
-          'rgba(153,102,255,0.4)',
-          'rgba(255,159,64,0.4)'
+          "rgba(75,192,192,0.4)",
+          "rgba(255,99,132,0.4)",
+          "rgba(255,206,86,0.4)",
+          "rgba(54,162,235,0.4)",
+          "rgba(153,102,255,0.4)",
+          "rgba(255,159,64,0.4)",
         ],
         borderColor: [
-          'rgba(75,192,192,1)',
-          'rgba(255,99,132,1)',
-          'rgba(255,206,86,1)',
-          'rgba(54,162,235,1)',
-          'rgba(153,102,255,1)',
-          'rgba(255,159,64,1)'
+          "rgba(75,192,192,1)",
+          "rgba(255,99,132,1)",
+          "rgba(255,206,86,1)",
+          "rgba(54,162,235,1)",
+          "rgba(153,102,255,1)",
+          "rgba(255,159,64,1)",
         ],
         borderWidth: 1,
         hoverBackgroundColor: [
-          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
-        ]
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+        ],
       },
     ],
   };
 
-  filteredData.forEach(item => {
+  filteredData.forEach((item) => {
     const { Voucher_ID, TotalDiscount } = item;
 
     if (voucherTotalDiscount[Voucher_ID]) {
       voucherTotalDiscount[Voucher_ID] += TotalDiscount; // Tính tổng tiền giảm giá
     } else {
-      voucherTotalDiscount[Voucher_ID] = TotalDiscount;  // Khởi tạo tổng tiền giảm giá
+      voucherTotalDiscount[Voucher_ID] = TotalDiscount; // Khởi tạo tổng tiền giảm giá
     }
   });
 
   // Cập nhật dữ liệu cho Pie chart
-  Object.keys(voucherTotalDiscount).forEach(Voucher_ID => {
+  Object.keys(voucherTotalDiscount).forEach((Voucher_ID) => {
     pieChartData.labels.push(Voucher_ID);
     pieChartData.datasets[0].data.push(voucherTotalDiscount[Voucher_ID]);
   });
 
   const lineChartData = {
-    labels: pieChartData.labels,  // Dùng chung nhãn với Pie chart
+    labels: pieChartData.labels, // Dùng chung nhãn với Pie chart
     datasets: [
       {
-        label: 'Tổng tiền giảm giá của Voucher',
+        label: "Tổng tiền giảm giá của Voucher",
         data: pieChartData.datasets[0].data, // Dữ liệu dùng chung (tổng tiền giảm giá)
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
         borderWidth: 1,
       },
     ],
@@ -162,25 +169,28 @@ const ChartVoucher = () => {
   };
 
   return (
-    <div className="xl:w-full h-[300px]"> {/* Điều chỉnh kích thước container */}
+    <div className="xl:w-full h-[300px]">
+      {" "}
+      {/* Điều chỉnh kích thước container */}
       <select value={selectedMonth} onChange={handleMonthChange}>
         <option value="">Chọn tháng muốn thống kê</option>
         {[...Array(12)].map((_, i) => (
-          <option key={i} value={i + 1}>Tháng {i + 1}</option>
+          <option key={i} value={i + 1}>
+            Tháng {i + 1}
+          </option>
         ))}
       </select>
-
       <select value={selectedYear} onChange={handleYearChange}>
         <option value="">Chọn năm</option>
-        {[2021, 2022, 2023, 2024].map(year => (
-          <option key={year} value={year}>{year}</option>
+        {[2021, 2022, 2023, 2024].map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
         ))}
       </select>
-
       <button onClick={handleSearch} disabled={!selectedMonth || !selectedYear}>
         Tìm kiếm
       </button>
-
       <Line data={lineChartData} options={chartOptions} />
       <Pie data={pieChartData} options={pieChartOptions} />
     </div>

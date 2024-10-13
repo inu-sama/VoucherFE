@@ -7,6 +7,8 @@ import ListVoucher from "../AdminClient/Voucher/ListVoucher.jsx";
 import EditVoucher from "../AdminClient/Voucher/EditVoucher.jsx";
 import DetailVoucher from "../AdminClient/Voucher/DetailVoucher.jsx";
 import Service_Partner from "../AdminClient/Serivce_Partner/Service_Partner.jsx";
+import GetListVoucher from "../Customer/getListVoucher.jsx";
+import Login from "../Login.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,16 @@ const router = createBrowserRouter([
         element: <Service_Partner />,
       },
     ],
+  },
+  {
+    path: "/ApplyVoucher",
+    element: <GetListVoucher />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/Login",
+    element: <Login />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
