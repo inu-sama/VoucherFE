@@ -13,7 +13,6 @@ const ListVoucher = () => {
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
 
@@ -40,7 +39,7 @@ const ListVoucher = () => {
       if (res.status === 400) {
         alert("Error: " + (data?.message || "Failed to update state"));
       } else {
-        navigate(`/Editvoucher/${id}`);
+        navigate(`/Admin/Editvoucher/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -153,7 +152,7 @@ const ListVoucher = () => {
             </ul>
           </div>
           <Link
-            to="/Createvoucher"
+            to="/Admin/Createvoucher"
             className="font-semibold bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg"
           >
             Create Voucher
@@ -191,7 +190,7 @@ const ListVoucher = () => {
                     </div>
                     <div className="col-span-4 grid grid-rows-2 gap-2">
                       <Link
-                        to={`/Detailvoucher/${voucher._id}`}
+                        to={`/Admin/Detailvoucher/${voucher._id}`}
                         className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
                       >
                         <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
@@ -241,7 +240,7 @@ const ListVoucher = () => {
                       </div>
                       <div className="col-span-4 grid grid-rows-2 gap-2">
                         <Link
-                          to={`/Detailvoucher/${voucher._id}`}
+                          to={`/Admin/Detailvoucher/${voucher._id}`}
                           className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
                         >
                           <FontAwesomeIcon

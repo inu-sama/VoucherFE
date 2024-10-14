@@ -25,7 +25,7 @@ const EditVoucher = () => {
       if (res.status === 400) {
         alert("Error: " + (data?.message || "Failed to update state"));
       } else {
-        navigate(`/Detailvoucher/${id}`);
+        navigate(`/Admin/Detailvoucher/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -113,7 +113,7 @@ const EditVoucher = () => {
           alert("Error: " + (data?.message || "Failed to update state"));
         }
         alert("Voucher updated successfully");
-        navigate("/Listvoucher");
+        navigate("/Admin/Listvoucher");
       }
     } catch (err) {
       alert("Error: " + (err.message || "Failed to update voucher"));

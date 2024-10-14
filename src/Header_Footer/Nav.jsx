@@ -16,25 +16,25 @@ const Nav = () => {
       <div className="p-4">
         <ul className="flex lg:block items-center">
           <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
-            <a href="/" className="route text-lg lg:text-xl font-extrabold">
+            <Link to="" className="route text-lg lg:text-xl font-extrabold">
               <FontAwesomeIcon icon={faChartLine} /> DashBoard
-            </a>
+            </Link>
           </li>
           <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
-            <a
-              href="/Listvoucher"
+            <Link
+              to="Listvoucher"
               className="route text-lg lg:text-xl font-extrabold"
             >
               <FontAwesomeIcon icon={faTicket} /> Voucher
-            </a>
+            </Link>
           </li>
           <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
-            <a
-              href="/ServicePartner"
+            <Link
+              to="ServicePartner"
               className="route text-lg lg:text-xl font-extrabold"
             >
               <FontAwesomeIcon icon={faUser} /> Service_Partner
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

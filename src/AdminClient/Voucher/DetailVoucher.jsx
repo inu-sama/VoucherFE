@@ -29,7 +29,7 @@ const DetailVoucher = () => {
       if (res.status === 400) {
         alert("Error: " + (voucher.message || "Failed to update state"));
       } else {
-        navigate(`/Editvoucher/${id}`);
+        navigate(`/Admin/Editvoucher/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -110,7 +110,7 @@ const DetailVoucher = () => {
             </h1>
           </div>
           <div className="col-span-1 flex items-center ">
-            <Link to={`/Listvoucher`}>
+            <Link to={`/Admin/Listvoucher`}>
               <button className="bg-[#eaf9e7] hover:bg-[#4ca771] w-10 h-10 border-4 border-[#4ca771] hover:text-[#eaf9e7] font-bold rounded-full">
                 <FontAwesomeIcon icon={faXmark} />
               </button>
