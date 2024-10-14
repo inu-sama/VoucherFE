@@ -111,7 +111,7 @@ const CreateVoucher = () => {
       const data = await response.json();
       if (response.ok) {
         alert("Voucher created successfully");
-        navigate("/Listvoucher");
+        navigate("/Admin/Listvoucher");
       } else {
         alert("Error: " + (data?.message || "Failed to create voucher"));
       }
@@ -362,7 +362,7 @@ const CreateVoucher = () => {
             </div>
             <div className="col-span-3">
               <Link
-                to="/Listvoucher"
+                to="/Admin/Listvoucher"
                 className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
               >
                 Back
