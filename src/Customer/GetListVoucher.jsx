@@ -28,8 +28,7 @@ const GetListVoucher = () => {
         body: JSON.stringify({
           //thay hết đống dữ liệu nhập vào này nha
           CusID: "Thanh1",
-          Service_ID: "SVCLavender Resort", // <-- Thay thành Service_ID bạn muốn
-          Partner_ID: "Thanh", // <-- Thay thành Partner_ID bạn muốn
+          Service_ID: "SVCTake A Breath", // <-- Thay thành Service_ID bạn muốn
           Price: 450000, // <-- Giá nhập vào
         }),
       });

@@ -55,11 +55,7 @@ const CreateVoucher = () => {
       return;
     }
 
-    if (
-      !condition.MinValue ||
-      !condition.MaxValue ||
-      !condition.PercentDiscount
-    ) {
+    if (!condition.MinValue || !condition.MaxValue) {
       alert("Please fill all the condition fields");
       return;
     }
@@ -200,7 +196,7 @@ const CreateVoucher = () => {
           </div>
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
-              <div className="col-span-5">
+              <div className="col-span-12">
                 <label className="font-bold">Image</label>
               </div>
               <div className="col-span-12">
@@ -230,6 +226,25 @@ const CreateVoucher = () => {
                   }
                 />
               </div>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="col-span-5">
+              <label className="font-bold line-clamp-1">
+                Discount Percentage
+              </label>
+            </div>
+            <div className="col-span-12">
+              <input
+                placeholder="Nhập phần trăm giảm giá"
+                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                type="number"
+                name="PercentDiscount"
+                value={Voucher.PercentDiscount}
+                onChange={(e) =>
+                  setVoucher({ ...Voucher, PercentDiscount: e.target.value })
+                }
+              />
             </div>
           </div>
           <div className="mt-10 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center border border-transparent border-t-[#c0e6ba]">
@@ -270,23 +285,6 @@ const CreateVoucher = () => {
               </div>
             </div>
           </div>
-          <div className="mt-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
-            <div className="col-span-5">
-              <label className="font-bold line-clamp-1">
-                Discount Percentage
-              </label>
-            </div>
-            <div className="col-span-12">
-              <input
-                placeholder="Nhập phần trăm giảm giá"
-                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
-                type="number"
-                name="PercentDiscount"
-                value={condition.PercentDiscount}
-                onChange={handleConditionChange}
-              />
-            </div>
-          </div>
 
           <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center">
             <div className="border-8 border-[#4ca771] rounded-lg h-fit">
@@ -316,8 +314,8 @@ const CreateVoucher = () => {
                       <span className="text-[#2F4F4F] font-bold text-xl">
                         •{" "}
                       </span>
-                      Giảm {cond.PercentDiscount}%, tối đa {cond.MaxValue}đ cho
-                      đơn hàng từ {cond.MinValue}đ
+                      Giảm {Voucher.PercentDiscount}%, tối đa {cond.MaxValue}đ
+                      cho đơn hàng từ {cond.MinValue}đ
                     </li>
                   ))}
                 </ul>

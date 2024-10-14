@@ -102,6 +102,7 @@ const DetailVoucher = () => {
 
   return (
     <div className="lg:bg-[#eaf9e7] bg-[#4ca771]">
+      {console.log("voucher:", voucher)}
       <div className="w-full bg-[#eaf9e7] p-4 rounded-t-xl">
         <div className="grid grid-cols-12 text-[#4ca771]">
           <div className="col-span-11 flex items-center">
@@ -158,6 +159,10 @@ const DetailVoucher = () => {
                 {voucher.RemainQuantity || "N/A"}
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
+                <span className="font-bold text-[#4ca771]">Mức giảm: </span>
+                {voucher.PercentDiscount || "N/A"}%
+              </p>
+              <p className="text-xl my-2 flex justify-between pr-10">
                 <span className="font-bold text-[#4ca771]">Mô tả: </span>
                 {voucher.Description || "N/A"}
               </p>
@@ -178,12 +183,6 @@ const DetailVoucher = () => {
                         Giá trị tối đa:{" "}
                         <span className="text-[#4ca771] font-normal">
                           {condition.MaxValue}đ
-                        </span>
-                      </p>
-                      <p>
-                        Giảm giá:{" "}
-                        <span className="text-[#4ca771] font-normal">
-                          {condition.PercentDiscount}%
                         </span>
                       </p>
                     </div>
