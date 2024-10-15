@@ -65,6 +65,7 @@ const Login = () => {
           setIsLoading(false);
         }
       } else {
+        setError("Đăng nhập không thành công.");
         throw new Error("Đăng nhập không thành công.");
       }
     } catch (error) {
