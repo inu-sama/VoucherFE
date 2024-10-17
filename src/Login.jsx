@@ -149,7 +149,8 @@ const Login = () => {
             <div className="flex items-center text-3xl justify-center mb-6">
               <button
                 onClick={handleLoginSSO}
-                type="submit"
+                type="button"
+                tabindex="2"
                 className="w-fit grid grid-row-2 hover:text-[#eaf9e7] cursor-pointer"
               >
                 <div className="flex justify-center">
@@ -160,6 +161,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
+              tabindex="1"
               className="w-full text-center text-xl py-3 font-bold cursor-pointer border-2 border-[#2F4F4F] hover:bg-[#2F4F4F] hover:text-white rounded-xl"
               disabled={isLoading}
             >
