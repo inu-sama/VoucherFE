@@ -20,7 +20,7 @@ const DetailVoucher = () => {
   const URL = "https://servervoucher.vercel.app/api";
   3;
 
-  const handlestate = async (id) => {
+  const handleState = async (id) => {
     try {
       const res = await fetch(`${URL}/updateState/${id}`, {
         method: "POST",
@@ -29,7 +29,7 @@ const DetailVoucher = () => {
       if (res.status === 400) {
         alert("Error: " + (voucher.message || "Failed to update state"));
       } else {
-        navigate(`/Admin/Editvoucher/${id}`);
+        navigate(`/Admin/EditVoucher/${id}`);
       }
     } catch (error) {
       console.log(error);
@@ -72,7 +72,7 @@ const DetailVoucher = () => {
   const handleDeleteVoucher = async (id) => {
     try {
       const res = await fetch(`${URL}/deleteVoucher/${id}`, {
-        method: "DELETE",
+        method: "GET",
       });
       const voucher = await res.json();
       if (res.status === 200) {
@@ -125,14 +125,6 @@ const DetailVoucher = () => {
               src={voucher.Image}
               alt="Voucher"
             />
-            <p className="text-xl my-2 flex justify-between">
-              <span className="font-bold text-[#4ca771]">Hạn sử dụng:</span>
-              <span>
-                {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
-                <span> - </span>
-                {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
-              </span>
-            </p>
           </div>
           <div className="w-full text-[#2F4F4F]">
             <h1 className="text-3xl font-bold mb-2">{voucher.Name}</h1>
@@ -209,19 +201,27 @@ const DetailVoucher = () => {
                   </p>
                 )}
               </div>
+              <p className="text-xl my-2 flex justify-between pr-10">
+                <span className="font-bold text-[#4ca771]">Hạn sử dụng:</span>
+                <span>
+                  {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
+                  <span> - </span>
+                  {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
+                </span>
+              </p>
             </div>
           </div>
         </div>
         <div className="grid grid-cols-12 gap-10 w-full justify-center mt-10">
           <div className="col-span-1"></div>
           <div className="col-span-5">
-            <button
-              onClick={() => handlestate(id)}
+            <Link
+              to={`/Admin/EditVoucher/${id}`}
               className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-5 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
-            </button>
+            </Link>
           </div>
           <div className="col-span-5 gap-10">
             <button

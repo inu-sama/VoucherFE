@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
-  faEdit,
   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,22 +28,6 @@ const ListVoucher = () => {
   useEffect(() => {
     fetchServices();
   }, []);
-
-  const handleState = async (id) => {
-    try {
-      const res = await fetch(`${URL}/updateState/${id}`, {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (res.status === 400) {
-        alert("Error: " + (data?.message || "Failed to update state"));
-      } else {
-        navigate(`/Admin/Editvoucher/${id}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const fetchVouchers = async () => {
     try {
@@ -240,7 +223,7 @@ const ListVoucher = () => {
                       </div>
                       <div className="col-span-4 grid grid-rows-2 gap-2">
                         <Link
-                          to={`/Admin/Detailvoucher/${voucher._id}`}
+                          to={`/Admin/DetailVoucher/${voucher._id}`}
                           className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
                         >
                           <FontAwesomeIcon

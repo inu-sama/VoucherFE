@@ -12,6 +12,7 @@ const EditVoucher = () => {
   const [description, setDescription] = useState({
     value: Voucher.Description,
   });
+  const [img, setImg] = useState(null);
   // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const EditVoucher = () => {
       const data = await res.json();
       setData(data[0]);
       setVoucher(data[0]);
+      setImg(data[0].Image);
     } catch (error) {
       setError("Không thể lấy dữ liệu từ máy chủ");
     } finally {
@@ -214,19 +216,39 @@ const EditVoucher = () => {
                   </div>
                 </div>
               </div>
+              <div className="mb-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                <div className="col-span-12">
+                  <label className="font-bold">Image</label>
+                </div>
+                <div className="col-span-12">
+                  <input
+                    placeholder="Ảnh minh họa"
+                    value={Voucher.Image}
+                    className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                    type="text"
+                    onChange={(e) => {
+                      setVoucher({ ...Voucher, Image: e.target.value });
+                      setImg(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
               <div className="mb-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
                   <div className="col-span-12">
-                    <label className="font-bold">Image</label>
+                    <label className="font-bold">Discount Percent</label>
                   </div>
                   <div className="col-span-12">
                     <input
-                      placeholder="Ảnh minh họa"
-                      value={Voucher.Image}
+                      value={Voucher.PercentDiscount}
+                      placeholder={`Phần trăm giảm: ${data.PercentDiscount}%`}
                       className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
-                      type="text"
+                      type="number"
                       onChange={(e) =>
-                        setVoucher({ ...Voucher, Image: e.target.value })
+                        setVoucher({
+                          ...Voucher,
+                          PercentDiscount: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -256,9 +278,9 @@ const EditVoucher = () => {
                   data.conditions.map((condition) => (
                     <div
                       key={condition._id}
-                      className="grid grid-cols-12 shadow-inner shadow-[#c0e6ba] rounded-lg py-2 px-4 mb-2 font-semibold bg-white"
+                      className="grid grid-cols-12 shadow-inner shadow-[#c0e6ba] rounded-lg py-3 px-4 mb-2 font-semibold bg-white"
                     >
-                      <div className="col-span-5 grid grid-rows-3 gap-2">
+                      <div className="col-span-5 grid grid-rows-2 gap-2">
                         <p>
                           Giá trị tối thiểu:{" "}
                           <span className="text-[#4ca771] font-normal" id="min">
@@ -271,31 +293,17 @@ const EditVoucher = () => {
                             {condition.MaxValue}đ
                           </span>
                         </p>
-                        <p>
-                          Giảm giá:{" "}
-                          <span
-                            className="text-[#4ca771] font-normal"
-                            id="percentage"
-                          >
-                            {condition.PercentDiscount}%
-                          </span>
-                        </p>
                       </div>
-                      <div className="col-span-4 grid grid-rows-3 gap-2">
+                      <div className="col-span-4 grid grid-rows-2 gap-2">
                         <input
                           type="number"
                           id="updateMin"
-                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] px-4 rounded-lg"
+                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] pl-4 rounded-lg"
                         />
                         <input
                           type="number"
                           id="updateMax"
-                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] px-4 rounded-lg"
-                        />
-                        <input
-                          type="number"
-                          id="updatePercentage"
-                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] px-4 rounded-lg"
+                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] pl-4 rounded-lg"
                         />
                       </div>
                       <div className="col-span-3 flex items-center justify-end">
@@ -323,7 +331,7 @@ const EditVoucher = () => {
           <div className="p-10 lg:col-span-4">
             <img
               className="w-auto rounded-xl h-auto object-cover"
-              src={data.Image}
+              src={img}
               alt="Car"
             />
           </div>
@@ -335,7 +343,7 @@ const EditVoucher = () => {
               onClick={handleSubmit}
               className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg flex items-center justify-center w-full"
             >
-              <FontAwesomeIcon icon={faEdit} /> Sửa
+              <FontAwesomeIcon icon={faEdit} className="mr-2" /> Sửa
             </button>
           </div>
           <div className="col-span-4">
@@ -343,7 +351,7 @@ const EditVoucher = () => {
               onClick={() => handleState(id)}
               className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
             >
-              <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
+              <FontAwesomeIcon icon={faXmark} className="mr-2" /> Hủy
             </button>
           </div>
           <div className="col-span-4"></div>

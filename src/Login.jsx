@@ -12,7 +12,7 @@ const Login = () => {
   const [Name, setName] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [Password, setPassword] = useState("");
+  const [PassWord, setPassword] = useState("");
   const [error, setError] = useState("");
   const URL = "https://servervoucher.vercel.app/api";
 
@@ -25,14 +25,14 @@ const Login = () => {
     setSuccess("");
     setIsLoading(true);
 
-    if (!Name || !Password) {
+    if (!Name || !PassWord) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post(`${URL}/signIn`, { Name, Password });
+      const response = await axios.post(`${URL}/signIn`, { Name, PassWord });
 
       if (response.status === 200) {
         const token = response.data.AccessTokken;
@@ -127,7 +127,7 @@ const Login = () => {
               <input
                 type="password"
                 className="w-full rounded-full text-lg py-2 px-4 bg-transparent outline-none border-b-4 border-[#2F4F4F] placeholder:text-[#2F4F4F] placeholder:font-"
-                value={Password}
+                value={PassWord}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
