@@ -122,10 +122,10 @@ const Login = () => {
             </div>
             <div className="rounded-3xl text-xl">
               <p className="px-4 pt-2 rounded-full font-semibold">
-                And your Password?
+                And your PassWord?
               </p>
               <input
-                type="password"
+                type="PassWord"
                 className="w-full rounded-full text-lg py-2 px-4 bg-transparent outline-none border-b-4 border-[#2F4F4F] placeholder:text-[#2F4F4F] placeholder:font-"
                 value={PassWord}
                 onChange={(e) => setPassword(e.target.value)}
@@ -134,7 +134,7 @@ const Login = () => {
               />
             </div>
             <p className="text-right mt-1 cursor-pointer hover:text-[#eaf9e7]">
-              Forgot your Password?
+              Forgot your PassWord?
             </p>
             <div className="grid grid-cols-12 my-4">
               <div className="col-span-5 flex items-center">

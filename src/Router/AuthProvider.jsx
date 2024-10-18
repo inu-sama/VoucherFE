@@ -42,9 +42,8 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
-          // localStorage.setItem("accessToken", token);
+          localStorage.setItem("accessToken", token);
           const userData = await response.json();
-          console.log("User data from API:", userData);
 
           if (response.ok) {
             setUser(userData);

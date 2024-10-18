@@ -10,14 +10,40 @@ import { Link, useNavigate } from "react-router-dom";
 const GetListVoucher = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [vouchers, setVouchers] = useState([]);
-  const [detailVoucher, setDetailVoucher] = useState(null);
+  const [note, setNote] = useState(null);
   const [PriceDiscount, setPriceDiscount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [orderPrice, setOrderPrice] = useState(100000);
-  // const URL = "http://localhost:3000/api";
+  const [orderPrice, setOrderPrice] = useState(500000);
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
+
+  const FetchNote = async () => {
+    try {
+      const response = await fetch(`${URL}/GetNote/OD123`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log("data note", data);
+      setNote(data);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    FetchNote();
+  }, []);
+
+  useEffect(() => {
+    if (note && note.CusID) {
+      console.log("cusID ", note.CusID);
+    }
+  }, [note]);
 
   const GetVoucher = async () => {
     try {
@@ -27,10 +53,9 @@ const GetListVoucher = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          //thay hết đống dữ liệu nhập vào này nha
-          CusID: "Thanh1",
-          Service_ID: "SVCTake A Breath", // <-- Thay thành Service_ID bạn muốn
-          Price: 450000, // <-- Giá nhập vào
+          CusID: note.CusID,
+          Service_ID: note.Service_ID,
+          Price: note.Price,
         }),
       });
 
@@ -50,7 +75,13 @@ const GetListVoucher = () => {
     }
   };
 
-  const setDiscount = async (theVoucher) => {
+  useEffect(() => {
+    if (note && note.CusID && note.Service_ID && note.Price) {
+      GetVoucher();
+    }
+  }, [note]);
+
+  const setDiscount = async (idVoucher) => {
     try {
       const response = await fetch(`${URL}/CalculateVoucher`, {
         method: "POST",
@@ -58,31 +89,24 @@ const GetListVoucher = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          //thay hết đống dữ liệu nhập vào này nha
-          _id: theVoucher._id,
-          Price: orderPrice,
+          _id: idVoucher,
+          Price: Number(orderPrice),
         }),
       });
 
-      const data = await response.json();
-
-      console.log("data", data);
-      if (Array.isArray(data)) {
-        setPriceDiscount(data);
-      } else {
-        setPriceDiscount(0);
+      if (!response.ok) {
+        throw new Error("Server error: " + response.statusText);
       }
 
-      setLoading(false);
+      const data = await response.json();
+
+      setPriceDiscount(data);
     } catch (error) {
+      console.error("Error:", error.message);
       setError(error.message);
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    GetVoucher();
-  }, []);
 
   const submitApplyVouhcer = async (voucherId) => {
     try {
@@ -145,9 +169,10 @@ const GetListVoucher = () => {
                 className="w-full bg-[#ffffff] rounded-xl p-4 cursor-pointer"
                 onClick={() => {
                   setSelectedVoucher(voucher);
-                  setPriceDiscount(
-                    orderPrice * (voucher.PercentDiscount / 100)
-                  );
+                  // setPriceDiscount(
+                  //   orderPrice * (voucher.PercentDiscount / 100)
+                  // );
+                  setDiscount(voucher._id);
                 }}
               >
                 <p className="text-xl font-bold text-[#b9732f] mb-4">
