@@ -11,9 +11,10 @@ const GetListVoucher = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [vouchers, setVouchers] = useState([]);
   const [detailVoucher, setDetailVoucher] = useState(null);
-  const [PriceDiscount, setPriceDiscount] = useState(null);
+  const [PriceDiscount, setPriceDiscount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [orderPrice, setOrderPrice] = useState(100000);
   // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
@@ -40,6 +41,36 @@ const GetListVoucher = () => {
         setVouchers(data);
       } else {
         setVouchers([]);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const setDiscount = async (theVoucher) => {
+    try {
+      const response = await fetch(`${URL}/CalculateVoucher`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          //thay hết đống dữ liệu nhập vào này nha
+          _id: theVoucher._id,
+          Price: orderPrice,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("data", data);
+      if (Array.isArray(data)) {
+        setPriceDiscount(data);
+      } else {
+        setPriceDiscount(0);
       }
 
       setLoading(false);
@@ -111,38 +142,32 @@ const GetListVoucher = () => {
             {vouchers.map((voucher) => (
               <div
                 key={voucher._id}
-                className="w-full bg-[#ffffff] rounded-xl p-4"
+                className="w-full bg-[#ffffff] rounded-xl p-4 cursor-pointer"
+                onClick={() => {
+                  setSelectedVoucher(voucher);
+                  setPriceDiscount(
+                    orderPrice * (voucher.PercentDiscount / 100)
+                  );
+                }}
               >
-                <div className="w-full grid grid-cols-12">
-                  <div className="w-full col-span-11">
-                    <p className="text-xl font-bold text-[#b9732f] mb-4">
-                      {voucher.Name}
-                    </p>
-                    <p className="text-lg text-[#437fc7]">
-                      Giảm <span className="font-bold">?%</span> trên tổng tiền
-                    </p>
-                    <p className="text-lg text-[#b9732f]">
-                      Có giá trị từ ngày{" "}
-                      <span className="text-[#437fc7]">
-                        {formatDate(voucher.ReleaseTime)}
-                      </span>{" "}
-                      đến{" "}
-                      <span className="text-[#437fc7]">
-                        {formatDate(voucher.ExpiredTime)}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="w-full flex justify-end items-center">
-                    <p
-                      className="bg-[#edf6ff] hover:bg-[#437fc7] font-bold p-4 rounded-lg text-[#437fc7] hover:text-[#ffffff] cursor-pointer"
-                      onClick={() => {
-                        setSelectedVoucher(voucher);
-                      }}
-                    >
-                      Select
-                    </p>
-                  </div>
-                </div>
+                <p className="text-xl font-bold text-[#b9732f] mb-4">
+                  {voucher.Name}
+                </p>
+                <p className="text-lg text-[#437fc7]">
+                  Giảm{" "}
+                  <span className="font-bold">{voucher.PercentDiscount}%</span>{" "}
+                  trên tổng tiền
+                </p>
+                <p className="text-lg text-[#b9732f]">
+                  Có giá trị từ ngày{" "}
+                  <span className="text-[#437fc7]">
+                    {formatDate(voucher.ReleaseTime)}
+                  </span>{" "}
+                  đến{" "}
+                  <span className="text-[#437fc7]">
+                    {formatDate(voucher.ExpiredTime)}
+                  </span>
+                </p>
               </div>
             ))}
           </div>
@@ -150,6 +175,7 @@ const GetListVoucher = () => {
             className="w-full text-center font-bold text-xl bg-[#b9732f] hover:bg-[#ffffff] text-[#edf6ff] hover:text-[#b9732f] p-3 mb-4 mt-10 rounded-xl cursor-pointer"
             onClick={() => {
               setSelectedVoucher(null);
+              setPriceDiscount(0);
             }}
           >
             Deselect voucher
@@ -167,14 +193,18 @@ const GetListVoucher = () => {
             <div className="w-full font-bold text-[#b9732f] py-2">
               Giá tiền:
             </div>
-            <div className="w-full text-end text-[#437fc7] py-2">123đ</div>
+            <div className="w-full text-end text-[#437fc7] py-2">
+              {orderPrice}đ
+            </div>
             <div className="w-full font-bold text-[#b9732f] py-2">Giảm:</div>
-            <div className="w-full text-end text-[#437fc7] py-2">123đ</div>
+            <div className="w-full text-end text-[#437fc7] py-2">
+              {PriceDiscount}đ
+            </div>
             <div className="w-full font-bold text-[#b9732f] py-2 text-xl">
               Tổng cộng:
             </div>
             <div className="w-full text-end text-[#437fc7] py-2 text-xl">
-              123đ
+              {orderPrice - PriceDiscount}đ
             </div>
           </div>
           <p className="w-full font-bold text-3xl text-[#437fc7] mb-4 mt-10">
@@ -201,7 +231,11 @@ const GetListVoucher = () => {
                     </span>
                   </p>
                   <p className="text-lg text-[#437fc7] mb-4">
-                    Giảm <span className="font-bold">?%</span> cho đơn hàng từ{" "}
+                    Giảm{" "}
+                    <span className="font-bold">
+                      {selectedVoucher.PercentDiscount}%
+                    </span>{" "}
+                    cho đơn hàng từ{" "}
                     <span className="font-bold">
                       {selectedVoucher.MinCondition}đ
                     </span>
@@ -222,7 +256,10 @@ const GetListVoucher = () => {
               Chưa chọn voucher!!!
             </p>
           )}
-          <p className="w-full text-center font-bold text-3xl bg-[#437fc7] hover:bg-[#ffffff] text-[#edf6ff] hover:text-[#437fc7] p-4 mb-4 mt-10 rounded-xl">
+          <p
+            id="applyBtn"
+            className="cursor-pointer w-full text-center font-bold text-3xl bg-[#437fc7] hover:bg-[#ffffff] text-[#edf6ff] hover:text-[#437fc7] p-4 mb-4 mt-10 rounded-xl"
+          >
             APPLY
           </p>
         </div>
