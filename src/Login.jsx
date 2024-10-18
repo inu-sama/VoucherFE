@@ -12,7 +12,7 @@ const Login = () => {
   const [Name, setName] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [Password, setPassword] = useState("");
+  const [PassWord, setPassWord] = useState("");
   const [error, setError] = useState("");
   const URL = "https://servervoucher.vercel.app/api";
 
@@ -25,14 +25,14 @@ const Login = () => {
     setSuccess("");
     setIsLoading(true);
 
-    if (!Name || !Password) {
+    if (!Name || !PassWord) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post(`${URL}/signIn`, { Name, Password });
+      const response = await axios.post(`${URL}/signIn`, { Name, PassWord });
 
       if (response.status === 200) {
         const token = response.data.AccessTokken;
@@ -122,19 +122,19 @@ const Login = () => {
             </div>
             <div className="rounded-3xl text-xl">
               <p className="px-4 pt-2 rounded-full font-semibold">
-                And your Password?
+                And your PassWord?
               </p>
               <input
-                type="password"
+                type="PassWord"
                 className="w-full rounded-full text-lg py-2 px-4 bg-transparent outline-none border-b-4 border-[#2F4F4F] placeholder:text-[#2F4F4F] placeholder:font-"
-                value={Password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                value={PassWord}
+                onChange={(e) => setPassWord(e.target.value)}
+                placeholder="PassWord"
                 required
               />
             </div>
             <p className="text-right mt-1 cursor-pointer hover:text-[#eaf9e7]">
-              Forgot your Password?
+              Forgot your PassWord?
             </p>
             <div className="grid grid-cols-12 my-4">
               <div className="col-span-5 flex items-center">
