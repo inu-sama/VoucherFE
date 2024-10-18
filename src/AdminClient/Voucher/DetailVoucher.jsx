@@ -215,13 +215,13 @@ const DetailVoucher = () => {
         <div className="grid grid-cols-12 gap-10 w-full justify-center mt-10">
           <div className="col-span-1"></div>
           <div className="col-span-5">
-            <button
-              onClick={() => handlestate(id)}
+            <Link
+              to={`/Admin/EditVoucher/${id}`}
               className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-5 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
-            </button>
+            </Link>
           </div>
           <div className="col-span-5 gap-10">
             <button
