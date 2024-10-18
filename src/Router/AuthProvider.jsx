@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkUserAuth = async () => {
-      console.log("Token sso:", token);
+      console.log("Token: ", token);
 
       if (token) {
         try {
