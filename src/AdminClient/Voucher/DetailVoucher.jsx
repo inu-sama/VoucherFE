@@ -8,28 +8,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const DetailVoucher = () => {
   const { id } = useParams();
   const [voucher, setVoucher] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
-  3;
 
-  const handleState = async (id) => {
+  const handlestate = async (id) => {
     try {
       const res = await fetch(`${URL}/updateState/${id}`, {
-        method: "POST",
+        method: "GET",
       });
       const voucher = await res.json();
       if (res.status === 400) {
         alert("Error: " + (voucher.message || "Failed to update state"));
       } else {
-        navigate(`/Admin/EditVoucher/${id}`);
+        alert("Update State Success");
+        navigate(`/Partner/ListVoucher/`);
       }
     } catch (error) {
       console.log(error);
@@ -214,22 +211,31 @@ const DetailVoucher = () => {
         </div>
         <div className="grid grid-cols-12 gap-10 w-full justify-center mt-10">
           <div className="col-span-1"></div>
-          <div className="col-span-5">
+          <div className="col-span-3">
             <Link
-              to={`/Admin/EditVoucher/${id}`}
+              to={`/Partner/EditVoucherPN/${id}`}
               className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-5 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
             </Link>
           </div>
-          <div className="col-span-5 gap-10">
+          <div className="col-span-3 gap-10">
             <button
               className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}
             >
               <FontAwesomeIcon icon={faTrash} />
               <span className="ml-2">Delete</span>
+            </button>
+          </div>
+          <div className="col-span-3 gap-10">
+            <button
+              className="bg-[#3bb0b0] hover:bg-[#eaf9e7] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
+              onClick={() => handlestate(id)}
+            >
+              <FontAwesomeIcon icon={faWrench} />
+              <span className="ml-2"> State</span>
             </button>
           </div>
           <div className="col-span-1"></div>

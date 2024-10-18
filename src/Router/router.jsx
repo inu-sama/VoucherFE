@@ -9,9 +9,15 @@ import ListVoucher from "../AdminClient/Voucher/ListVoucher.jsx";
 import EditVoucher from "../AdminClient/Voucher/EditVoucher.jsx";
 import DetailVoucher from "../AdminClient/Voucher/DetailVoucher.jsx";
 import Service_Partner from "../AdminClient/Serivce_Partner/Service_Partner.jsx";
-import GetListVoucher from "../Customer/getListVoucher.jsx";
+import GetListVoucher from "../Customer/GetListVoucher.jsx";
+import ListVoucherPN from "../Partner/ListVoucher.partner.jsx";
+import DetailVoucherPN from "../Partner/DetailVoucher.partner.jsx";
+import CreateVoucherPN from "../Partner/CreateVoucher.partner.jsx";
+import EditVoucherPN from "../Partner/EditVoucher.partner.jsx";
 import Login from "../Login.jsx";
 import MainHomeAdmin from "../AdminClient/MainHomeAdmin.jsx";
+import MainParter from "../Partner/MainPartner.jsx";
+import CollectPoint from "../Customer/CollectPoint/CollectPoint.jsx";
 
 const AuthLayout = () => {
   return (
@@ -64,12 +70,12 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <ProtectedRoute role="user">
-            <App />
+            <CollectPoint />
           </ProtectedRoute>
         ),
         children: [
           {
-            path: "/Home",
+            path: "/CollectPoint",
             element: <GetListVoucher />,
           },
         ],
@@ -78,13 +84,25 @@ const router = createBrowserRouter([
         path: "/Partner",
         element: (
           <ProtectedRoute role="partner">
-            <GetListVoucher />
+            <MainParter />
           </ProtectedRoute>
         ),
         children: [
           {
-            path: "aaa",
-            element: <GetListVoucher />,
+            path: "ListVoucherPN",
+            element: <ListVoucherPN />,
+          },
+          {
+            path: "CreateVoucherPN",
+            element: <CreateVoucherPN />,
+          },
+          {
+            path: "EditVoucherPN/:id",
+            element: <EditVoucherPN />,
+          },
+          {
+            path: "DetailVoucherPN/:id",
+            element: <DetailVoucherPN />,
           },
         ],
       },

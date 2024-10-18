@@ -13,25 +13,9 @@ const EditVoucher = () => {
     value: Voucher.Description,
   });
   const [img, setImg] = useState(null);
-  // const URL = "http://localhost:3000/api";
   const URL = "https://servervoucher.vercel.app/api";
   const navigate = useNavigate();
 
-  const handleState = async (id) => {
-    try {
-      const res = await fetch(`${URL}/updateState/${id}`, {
-        method: "POST",
-      });
-      const data = await res.json();
-      if (res.status === 400) {
-        alert("Error: " + (data?.message || "Failed to update state"));
-      } else {
-        navigate(`/Admin/Detailvoucher/${id}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const date = (a) => {
     return new Date(a).toLocaleDateString("en-CA", {
       day: "2-digit",
@@ -347,12 +331,12 @@ const EditVoucher = () => {
             </button>
           </div>
           <div className="col-span-4">
-            <button
-              onClick={() => handleState(id)}
+            <Link
+              to={`/Admin/Detailvoucher/${id}`}
               className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faXmark} className="mr-2" /> Hủy
-            </button>
+            </Link>
           </div>
           <div className="col-span-4"></div>
         </div>

@@ -52,7 +52,7 @@ const Partner = () => {
               {item._id}
             </div>
             <div className="col-span-5 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center">
-              {item.Name}
+              {item.Mail}
             </div>
             <div className="col-span-2 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-r-xl">
               <FontAwesomeIcon icon={faCircleInfo} />

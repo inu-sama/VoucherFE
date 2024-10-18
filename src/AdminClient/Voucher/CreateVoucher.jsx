@@ -6,6 +6,7 @@ const CreateVoucher = () => {
   const URL = "https://servervoucher.vercel.app/api";
 
   const [Voucher, setVoucher] = useState({
+    _id: "",
     Name: "",
     ReleaseTime: "",
     ExpiredTime: "",
@@ -79,6 +80,7 @@ const CreateVoucher = () => {
     e.preventDefault();
 
     if (
+      !Voucher._id ||
       !Voucher.Name ||
       !Voucher.ExpiredTime ||
       !Voucher.ReleaseTime ||
@@ -135,7 +137,7 @@ const CreateVoucher = () => {
               </div>
               <div className="col-span-12">
                 <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="text"
                   placeholder="Nhập mã voucher"
                   value={Voucher._id}
@@ -152,7 +154,7 @@ const CreateVoucher = () => {
               </div>
               <div className="col-span-12">
                 <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="text"
                   placeholder="Nhập tên voucher"
                   value={Voucher.Name}
@@ -169,7 +171,7 @@ const CreateVoucher = () => {
             </div>
             <div className="col-span-12">
               <input
-                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                 type="text"
                 placeholder="Nhập mô tả"
                 value={Voucher.Description}
@@ -186,7 +188,7 @@ const CreateVoucher = () => {
               </div>
               <div className="col-span-12">
                 <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="date"
                   value={Voucher.ReleaseTime}
                   onChange={(e) =>
@@ -201,7 +203,7 @@ const CreateVoucher = () => {
               </div>
               <div className="col-span-12">
                 <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="date"
                   value={Voucher.ExpiredTime}
                   onChange={(e) =>
@@ -221,7 +223,7 @@ const CreateVoucher = () => {
               <div className="col-span-12">
                 <input
                   placeholder="Nhập phần trăm giảm giá"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
                   name="PercentDiscount"
                   value={Voucher.PercentDiscount}
@@ -238,7 +240,7 @@ const CreateVoucher = () => {
               <div className="col-span-12">
                 <input
                   placeholder="Nhập số lượng"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
                   value={Voucher.RemainQuantity}
                   onChange={(e) =>
@@ -256,7 +258,7 @@ const CreateVoucher = () => {
             <div className="col-span-12">
               <input
                 placeholder="Nhập link ảnh"
-                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                 type="text"
                 value={Voucher.Image}
                 onChange={(e) =>
@@ -270,13 +272,10 @@ const CreateVoucher = () => {
               <div className="col-span-4">
                 <label className="font-bold line-clamp-1">Min Value</label>
               </div>
-              <div className="col-span-8 text-right pr-4 line-clamp-1 text-[#2F4F4F]">
-                *bỏ trống nếu áp dụng mọi giá
-              </div>
               <div className="col-span-12">
                 <input
                   placeholder="Nhập giá trị đơn hàng tối thiểu"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
                   name="MinValue"
                   value={condition.MinValue}
@@ -288,13 +287,10 @@ const CreateVoucher = () => {
               <div className="col-span-4">
                 <label className="font-bold line-clamp-1">Max Discount</label>
               </div>
-              <div className="col-span-8 text-right pr-4 line-clamp-1 text-[#2F4F4F]">
-                *bỏ trống nếu áp dụng mọi giá
-              </div>
               <div className="col-span-12">
                 <input
                   placeholder="Nhập giá trị tối đa được giảm"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
                   name="MaxValue"
                   value={condition.MaxValue}

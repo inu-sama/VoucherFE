@@ -5,7 +5,7 @@ import Nav from "./Header_Footer/Nav.jsx";
 function App() {
   return (
     <div>
-      <p>user</p>
+      <Outlet />
     </div>
   );
 }
