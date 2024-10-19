@@ -19,18 +19,24 @@ const AuthProvider = ({ children }) => {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
   }
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  }
+
   const token =
     searchParams.get("Token") ||
     localStorage.getItem("accessToken") ||
-    document.cookie.split("=")[1];
+    getCookie("Token");
+
   if (token) {
     setCookie("Token", token, 1);
   }
 
   useEffect(() => {
     const checkUserAuth = async () => {
-      console.log("Token: ", token);
-
       if (token) {
         try {
           const response = await fetch(
@@ -42,19 +48,19 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
-          localStorage.setItem("accessToken", token);
           const userData = await response.json();
 
           if (response.ok) {
             setUser(userData);
             setIsLoading(false);
+            localStorage.setItem("accessToken", token);
 
             if (userData.role === "Admin") {
               navigate("/Admin");
             } else if (userData.role === "user") {
               navigate("/");
             } else if (userData.role === "partner") {
-              navigate("Partner");
+              navigate("/Partner");
             } else {
               navigate("/Login");
             }
@@ -63,7 +69,8 @@ const AuthProvider = ({ children }) => {
             navigate("/Login");
           }
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+          setIsLoading(false);
           navigate("/Login");
         }
       } else {
@@ -73,7 +80,7 @@ const AuthProvider = ({ children }) => {
     };
 
     checkUserAuth();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const login = (userData) => {
     setUser(userData);

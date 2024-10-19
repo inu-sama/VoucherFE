@@ -177,10 +177,10 @@ const CollectPoint = () => {
   }
 
   return (
-    <div className="w-ful bg-[#EAF8E6]">
+    <div className="w-full mt-20 bg-[#EAF8E6]">
       <HeaderCus />
-      <div className="w-full mt-4 ">
-        <h1 className="w-full text-4xl text-[#4ca771] text-center font-bold">
+      <div className="w-full ">
+        <h1 className="w-full pt-8 text-4xl text-[#4ca771] text-center font-bold">
           WELCOME TO COLLECT POINT AT VOUCHER4U
         </h1>
         <div className="flex justify-center mt-9">
@@ -193,7 +193,9 @@ const CollectPoint = () => {
               className="w-14 h-14 rounded-full"
             />
             <div className="mt-1 mx-2">
-              <p className="text-[#4ca771]"> {user?.Name}</p>
+              <p className="text-[#4ca771]">
+                {user?.lastName} {user?.firstName}
+              </p>
               <p className="text-[#2F4F4F]"> {user?.email}</p>
             </div>
           </div>

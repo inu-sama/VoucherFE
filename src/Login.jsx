@@ -148,6 +148,7 @@ const Login = () => {
             <div className="flex items-center text-3xl justify-center">
               <button
                 onClick={handleLoginSSO}
+                type="button"
                 className="w-fit grid grid-row-2 hover:text-[#eaf9e7] cursor-pointer"
               >
                 <div className="flex justify-center">
