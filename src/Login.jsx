@@ -6,7 +6,7 @@ import { SSO } from "@htilssu/wowo";
 import axios from "axios";
 
 const Login = () => {
-  const sso = new SSO("cm26271bl0000jpklbt5532p5");
+  const sso = new SSO("V4U");
   const navigate = useNavigate();
 
   const [Name, setName] = useState("");
