@@ -1,66 +1,132 @@
-import { memo, useState, useEffect } from "react";
-import { Line, Pie } from "react-chartjs-2";
-import { Chart } from "chart.js/auto";
+import { memo, useState, useEffect } from 'react';
+import { Pie, Line } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
 const ChartVoucher = () => {
-  const [selectedMonth, setSelectedMonth] = useState(""); // Lưu tháng được chọn
-  const [selectedYear, setSelectedYear] = useState(""); // Lưu năm được chọn
-  const [history, setHistory] = useState(null);
+  const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
+  const [service, setService] = useState([]);
+  const [year, setYear] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredData, setFilteredData] = useState([]); // Dữ liệu đã lọc
-
-  // Hàm fetch dữ liệu từ API
-  const fetchHistory = async () => {
-    try {
-      const res = await fetch(
-        "https://server-voucher.vercel.app/api/Statistical_Voucher"
-      );
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const data = await res.json();
-      setHistory(data);
-      console.log(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedService, setSelectedService] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [noDataFound, setNoDataFound] = useState(false);
+  const [voucherStatistics, setVoucherStatistics] = useState({});
+  const [noFilterData, setNoFilterData] = useState(false);
 
   useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch("https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service");
+        if (!res.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await res.json();
+        console.log(data);
+        setHistory(data);
+
+        const serviceIds = data.flatMap(item => item.haveVouchers.map(voucher => voucher.Service_ID));
+        setService([...new Set(serviceIds)]);
+
+        const uniqueYears = [...new Set(data.map(item => new Date(item.Date).getFullYear()))];
+        setYear(uniqueYears);
+
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchHistory();
   }, []);
 
-  // Xử lý sự kiện thay đổi tháng
-  const handleMonthChange = (e) => {
-    setSelectedMonth(e.target.value);
-  };
+  const filterData = () => {
+    if (history.length === 0) return;
 
-  // Xử lý sự kiện thay đổi năm
-  const handleYearChange = (e) => {
-    setSelectedYear(e.target.value);
-  };
-
-  // Lọc dữ liệu dựa trên tháng và năm
-  const filterDataByMonthAndYear = () => {
-    if (!selectedMonth || !selectedYear || !history.length) return;
-
-    const filtered = history.filter((item) => {
+    const filtered = history.filter(item => {
       const voucherDate = new Date(item.Date);
-      return (
-        voucherDate.getMonth() + 1 === parseInt(selectedMonth) && // Lọc theo tháng
-        voucherDate.getFullYear() === parseInt(selectedYear) // Lọc theo năm
+      const matchesMonthYear = (
+        (!selectedMonth || voucherDate.getMonth() + 1 === parseInt(selectedMonth)) &&
+        (!selectedYear || voucherDate.getFullYear() === parseInt(selectedYear))
       );
+
+      const matchesService = !selectedService || item.haveVouchers.some(voucher => voucher.Service_ID === selectedService);
+
+      return matchesMonthYear && matchesService;
     });
+
     setFilteredData(filtered);
+    updateVoucherStatistics(filtered);
+    setNoDataFound(filtered.length === 0);
+    setNoFilterData(filtered.length === 0 && !selectedMonth && !selectedYear && !selectedService);
   };
 
-  // Khi người dùng nhấn nút tìm kiếm
-  const handleSearch = () => {
-    filterDataByMonthAndYear(); // Lọc dữ liệu dựa vào tháng và năm
+  const updateVoucherStatistics = (filteredData) => {
+    const voucherStats = {};
+
+    filteredData.forEach(item => {
+      const { Voucher_ID, TotalDiscount } = item;
+      const validTotalDiscount = Number(TotalDiscount) || 0;
+
+      if (!voucherStats[Voucher_ID]) {
+        voucherStats[Voucher_ID] = {
+          totalDiscount: validTotalDiscount,
+          totalUsed: 1,
+          partnerID: item.Partner_ID,
+          serviceIDs: item.haveVouchers.map(v => v.Service_ID).join(', '),
+          date: new Date(item.Date).toLocaleDateString(),
+        };
+      } else {
+        voucherStats[Voucher_ID].totalDiscount += validTotalDiscount;
+        voucherStats[Voucher_ID].totalUsed += 1;
+      }
+    });
+
+    setVoucherStatistics(voucherStats);
   };
+
+  const pieData = {
+    labels: Object.keys(voucherStatistics),
+    datasets: [{
+      label: 'Total Used',
+      data: Object.values(voucherStatistics).map(voucher => voucher.totalUsed),
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.6)',
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(153, 102, 255, 0.6)',
+        'rgba(255, 159, 64, 0.6)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const lineData = {
+    labels: Object.keys(voucherStatistics),
+    datasets: [{
+      label: 'Total Discount',
+      data: Object.values(voucherStatistics).map(voucher => voucher.totalDiscount),
+      fill: false,
+      borderColor: 'rgba(75, 192, 192, 1)',
+      tension: 0.1
+    }]
+  };
+
+  const months = Array.from({ length: 12 }, (_, index) => index + 1);
 
   if (isLoading) {
     return (
@@ -78,121 +144,78 @@ const ChartVoucher = () => {
     );
   }
 
-  if (!history || history.length === 0) return <div>No data available.</div>;
-
-  // Chuẩn bị dữ liệu cho biểu đồ
-  const voucherTotalDiscount = {}; // Tổng tiền giảm giá của mỗi voucher
-  const pieChartData = {
-    labels: [], // Nhãn cho Pie chart
-    datasets: [
-      {
-        label: "Tổng tiền giảm giá của Voucher",
-        data: [], // Dữ liệu cho Pie chart (tổng tiền giảm giá)
-        backgroundColor: [
-          "rgba(75,192,192,0.4)",
-          "rgba(255,99,132,0.4)",
-          "rgba(255,206,86,0.4)",
-          "rgba(54,162,235,0.4)",
-          "rgba(153,102,255,0.4)",
-          "rgba(255,159,64,0.4)",
-        ],
-        borderColor: [
-          "rgba(75,192,192,1)",
-          "rgba(255,99,132,1)",
-          "rgba(255,206,86,1)",
-          "rgba(54,162,235,1)",
-          "rgba(153,102,255,1)",
-          "rgba(255,159,64,1)",
-        ],
-        borderWidth: 1,
-        hoverBackgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#9966FF",
-          "#FF9F40",
-        ],
-      },
-    ],
-  };
-
-  filteredData.forEach((item) => {
-    const { Voucher_ID, TotalDiscount } = item;
-
-    if (voucherTotalDiscount[Voucher_ID]) {
-      voucherTotalDiscount[Voucher_ID] += TotalDiscount; // Tính tổng tiền giảm giá
-    } else {
-      voucherTotalDiscount[Voucher_ID] = TotalDiscount; // Khởi tạo tổng tiền giảm giá
-    }
-  });
-
-  // Cập nhật dữ liệu cho Pie chart
-  Object.keys(voucherTotalDiscount).forEach((Voucher_ID) => {
-    pieChartData.labels.push(Voucher_ID);
-    pieChartData.datasets[0].data.push(voucherTotalDiscount[Voucher_ID]);
-  });
-
-  const lineChartData = {
-    labels: pieChartData.labels, // Dùng chung nhãn với Pie chart
-    datasets: [
-      {
-        label: "Tổng tiền giảm giá của Voucher",
-        data: pieChartData.datasets[0].data, // Dữ liệu dùng chung (tổng tiền giảm giá)
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true, // Bắt đầu trục Y từ 0 cho Line chart
-      },
-    },
-    maintainAspectRatio: false, // Vô hiệu hóa tỷ lệ cố định, cho phép thay đổi kích thước
-  };
-
-  // Tùy chọn cho Pie chart để tắt đường gạch
-  const pieChartOptions = {
-    plugins: {
-      legend: {
-        display: true,
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    maintainAspectRatio: false, // Vô hiệu hóa tỷ lệ cố định
-  };
-
   return (
-    <div className="xl:w-full h-[300px]">
-      {" "}
-      {/* Điều chỉnh kích thước container */}
-      <select value={selectedMonth} onChange={handleMonthChange}>
-        <option value="">Chọn tháng muốn thống kê</option>
-        {[...Array(12)].map((_, i) => (
-          <option key={i} value={i + 1}>
-            Tháng {i + 1}
-          </option>
+    <div>
+      <label> Service: </label>
+      <select value={selectedService} onChange={e => setSelectedService(e.target.value)}>
+        <option value="">All Services</option>
+        {service.map((serviceId, index) => (
+          <option key={index} value={serviceId}>{serviceId}</option>
         ))}
       </select>
-      <select value={selectedYear} onChange={handleYearChange}>
-        <option value="">Chọn năm</option>
-        {[2021, 2022, 2023, 2024].map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
+      <label> Month: </label>
+      <select value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}>
+        <option value="">Select Month</option>
+        {months.map(month => (
+          <option key={month} value={month}>{month}</option>
         ))}
       </select>
-      <button onClick={handleSearch} disabled={!selectedMonth || !selectedYear}>
-        Tìm kiếm
-      </button>
-      <Line data={lineChartData} options={chartOptions} />
-      <Pie data={pieChartData} options={pieChartOptions} />
+      <label>Year:</label>
+      <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
+        <option value="">Select Year</option>
+        {year.map((year, index) => (
+          <option key={index} value={year}>{year}</option>
+        ))}
+      </select>
+
+      <button onClick={filterData}>Sort</button>
+
+      {noDataFound && !noFilterData && <p>Không tìm thấy dữ liệu vui lòng</p>}
+      
+
+      {filteredData.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Voucher ID</th>
+              <th>Partner ID</th>
+              <th>Service IDs</th>
+              <th>Total Used</th>
+              <th>Total Discount</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(voucherStatistics).map((voucherId) => (
+              <tr key={voucherId}>
+                <td>{voucherId}</td>
+                <td>{voucherStatistics[voucherId].partnerID}</td>
+                <td>{voucherStatistics[voucherId].serviceIDs}</td>
+                <td>{voucherStatistics[voucherId].totalUsed}</td>
+                <td>{voucherStatistics[voucherId].totalDiscount}</td>
+                <td>{voucherStatistics[voucherId].date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* Chỉ hiển thị biểu đồ nếu có dữ liệu được lọc */}
+      {filteredData.length > 0 && !noDataFound && !noFilterData && (
+        <>
+          {/* Pie Chart - Voucher ID vs Total Used */}
+          <div style={{ width: '400px', margin: '50px auto' }}>
+            <h3>Voucher ID vs Total Used</h3>
+            <Pie data={pieData} />
+          </div>
+
+          {/* Line Chart - Voucher ID vs Total Discount */}
+          <div style={{ width: '600px', margin: '50px auto' }}>
+            <h3>Voucher ID vs Total Discount</h3>
+            <Line data={lineData} />
+          </div>
+        </>
+      )}
     </div>
   );
 };
