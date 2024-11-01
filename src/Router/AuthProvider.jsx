@@ -25,57 +25,49 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
+          const userData = await response.json();
 
           if (response.ok) {
-            const userData = await response.json();
             setUser(userData);
+            setIsLoading(false);
             localStorage.setItem("Token", token);
             localStorage.setItem("callback", callback);
-            navigateBasedOnRole(userData.role);
+
+            if (userData.role === "Admin") {
+              navigate("/Admin");
+            } else if (userData.role === "user") {
+              navigate("/");
+            } else if (userData.role === "partner") {
+              navigate("/Partner");
+            } else {
+              navigate("/Login");
+            }
           } else {
+            setIsLoading(false);
             navigate("/Login");
           }
         } catch (error) {
           console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-          navigate("/Login");
-        } finally {
           setIsLoading(false);
+          navigate("/Login");
         }
       } else {
-        navigate("/Login");
         setIsLoading(false);
+        navigate("/Login");
       }
     };
 
     checkUserAuth();
-  }, [navigate, token, callback]);
-
-  const navigateBasedOnRole = (role) => {
-    switch (role) {
-      case "Admin":
-        navigate("/Admin");
-        break;
-      case "user":
-        navigate("/");
-        break;
-      case "partner":
-        navigate("/Partner");
-        break;
-      default:
-        navigate("/Login");
-    }
-  };
+  }, [navigate, token]);
 
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem("Token", userData.token);
-    navigateBasedOnRole(userData.role);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("Token");
-    localStorage.removeItem("callback");
     navigate("/Login");
   };
 
