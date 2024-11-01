@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { faAnglesUp, faEarthAsia } from "@fortawesome/free-solid-svg-icons";
+import { faEarthAsia } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { SSO } from "@htilssu/wowo";
@@ -9,58 +9,38 @@ const Login = () => {
   const sso = new SSO("V4U");
   const navigate = useNavigate();
 
-  const [Name, setName] = useState("");
+  const [name, setName] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [PassWord, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const URL = "https://server-voucher.vercel.app/api";
 
   function handleLoginSSO() {
-    sso.redirectToLogin("https://voucher4u-fe.vercel.app");
+    sso.redirectToLogin("http://localhost:2106");
   }
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setIsLoading(true);
 
-    if (!Name || !PassWord) {
+    if (!name || !password) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post(`${URL}/signIn`, { Name, PassWord });
+      const response = await axios.post(`${URL}/signIn`, {
+        Name: name,
+        PassWord: password,
+      });
 
       if (response.status === 200) {
         const token = response.data.AccessTokken;
-
-        const res = await fetch(`${URL}/readtoken`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (res.ok) {
-          const userData = await res.json();
-          const userRole = userData.role;
-
-          localStorage.setItem("Token", token);
-          localStorage.setItem("role", userRole);
-
-          setSuccess("Đăng nhập thành công!");
-          setIsLoading(false);
-
-          navigateBasedOnRole(userRole);
-        } else {
-          setError(
-            "Token không hợp lệ hoặc không thể đọc thông tin người dùng."
-          );
-          setIsLoading(false);
-        }
+        window.location.href = `http://localhost:2106/?Token=${token}`;
       } else {
         throw new Error("Đăng nhập không thành công.");
       }
@@ -74,22 +54,6 @@ const Login = () => {
       } else {
         setError("Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
       }
-    }
-  };
-
-  const navigateBasedOnRole = (role) => {
-    switch (role) {
-      case "Admin":
-        navigate("/Admin");
-        break;
-      case "user":
-        navigate("/");
-        break;
-      case "partner":
-        navigate("/Partner");
-        break;
-      default:
-        navigate("/Login");
     }
   };
 
@@ -111,7 +75,7 @@ const Login = () => {
               <input
                 type="text"
                 className="w-full rounded-full text-lg py-2 px-4 bg-transparent outline-none border-b-4 border-[#2F4F4F] placeholder:text-[#2F4F4F]"
-                value={Name}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Name"
                 required
@@ -119,19 +83,19 @@ const Login = () => {
             </div>
             <div className="rounded-3xl text-xl">
               <p className="px-4 pt-2 rounded-full font-semibold">
-                And your PassWord?
+                And your Password?
               </p>
               <input
-                type="PassWord"
-                className="w-full rounded-full text-lg py-2 px-4 bg-transparent outline-none border-b-4 border-[#2F4F4F] placeholder:text-[#2F4F4F] placeholder:font-"
-                value={PassWord}
+                type="password"
+                className="w-full rounded-full text-lg py-2 px-4 bg-transparent outline-none border-b-4 border-[#2F4F4F] placeholder:text-[#2F4F4F]"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
               />
             </div>
             <p className="text-right mt-1 cursor-pointer hover:text-[#eaf9e7]">
-              Forgot your PassWord?
+              Forgot your Password?
             </p>
             <div className="grid grid-cols-12 my-4">
               <div className="col-span-5 flex items-center">

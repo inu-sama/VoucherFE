@@ -9,8 +9,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const token =
-    searchParams.get("Token") || localStorage.getItem("accessToken");
+  const token = searchParams.get("Token") || localStorage.getItem("Token");
 
   useEffect(() => {
     const checkUserAuth = async () => {
@@ -30,7 +29,7 @@ const AuthProvider = ({ children }) => {
           if (response.ok) {
             setUser(userData);
             setIsLoading(false);
-            localStorage.setItem("accessToken", token);
+            localStorage.setItem("Token", token);
 
             if (userData.role === "Admin") {
               navigate("/Admin");
@@ -61,12 +60,12 @@ const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("accessToken", userData.token);
+    localStorage.setItem("Token", userData.token);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("Token");
     navigate("/Login");
   };
 
