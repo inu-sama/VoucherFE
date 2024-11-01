@@ -17,7 +17,7 @@ const DetailVoucher = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const URL = "https://servervoucher.vercel.app/api";
+  const URL = "http://34.204.80.177:3000/api";
   3;
 
   const handlestate = async (id) => {

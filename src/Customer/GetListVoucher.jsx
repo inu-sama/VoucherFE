@@ -17,7 +17,7 @@ const GetListVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [orderPrice, setOrderPrice] = useState(500000);
-  const URL = "https://servervoucher.vercel.app/api";
+  const URL = "http://34.204.80.177:3000/api";
   const navigate = useNavigate();
 
   const FetchNote = async () => {

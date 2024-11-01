@@ -12,7 +12,7 @@ const EditVoucher = () => {
   const [description, setDescription] = useState({
     value: Voucher.Description,
   });
-  const URL = "https://servervoucher.vercel.app/api";
+  const URL = "http://34.204.80.177:3000/api";
   const navigate = useNavigate();
 
   const handleState = async (id) => {
