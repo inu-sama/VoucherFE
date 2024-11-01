@@ -17,7 +17,7 @@ const Login = () => {
   const URL = "http://34.204.80.177:3000/api";
 
   function handleLoginSSO() {
-    sso.redirectToLogin("https://voucher-fe-liard.vercel.app/");
+    sso.redirectToLogin("https://voucher-fe-test-seven.vercel.app/");
   }
   const handleLogin = async (e) => {
     e.preventDefault();
