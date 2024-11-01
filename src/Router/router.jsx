@@ -68,7 +68,7 @@ const router = createBrowserRouter([
           {
             path: "ChartVoucher",
             element: <ChartVoucher />,
-          }
+          },
         ],
       },
       {

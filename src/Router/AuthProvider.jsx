@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
   const [searchParams] = useSearchParams();
 
   const token = searchParams.get("Token") || localStorage.getItem("Token");
+  const callback = searchParams.get("URLCallBack");
 
   useEffect(() => {
     const checkUserAuth = async () => {
@@ -30,6 +31,7 @@ const AuthProvider = ({ children }) => {
             setUser(userData);
             setIsLoading(false);
             localStorage.setItem("Token", token);
+            localStorage.setItem("callback", callback);
 
             if (userData.role === "Admin") {
               navigate("/Admin");
