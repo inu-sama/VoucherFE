@@ -11,7 +11,7 @@ const CreateVoucher = () => {
     ExpiredTime: "",
     Description: "",
     Image: "",
-    RemainQuantity: 0,
+    RemainQuantity: "",
     MinValue: 0,
     MaxValue: 0,
     PercentDiscount: 0,
