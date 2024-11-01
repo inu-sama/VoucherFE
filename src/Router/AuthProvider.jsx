@@ -14,45 +14,50 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkUserAuth = async () => {
-      if (token) {
-        try {
-          const response = await fetch(
-            "https://server-voucher.vercel.app/api/readtoken",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const userData = await response.json();
+      setIsLoading(true); // Đặt lại trạng thái loading khi gọi hàm
 
-          if (response.ok) {
-            setUser(userData);
-            setIsLoading(false);
-            localStorage.setItem("accessToken", token);
-
-            if (userData.role === "Admin") {
-              navigate("/Admin");
-            } else if (userData.role === "user") {
-              navigate("/");
-            } else if (userData.role === "partner") {
-              navigate("/Partner");
-            } else {
-              navigate("/Login");
-            }
-          } else {
-            setIsLoading(false);
-            navigate("/Login");
-          }
-        } catch (error) {
-          console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-          setIsLoading(false);
-          navigate("/Login");
-        }
-      } else {
+      if (!token) {
         setIsLoading(false);
+        return navigate("/Login");
+      }
+
+      try {
+        const response = await fetch(
+          "https://server-voucher.vercel.app/api/readtoken",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch user data");
+
+        const userData = await response.json();
+        setUser(userData);
+        localStorage.setItem("accessToken", token);
+
+        // Điều hướng dựa trên vai trò
+        switch (userData.role) {
+          case "Admin":
+            navigate("/Admin");
+            break;
+          case "user":
+            navigate("/");
+            break;
+          case "partner":
+            navigate("/Partner");
+            break;
+          default:
+            navigate("/Login");
+            break;
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu người dùng:", error);
         navigate("/Login");
+      } finally {
+        setIsLoading(false); // Đảm bảo luôn đặt trạng thái loading về false
       }
     };
 
