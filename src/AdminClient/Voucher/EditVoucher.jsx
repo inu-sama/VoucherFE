@@ -13,7 +13,7 @@ const EditVoucher = () => {
     value: Voucher.Description,
   });
   const [img, setImg] = useState(null);
-  const URL = "http://34.204.80.177:3000/api";
+  const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
   const date = (a) => {

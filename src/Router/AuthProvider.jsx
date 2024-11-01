@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await fetch(
-            "http://34.204.80.177:3000/api/readtoken",
+            "https://server-voucher.vercel.app/api/readtoken",
             {
               method: "GET",
               headers: {
