@@ -9,7 +9,7 @@ import ListVoucher from "../AdminClient/Voucher/ListVoucher.jsx";
 import EditVoucher from "../AdminClient/Voucher/EditVoucher.jsx";
 import DetailVoucher from "../AdminClient/Voucher/DetailVoucher.jsx";
 import Service_Partner from "../AdminClient/Serivce_Partner/Service_Partner.jsx";
-import GetListVoucher from "../Customer/getListVoucher.jsx";
+import GetListVoucher from "../Customer/GetListVoucher.jsx";
 import ListVoucherPN from "../Partner/ListVoucher.partner.jsx";
 import DetailVoucherPN from "../Partner/DetailVoucher.partner.jsx";
 import CreateVoucherPN from "../Partner/CreateVoucher.partner.jsx";
