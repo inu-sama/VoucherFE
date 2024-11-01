@@ -17,11 +17,20 @@ const ChartVoucher = () => {
   const [noDataFound, setNoDataFound] = useState(false);
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
+  const [colors, setColors] = useState([]);
+
+  const generateRandomColor = () => {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch("https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service");
+        const res = await fetch("http://54.173.73.228:3000/api/Statistical_VoucherFindPartner_Service");
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -143,6 +152,8 @@ const ChartVoucher = () => {
       </div>
     );
   }
+
+  
 
   return (
     <div>

@@ -18,6 +18,7 @@ import Login from "../Login.jsx";
 import MainHomeAdmin from "../AdminClient/MainHomeAdmin.jsx";
 import MainPartner from "../Partner/MainPartner.jsx";
 import CollectPoint from "../Customer/CollectPoint/CollectPoint.jsx";
+import ChartVoucher from "../AdminClient/DashBoard/ChartVoucher.jsx";
 
 const AuthLayout = () => {
   return (
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
             path: "ServicePartner",
             element: <Service_Partner />,
           },
+          {
+            path: "ChartVoucher",
+            element: <ChartVoucher />,
+          }
         ],
       },
       {
