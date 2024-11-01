@@ -1,8 +1,27 @@
-import { memo, useState, useEffect } from 'react';
-import { Pie, Line } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title } from 'chart.js';
+import { memo, useState, useEffect } from "react";
+import { Pie, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+} from "chart.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title
+);
 
 const ChartVoucher = () => {
   const [history, setHistory] = useState([]);
@@ -10,9 +29,9 @@ const ChartVoucher = () => {
   const [service, setService] = useState([]);
   const [year, setYear] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedService, setSelectedService] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedService, setSelectedService] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [noDataFound, setNoDataFound] = useState(false);
   const [voucherStatistics, setVoucherStatistics] = useState({});
@@ -24,13 +43,17 @@ const ChartVoucher = () => {
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     return `rgb(${r}, ${g}, ${b})`;
-  }
-
+  };
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch("http://54.173.73.228:3000/api/Statistical_VoucherFindPartner_Service");
+        const res = await fetch(
+          "http://18.209.35.247:3000/api/Statistical_VoucherFindPartner_Service"
+        );
+        // const res = await fetch(
+        //   "https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
+        // );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -38,12 +61,15 @@ const ChartVoucher = () => {
         console.log(data);
         setHistory(data);
 
-        const serviceIds = data.flatMap(item => item.haveVouchers.map(voucher => voucher.Service_ID));
+        const serviceIds = data.flatMap((item) =>
+          item.haveVouchers.map((voucher) => voucher.Service_ID)
+        );
         setService([...new Set(serviceIds)]);
 
-        const uniqueYears = [...new Set(data.map(item => new Date(item.Date).getFullYear()))];
+        const uniqueYears = [
+          ...new Set(data.map((item) => new Date(item.Date).getFullYear())),
+        ];
         setYear(uniqueYears);
-
       } catch (error) {
         setError(error.message);
       } finally {
@@ -57,14 +83,18 @@ const ChartVoucher = () => {
   const filterData = () => {
     if (history.length === 0) return;
 
-    const filtered = history.filter(item => {
+    const filtered = history.filter((item) => {
       const voucherDate = new Date(item.Date);
-      const matchesMonthYear = (
-        (!selectedMonth || voucherDate.getMonth() + 1 === parseInt(selectedMonth)) &&
-        (!selectedYear || voucherDate.getFullYear() === parseInt(selectedYear))
-      );
+      const matchesMonthYear =
+        (!selectedMonth ||
+          voucherDate.getMonth() + 1 === parseInt(selectedMonth)) &&
+        (!selectedYear || voucherDate.getFullYear() === parseInt(selectedYear));
 
-      const matchesService = !selectedService || item.haveVouchers.some(voucher => voucher.Service_ID === selectedService);
+      const matchesService =
+        !selectedService ||
+        item.haveVouchers.some(
+          (voucher) => voucher.Service_ID === selectedService
+        );
 
       return matchesMonthYear && matchesService;
     });
@@ -72,13 +102,22 @@ const ChartVoucher = () => {
     setFilteredData(filtered);
     updateVoucherStatistics(filtered);
     setNoDataFound(filtered.length === 0);
-    setNoFilterData(filtered.length === 0 && !selectedMonth && !selectedYear && !selectedService);
+    setNoFilterData(
+      filtered.length === 0 &&
+        !selectedMonth &&
+        !selectedYear &&
+        !selectedService
+    );
   };
+
+  useEffect(() => {
+    filterData();
+  }, []);
 
   const updateVoucherStatistics = (filteredData) => {
     const voucherStats = {};
 
-    filteredData.forEach(item => {
+    filteredData.forEach((item) => {
       const { Voucher_ID, TotalDiscount } = item;
       const validTotalDiscount = Number(TotalDiscount) || 0;
 
@@ -87,7 +126,7 @@ const ChartVoucher = () => {
           totalDiscount: validTotalDiscount,
           totalUsed: 1,
           partnerID: item.Partner_ID,
-          serviceIDs: item.haveVouchers.map(v => v.Service_ID).join(', '),
+          serviceIDs: item.haveVouchers.map((v) => v.Service_ID).join(", "),
           date: new Date(item.Date).toLocaleDateString(),
         };
       } else {
@@ -101,38 +140,46 @@ const ChartVoucher = () => {
 
   const pieData = {
     labels: Object.keys(voucherStatistics),
-    datasets: [{
-      label: 'Total Used',
-      data: Object.values(voucherStatistics).map(voucher => voucher.totalUsed),
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.6)',
-        'rgba(54, 162, 235, 0.6)',
-        'rgba(255, 206, 86, 0.6)',
-        'rgba(75, 192, 192, 0.6)',
-        'rgba(153, 102, 255, 0.6)',
-        'rgba(255, 159, 64, 0.6)'
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
-      borderWidth: 1
-    }]
+    datasets: [
+      {
+        label: "Total Used",
+        data: Object.values(voucherStatistics).map(
+          (voucher) => voucher.totalUsed
+        ),
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
   };
 
   const lineData = {
     labels: Object.keys(voucherStatistics),
-    datasets: [{
-      label: 'Total Discount',
-      data: Object.values(voucherStatistics).map(voucher => voucher.totalDiscount),
-      fill: false,
-      borderColor: 'rgba(75, 192, 192, 1)',
-      tension: 0.1
-    }]
+    datasets: [
+      {
+        label: "Total Discount",
+        data: Object.values(voucherStatistics).map(
+          (voucher) => voucher.totalDiscount
+        ),
+        fill: false,
+        borderColor: "rgba(75, 192, 192, 1)",
+        tension: 0.1,
+      },
+    ],
   };
 
   const months = Array.from({ length: 12 }, (_, index) => index + 1);
@@ -153,80 +200,108 @@ const ChartVoucher = () => {
     );
   }
 
-  
-
   return (
     <div>
       <label> Service: </label>
-      <select value={selectedService} onChange={e => setSelectedService(e.target.value)}>
+      <select
+        value={selectedService}
+        onChange={(e) => {
+          setSelectedService(e.target.value);
+          filterData();
+        }}
+      >
         <option value="">All Services</option>
         {service.map((serviceId, index) => (
-          <option key={index} value={serviceId}>{serviceId}</option>
+          <option key={index} value={serviceId}>
+            {serviceId}
+          </option>
         ))}
       </select>
       <label> Month: </label>
-      <select value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}>
+      <select
+        value={selectedMonth}
+        onChange={(e) => {
+          setSelectedMonth(e.target.value);
+          filterData();
+        }}
+      >
         <option value="">Select Month</option>
-        {months.map(month => (
-          <option key={month} value={month}>{month}</option>
+        {months.map((month) => (
+          <option key={month} value={month}>
+            {month}
+          </option>
         ))}
       </select>
       <label>Year:</label>
-      <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
+      <select
+        value={selectedYear}
+        onChange={(e) => {
+          setSelectedYear(e.target.value);
+          filterData();
+        }}
+      >
         <option value="">Select Year</option>
         {year.map((year, index) => (
-          <option key={index} value={year}>{year}</option>
+          <option key={index} value={year}>
+            {year}
+          </option>
         ))}
       </select>
 
-      <button onClick={filterData}>Sort</button>
-
-      {noDataFound && !noFilterData && <p>Không tìm thấy dữ liệu vui lòng</p>}
-      
-
-      {filteredData.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Voucher ID</th>
-              <th>Partner ID</th>
-              <th>Service IDs</th>
-              <th>Total Used</th>
-              <th>Total Discount</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(voucherStatistics).map((voucherId) => (
-              <tr key={voucherId}>
-                <td>{voucherId}</td>
-                <td>{voucherStatistics[voucherId].partnerID}</td>
-                <td>{voucherStatistics[voucherId].serviceIDs}</td>
-                <td>{voucherStatistics[voucherId].totalUsed}</td>
-                <td>{voucherStatistics[voucherId].totalDiscount}</td>
-                <td>{voucherStatistics[voucherId].date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {noDataFound && !noFilterData && (
+        <p>Không tìm thấy dữ liệu, vui lòng chọn lại</p>
       )}
+
+      <div className="grid grid-cols-12">
+        <div className="col-span-4">
+          {filteredData.length > 0 && !noDataFound && !noFilterData && (
+            <>
+              {/* Pie Chart - Voucher ID vs Total Used */}
+              <div style={{ width: "400px", margin: "50px auto" }}>
+                <Pie data={pieData} />
+              </div>
+            </>
+          )}
+        </div>
+        <div className="col-span-8">
+          {filteredData.length > 0 && (
+            <table>
+              <thead>
+                <tr>
+                  <th>Voucher ID</th>
+                  <th>Partner ID</th>
+                  <th>Service IDs</th>
+                  <th>Total Used</th>
+                  <th>Total Discount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(voucherStatistics).map((voucherId) => (
+                  <tr key={voucherId}>
+                    <td>{voucherId}</td>
+                    <td>{voucherStatistics[voucherId].partnerID}</td>
+                    <td>{voucherStatistics[voucherId].serviceIDs}</td>
+                    <td>{voucherStatistics[voucherId].totalUsed}</td>
+                    <td>{voucherStatistics[voucherId].totalDiscount}</td>
+                    <td>{voucherStatistics[voucherId].date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {filteredData.length > 0 && !noDataFound && !noFilterData && (
+            <>
+              {/* Line Chart - Voucher ID vs Total Discount */}
+              <div style={{ width: "600px", margin: "50px auto" }}>
+                <Line data={lineData} />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* Chỉ hiển thị biểu đồ nếu có dữ liệu được lọc */}
-      {filteredData.length > 0 && !noDataFound && !noFilterData && (
-        <>
-          {/* Pie Chart - Voucher ID vs Total Used */}
-          <div style={{ width: '400px', margin: '50px auto' }}>
-            <h3>Voucher ID vs Total Used</h3>
-            <Pie data={pieData} />
-          </div>
-
-          {/* Line Chart - Voucher ID vs Total Discount */}
-          <div style={{ width: '600px', margin: '50px auto' }}>
-            <h3>Voucher ID vs Total Discount</h3>
-            <Line data={lineData} />
-          </div>
-        </>
-      )}
     </div>
   );
 };
