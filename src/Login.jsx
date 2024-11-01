@@ -17,7 +17,7 @@ const Login = () => {
   const URL = "https://server-voucher.vercel.app/api";
 
   function handleLoginSSO() {
-    sso.redirectToLogin("http://localhost:2106");
+    sso.redirectToLogin("https://voucher4u-fe.vercel.app");
   }
 
   const handleLogin = async (e) => {
@@ -40,7 +40,7 @@ const Login = () => {
 
       if (response.status === 200) {
         const token = response.data.AccessTokken;
-        window.location.href = `http://localhost:2106/?Token=${token}`;
+        window.location.href = `https://voucher4u-fe.vercel.app/?Token=${token}`;
       } else {
         throw new Error("Đăng nhập không thành công.");
       }
