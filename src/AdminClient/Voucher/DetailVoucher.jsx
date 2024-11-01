@@ -14,7 +14,7 @@ const DetailVoucher = () => {
   const [voucher, setVoucher] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const URL = "http://54.173.73.228:3000/api";
+  const URL = "http://34.204.80.177:3000/api";
 
   const handlestate = async (id) => {
     try {

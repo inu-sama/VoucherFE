@@ -14,7 +14,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [PassWord, setPassword] = useState("");
   const [error, setError] = useState("");
-  const URL = "https://servervoucher.vercel.app/api";
+  const URL = "http://34.204.80.177:3000/api";
 
   function handleLoginSSO() {
     sso.redirectToLogin("http://localhost:2106/");
