@@ -10,7 +10,7 @@ const MainHomeAdmin = () => {
         <div className="col-span-12 lg:col-span-3">
           <Nav />
         </div>
-        <div className="col-span-12 lg:col-span-9">
+        <div className="col-span-12 lg:col-span-9 min-h-screen">
           <Outlet />
         </div>
       </div>
