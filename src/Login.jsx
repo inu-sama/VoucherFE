@@ -14,7 +14,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const URL = "https://server-voucher.vercel.app/api";
-
   function handleLoginSSO() {
     sso.redirectToLogin("https://voucher4u-fe.vercel.app/sso");
   }

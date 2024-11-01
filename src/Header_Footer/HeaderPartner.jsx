@@ -10,9 +10,13 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    const callback = localStorage.getItem("URLCallBack");
+    if (callback) {
+      window.location.href = callback;
+    } else {
+      console.error("Callback URL not found");
+    }
     logout();
-    const callback = localStorage.getItem("callback");
-    navigate(callback);
   };
 
   return (
