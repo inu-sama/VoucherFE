@@ -13,7 +13,7 @@ const ProtectedRouter = ({ children }) => {
   const logout = () => {
     console.log("Logout function triggered");
     setUser(null);
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("Token");
   };
 
   return (
