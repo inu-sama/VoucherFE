@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CreateVoucher = () => {
   // const URL = "http://localhost:3000/api";
-  const URL = "http://54.173.73.228:3000";
+  const URL = "http://54.173.73.228:3000/api";
 
   const [Voucher, setVoucher] = useState({
     _id: "",
