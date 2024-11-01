@@ -16,7 +16,7 @@ import CreateVoucherPN from "../Partner/CreateVoucher.partner.jsx";
 import EditVoucherPN from "../Partner/EditVoucher.partner.jsx";
 import Login from "../Login.jsx";
 import MainHomeAdmin from "../AdminClient/MainHomeAdmin.jsx";
-import MainParter from "../Partner/MainPartner.jsx";
+import MainPartner from "../Partner/MainPartner.jsx";
 import CollectPoint from "../Customer/CollectPoint/CollectPoint.jsx";
 import ChartVoucher from "../AdminClient/DashBoard/ChartVoucher.jsx";
 
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
         ),
         children: [
           {
-            path: "/CollectPoint",
+            path: "/GetListVoucher",
             element: <GetListVoucher />,
           },
         ],
@@ -89,7 +89,7 @@ const router = createBrowserRouter([
         path: "/Partner",
         element: (
           <ProtectedRoute role="partner">
-            <MainParter />
+            <MainPartner />
           </ProtectedRoute>
         ),
         children: [

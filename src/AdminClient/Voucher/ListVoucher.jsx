@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faCircleInfo,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 const ListVoucher = () => {
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState(null);
+  const [selectedPage, setSelectedPage] = useState(1);
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -86,6 +84,11 @@ const ListVoucher = () => {
     );
   }
 
+  const pages = [];
+  for (let i = 0; i < Math.ceil(vouchers.length / 6); i++) {
+    pages.push(i + 1);
+  }
+
   return (
     <div className="lg:bg-[#eaf9e7] bg-[#4ca771]">
       <div className="w-full bg-[#eaf9e7] rounded-t-xl p-4">
@@ -143,109 +146,146 @@ const ListVoucher = () => {
         </div>
         <div className="grid mx-2 grid-cols-1 lg:grid-cols-2 gap-4">
           {!selectedServices
-            ? vouchers.map((voucher) => (
-                <div
-                  key={voucher._id}
-                  className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]"
+            ? vouchers.map((voucher, index) => {
+                while (
+                  index >= selectedPage * 6 - 6 &&
+                  index < selectedPage * 6
+                ) {
+                  return (
+                    <div
+                      key={voucher._id}
+                      className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]"
+                    >
+                      <h2 className="text-2xl font-bold mb-3">
+                        {voucher.Name}
+                      </h2>
+                      <div className="grid grid-cols-12">
+                        <div className="col-span-8">
+                          <p>{voucher.Description}</p>
+                          <p>
+                            <span className="font-bold text-[#4ca771]">
+                              Số lượng còn lại:
+                            </span>{" "}
+                            {voucher.RemainQuantity}
+                          </p>
+                          <p>
+                            <span className="font-bold text-[#4ca771]">
+                              Thời gian bắt đầu:
+                            </span>{" "}
+                            {date(voucher.ReleaseTime)}
+                          </p>
+                          <p>
+                            <span className="font-bold text-[#4ca771]">
+                              Thời gian hết hạn:
+                            </span>{" "}
+                            {date(voucher.ExpiredTime)}
+                          </p>
+                        </div>
+                        <div className="col-span-4 grid grid-rows-2 gap-2">
+                          <Link
+                            to={`/Admin/Detailvoucher/${voucher._id}`}
+                            className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
+                          >
+                            <FontAwesomeIcon
+                              className="mr-2"
+                              icon={faCircleInfo}
+                            />
+                            Detail
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteVoucher(voucher._id)}
+                            className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
+                          >
+                            <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              })
+            : vouchers.map((voucher, index) => {
+                while (
+                  index >= selectedPage * 6 - 6 &&
+                  index < selectedPage * 6
+                ) {
+                  return voucher.haveVouchers.find(
+                    (x) => x.Service_ID == selectedServices._id
+                  ) != undefined ? (
+                    <div
+                      key={voucher._id}
+                      className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]"
+                    >
+                      <h2 className="text-2xl font-bold mb-3">
+                        {voucher.Name}
+                      </h2>
+                      <div className="grid grid-cols-12">
+                        <div className="col-span-8">
+                          <p>{voucher.Description}</p>
+                          <p>
+                            <span className="font-bold text-[#4ca771]">
+                              Số lượng còn lại:
+                            </span>{" "}
+                            {voucher.RemainQuantity}
+                          </p>
+                          <p>
+                            <span className="font-bold text-[#4ca771]">
+                              Thời gian bắt đầu:
+                            </span>{" "}
+                            {date(voucher.ReleaseTime)}
+                          </p>
+                          <p>
+                            <span className="font-bold text-[#4ca771]">
+                              Thời gian hết hạn:
+                            </span>{" "}
+                            {date(voucher.ExpiredTime)}
+                          </p>
+                        </div>
+                        <div className="col-span-4 grid grid-rows-2 gap-2">
+                          <Link
+                            to={`/Admin/DetailVoucher/${voucher._id}`}
+                            className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
+                          >
+                            <FontAwesomeIcon
+                              className="mr-2"
+                              icon={faCircleInfo}
+                            />
+                            Detail
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteVoucher(voucher._id)}
+                            className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
+                          >
+                            <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    console.log(voucher)
+                  );
+                }
+              })}
+        </div>
+        <div className="w-full flex justify-center mt-4">
+          <div className="w-1/3 flex justify-between">
+            {pages.map((page) => {
+              return (
+                <p
+                  key={page}
+                  className="rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#2F4F4F] bg-[#fff] hover:bg-[#2F4F4F] text-[#2F4F4F] hover:text-[#fff] cursor-pointer"
+                  onClick={() => {
+                    setSelectedPage(page);
+                  }}
                 >
-                  <h2 className="text-2xl font-bold mb-3">{voucher.Name}</h2>
-                  <div className="grid grid-cols-12">
-                    <div className="col-span-8">
-                      <p>{voucher.Description}</p>
-                      <p>
-                        <span className="font-bold text-[#4ca771]">
-                          Số lượng còn lại:
-                        </span>{" "}
-                        {voucher.RemainQuantity}
-                      </p>
-                      <p>
-                        <span className="font-bold text-[#4ca771]">
-                          Thời gian bắt đầu:
-                        </span>{" "}
-                        {date(voucher.ReleaseTime)}
-                      </p>
-                      <p>
-                        <span className="font-bold text-[#4ca771]">
-                          Thời gian hết hạn:
-                        </span>{" "}
-                        {date(voucher.ExpiredTime)}
-                      </p>
-                    </div>
-                    <div className="col-span-4 grid grid-rows-2 gap-2">
-                      <Link
-                        to={`/Admin/Detailvoucher/${voucher._id}`}
-                        className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
-                      >
-                        <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
-                        Detail
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteVoucher(voucher._id)}
-                        className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
-                      >
-                        <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            : vouchers.map((voucher) =>
-                voucher.haveVouchers.find(
-                  (x) => x.Service_ID == selectedServices._id
-                ) != undefined ? (
-                  <div
-                    key={voucher._id}
-                    className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]"
-                  >
-                    <h2 className="text-2xl font-bold mb-3">{voucher.Name}</h2>
-                    <div className="grid grid-cols-12">
-                      <div className="col-span-8">
-                        <p>{voucher.Description}</p>
-                        <p>
-                          <span className="font-bold text-[#4ca771]">
-                            Số lượng còn lại:
-                          </span>{" "}
-                          {voucher.RemainQuantity}
-                        </p>
-                        <p>
-                          <span className="font-bold text-[#4ca771]">
-                            Thời gian bắt đầu:
-                          </span>{" "}
-                          {date(voucher.ReleaseTime)}
-                        </p>
-                        <p>
-                          <span className="font-bold text-[#4ca771]">
-                            Thời gian hết hạn:
-                          </span>{" "}
-                          {date(voucher.ExpiredTime)}
-                        </p>
-                      </div>
-                      <div className="col-span-4 grid grid-rows-2 gap-2">
-                        <Link
-                          to={`/Admin/DetailVoucher/${voucher._id}`}
-                          className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
-                        >
-                          <FontAwesomeIcon
-                            className="mr-2"
-                            icon={faCircleInfo}
-                          />
-                          Detail
-                        </Link>
-                        <button
-                          onClick={() => handleDeleteVoucher(voucher._id)}
-                          className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
-                        >
-                          <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  console.log(voucher)
-                )
-              )}
+                  {page}
+                </p>
+              );
+            })}
+            {/* <p className="rounded-full">{Math.ceil(vouchers.length / 4)}</p> */}
+          </div>
         </div>
       </div>
     </div>
