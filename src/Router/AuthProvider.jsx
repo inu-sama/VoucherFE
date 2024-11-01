@@ -9,12 +9,11 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const token =
-    searchParams.get("Token") || localStorage.getItem("accessToken");
+  const token = searchParams.get("Token") || localStorage.getItem("Token");
 
   useEffect(() => {
     const checkUserAuth = async () => {
-      setIsLoading(true); // Đặt lại trạng thái loading khi gọi hàm
+      setIsLoading(true);
 
       if (!token) {
         setIsLoading(false);
@@ -36,28 +35,19 @@ const AuthProvider = ({ children }) => {
 
         const userData = await response.json();
         setUser(userData);
-        localStorage.setItem("accessToken", token);
+        localStorage.setItem("Token", token);
 
-        // Điều hướng dựa trên vai trò
-        switch (userData.role) {
-          case "Admin":
-            navigate("/Admin");
-            break;
-          case "user":
-            navigate("/");
-            break;
-          case "partner":
-            navigate("/Partner");
-            break;
-          default:
-            navigate("/Login");
-            break;
+        if (userData) {
+          window.location.href =
+            "https://voucher4u-fe.vercel.app/?Token=" + token;
+        } else {
+          window.location.href = "https://voucher4u-fe.vercel.app/Login";
         }
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-        navigate("/Login");
+        window.location.href = "https://voucher4u-fe.vercel.app/Login";
       } finally {
-        setIsLoading(false); // Đảm bảo luôn đặt trạng thái loading về false
+        setIsLoading(false);
       }
     };
 
@@ -66,12 +56,12 @@ const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("accessToken", userData.token);
+    localStorage.setItem("Token", userData.token);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("Token");
     navigate("/Login");
   };
 

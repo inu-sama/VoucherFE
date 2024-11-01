@@ -17,7 +17,7 @@ const Login = () => {
   const URL = "https://server-voucher.vercel.app/api";
 
   function handleLoginSSO() {
-    sso.redirectToLogin("https://voucher4u-fe.vercel.app/");
+    sso.redirectToLogin(location.origin + "https://voucher4u-fe.vercel.app/");
   }
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -48,11 +48,8 @@ const Login = () => {
           const userData = await res.json();
           const userRole = userData.role;
 
-          localStorage.setItem("accessToken", token);
+          localStorage.setItem("Token", token);
           localStorage.setItem("role", userRole);
-
-          console.log("token", token);
-          console.log("userRole", userRole);
 
           setSuccess("Đăng nhập thành công!");
           setIsLoading(false);
