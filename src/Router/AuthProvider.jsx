@@ -9,45 +9,50 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const token = searchParams.get("Token") || localStorage.getItem("Token");
+  const token =
+    searchParams.get("Token") || localStorage.getItem("accessToken");
 
   useEffect(() => {
     const checkUserAuth = async () => {
-      setIsLoading(true);
+      if (token) {
+        try {
+          const response = await fetch(
+            "https://server-voucher.vercel.app/api/readtoken",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const userData = await response.json();
 
-      if (!token) {
-        setIsLoading(false);
-        return navigate("/Login");
-      }
+          if (response.ok) {
+            setUser(userData);
+            setIsLoading(false);
+            localStorage.setItem("accessToken", token);
 
-      try {
-        const response = await fetch(
-          "https://server-voucher.vercel.app/api/readtoken",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            if (userData.role === "Admin") {
+              navigate("/Admin");
+            } else if (userData.role === "user") {
+              navigate("/");
+            } else if (userData.role === "partner") {
+              navigate("/Partner");
+            } else {
+              navigate("/Login");
+            }
+          } else {
+            setIsLoading(false);
+            navigate("/Login");
           }
-        );
-
-        if (!response.ok) throw new Error("Failed to fetch user data");
-
-        const userData = await response.json();
-        setUser(userData);
-        localStorage.setItem("Token", token);
-
-        if (userData) {
-          window.location.href =
-            "https://voucher4u-fe.vercel.app/?Token=" + token;
-        } else {
-          window.location.href = "https://voucher4u-fe.vercel.app/Login";
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+          setIsLoading(false);
+          navigate("/Login");
         }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-        window.location.href = "https://voucher4u-fe.vercel.app/Login";
-      } finally {
+      } else {
         setIsLoading(false);
+        navigate("/Login");
       }
     };
 
@@ -56,12 +61,12 @@ const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("Token", userData.token);
+    localStorage.setItem("accessToken", userData.token);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("Token");
+    localStorage.removeItem("accessToken");
     navigate("/Login");
   };
 
