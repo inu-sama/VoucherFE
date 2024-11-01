@@ -49,7 +49,7 @@ const ChartVoucher = () => {
     const fetchHistory = async () => {
       try {
         const res = await fetch(
-          "http://18.209.35.247:3000/api/Statistical_VoucherFindPartner_Service"
+          "http://34.204.80.177:3000/api/Statistical_VoucherFindPartner_Service"
         );
         // const res = await fetch(
         //   "https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
@@ -201,59 +201,70 @@ const ChartVoucher = () => {
   }
 
   return (
-    <div>
-      <label> Service: </label>
-      <select
-        value={selectedService}
-        onChange={(e) => {
-          setSelectedService(e.target.value);
-          filterData();
-        }}
-      >
-        <option value="">All Services</option>
-        {service.map((serviceId, index) => (
-          <option key={index} value={serviceId}>
-            {serviceId}
-          </option>
-        ))}
-      </select>
-      <label> Month: </label>
-      <select
-        value={selectedMonth}
-        onChange={(e) => {
-          setSelectedMonth(e.target.value);
-          filterData();
-        }}
-      >
-        <option value="">Select Month</option>
-        {months.map((month) => (
-          <option key={month} value={month}>
-            {month}
-          </option>
-        ))}
-      </select>
-      <label>Year:</label>
-      <select
-        value={selectedYear}
-        onChange={(e) => {
-          setSelectedYear(e.target.value);
-          filterData();
-        }}
-      >
-        <option value="">Select Year</option>
-        {year.map((year, index) => (
-          <option key={index} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
+    <div className="text-[#2F4F4F]">
+      <div className="w-full grid grid-cols-3 p-6 gap-6">
+        <div className="col-span-1">
+          <p className="text-lg font-semibold">Service:</p>
+          <select
+            value={selectedService}
+            onChange={(e) => {
+              setSelectedService(e.target.value);
+              filterData();
+            }}
+            className="w-full"
+          >
+            <option value="">All Services</option>
+            {service.map((serviceId, index) => (
+              <option key={index} value={serviceId}>
+                {serviceId}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-1">
+          <p className="text-lg font-semibold">Month:</p>
+          <select
+            value={selectedMonth}
+            onChange={(e) => {
+              setSelectedMonth(e.target.value);
+              filterData();
+            }}
+            className="w-full"
+          >
+            <option value="">Select Month</option>
+            {months.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-1">
+          <p className="text-lg font-semibold">Year:</p>
+          <select
+            value={selectedYear}
+            onChange={(e) => {
+              setSelectedYear(e.target.value);
+              filterData();
+            }}
+            className="w-full"
+          >
+            <option value="">Select Year</option>
+            {year.map((year, index) => (
+              <option key={index} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {noDataFound && !noFilterData && (
         <p>Không tìm thấy dữ liệu, vui lòng chọn lại</p>
       )}
 
-      <div className="grid grid-cols-12">
-        <div className="col-span-4">
+      <div className="grid lg:grid-cols-12">
+        <div className="lg:col-span-4">
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
             <>
               {/* Pie Chart - Voucher ID vs Total Used */}
@@ -263,37 +274,39 @@ const ChartVoucher = () => {
             </>
           )}
         </div>
-        <div className="col-span-8">
-          {filteredData.length > 0 && (
-            <table>
-              <thead>
-                <tr>
-                  <th>Voucher ID</th>
-                  <th>Partner ID</th>
-                  <th>Service IDs</th>
-                  <th>Total Used</th>
-                  <th>Total Discount</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(voucherStatistics).map((voucherId) => (
-                  <tr key={voucherId}>
-                    <td>{voucherId}</td>
-                    <td>{voucherStatistics[voucherId].partnerID}</td>
-                    <td>{voucherStatistics[voucherId].serviceIDs}</td>
-                    <td>{voucherStatistics[voucherId].totalUsed}</td>
-                    <td>{voucherStatistics[voucherId].totalDiscount}</td>
-                    <td>{voucherStatistics[voucherId].date}</td>
+        <div className="lg:col-span-8">
+          <div className="p-6">
+            {filteredData.length > 0 && (
+              <table className="">
+                <thead>
+                  <tr>
+                    <th>Voucher ID</th>
+                    <th>Partner ID</th>
+                    <th>Service IDs</th>
+                    <th>Total Used</th>
+                    <th>Total Discount</th>
+                    <th>Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                </thead>
+                <tbody>
+                  {Object.keys(voucherStatistics).map((voucherId) => (
+                    <tr key={voucherId}>
+                      <td>{voucherId}</td>
+                      <td>{voucherStatistics[voucherId].partnerID}</td>
+                      <td>{voucherStatistics[voucherId].serviceIDs}</td>
+                      <td>{voucherStatistics[voucherId].totalUsed}</td>
+                      <td>{voucherStatistics[voucherId].totalDiscount}</td>
+                      <td>{voucherStatistics[voucherId].date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
             <>
               {/* Line Chart - Voucher ID vs Total Discount */}
-              <div style={{ width: "600px", margin: "50px auto" }}>
+              <div className="w-[600px] my-[50px] mx-auto">
                 <Line data={lineData} />
               </div>
             </>
