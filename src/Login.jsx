@@ -4,11 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { SSO } from "@htilssu/wowo";
 import axios from "axios";
+const sso = new SSO("V4U");
 
 const Login = () => {
-  const sso = new SSO("V4U");
   const navigate = useNavigate();
-
   const [name, setName] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
