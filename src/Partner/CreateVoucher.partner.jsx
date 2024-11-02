@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateVoucher = () => {
-  const URL = "http://34.204.80.177:3000/api";
+  const URL = "https://server-voucher.vercel.app/api";
 
   const [Voucher, setVoucher] = useState({
     _id: "",
@@ -100,10 +100,17 @@ const CreateVoucher = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
         },
         body: JSON.stringify({
           ...Voucher,
+          RemainQuantity: Number(Voucher.RemainQuantity),
+          PercentDiscount: Number(Voucher.PercentDiscount),
+          Conditions: Voucher.Conditions.map((cond) => ({
+            ...cond,
+            MinValue: Number(cond.MinValue),
+            MaxValue: Number(cond.MaxValue),
+          })),
           HaveVouchers: selectedServices.map((serviceId) => ({
             Service_ID: serviceId,
           })),

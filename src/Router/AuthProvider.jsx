@@ -9,38 +9,16 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-      const date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-  }
-
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
-  }
-
-  const token =
-    searchParams.get("Token") ||
-    localStorage.getItem("accessToken") ||
-    getCookie("Token");
-
-  if (token) {
-    setCookie("Token", token, 1);
-  }
+  const token = searchParams.get("Token") || localStorage.getItem("Token");
+  const callback =
+    searchParams.get("URLCallBack") || localStorage.getItem("URLCallBack");
 
   useEffect(() => {
     const checkUserAuth = async () => {
       if (token) {
         try {
           const response = await fetch(
-            "http://34.204.80.177:3000/api/readtoken",
+            "https://server-voucher.vercel.app/api/readtoken",
             {
               method: "GET",
               headers: {
@@ -48,48 +26,58 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
-          const userData = await response.json();
 
           if (response.ok) {
+            const userData = await response.json();
             setUser(userData);
-            setIsLoading(false);
-            localStorage.setItem("accessToken", token);
-
-            if (userData.role === "Admin") {
-              navigate("/Admin");
-            } else if (userData.role === "user") {
-              navigate("/");
-            } else if (userData.role === "partner") {
-              navigate("/Partner");
-            } else {
-              navigate("/Login");
-            }
+            localStorage.setItem("Token", token);
+            localStorage.setItem("URLCallBack", callback || "/");
+            navigateBasedOnRole(userData.role);
           } else {
-            setIsLoading(false);
             navigate("/Login");
           }
         } catch (error) {
           console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-          setIsLoading(false);
           navigate("/Login");
+        } finally {
+          setIsLoading(false);
         }
       } else {
-        setIsLoading(false);
         navigate("/Login");
+        setIsLoading(false);
       }
     };
 
     checkUserAuth();
-  }, [navigate, token]);
+  }, [navigate, token, callback]);
+
+  const navigateBasedOnRole = (role) => {
+    const savedCallback = localStorage.getItem("URLCallBack") || "/";
+    switch (role) {
+      case "Admin":
+        navigate("/Admin");
+        break;
+      case "user":
+        navigate(savedCallback);
+        break;
+      case "partner":
+        navigate("/Partner");
+        break;
+      default:
+        navigate("/Login");
+    }
+  };
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("accessToken", userData.token);
+    localStorage.setItem("Token", userData.token);
+    navigateBasedOnRole(userData.role);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("Token");
+    localStorage.removeItem("URLCallBack");
     navigate("/Login");
   };
 

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Nav from "../Header_Footer/NavPartner.jsx";
-import Header from "../Header_Footer/Hearder.jsx";
+import Header from "../Header_Footer/HeaderPartner.jsx";
 
 const MainParter = () => {
   return (

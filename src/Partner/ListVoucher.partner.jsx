@@ -13,7 +13,7 @@ const ListVoucher = () => {
   const [vouchers, setVouchers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const URL = "http://34.204.80.177:3000/api";
+  const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
   const fetchServices = async () => {
@@ -52,7 +52,7 @@ const ListVoucher = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
         },
       });
       if (!res.ok) {

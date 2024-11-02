@@ -5,13 +5,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const Hearder = () => {
+const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    const callback = localStorage.getItem("URLCallBack");
+    if (callback) {
+      window.location.href = callback;
+    } else {
+      console.error("Callback URL not found");
+    }
     logout();
-    navigate("/login");
   };
 
   return (
@@ -33,4 +38,4 @@ const Hearder = () => {
   );
 };
 
-export default Hearder;
+export default Header;

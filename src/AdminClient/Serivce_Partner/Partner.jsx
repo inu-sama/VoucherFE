@@ -8,7 +8,7 @@ const Partner = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // const Url = "http://localhost:3000/api";
-  const Url = "http://34.204.80.177:3000/api";
+  const Url = "https://server-voucher.vercel.app/api";
 
   const fetchPartner = async () => {
     try {

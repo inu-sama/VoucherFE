@@ -49,7 +49,7 @@ const ChartVoucher = () => {
     const fetchHistory = async () => {
       try {
         const res = await fetch(
-          "http://34.204.80.177:3000/api/Statistical_VoucherFindPartner_Service"
+          "https://server-voucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
         );
         // const res = await fetch(
         //   "https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
