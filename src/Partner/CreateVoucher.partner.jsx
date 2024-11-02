@@ -11,7 +11,7 @@ const CreateVoucher = () => {
     ExpiredTime: "",
     Description: "",
     Image: "",
-    RemainQuantity: "",
+    RemainQuantity: 0,
     MinValue: 0,
     MaxValue: 0,
     PercentDiscount: 0,
@@ -104,6 +104,13 @@ const CreateVoucher = () => {
         },
         body: JSON.stringify({
           ...Voucher,
+          RemainQuantity: Number(Voucher.RemainQuantity),
+          PercentDiscount: Number(Voucher.PercentDiscount),
+          Conditions: Voucher.Conditions.map((cond) => ({
+            ...cond,
+            MinValue: Number(cond.MinValue),
+            MaxValue: Number(cond.MaxValue),
+          })),
           HaveVouchers: selectedServices.map((serviceId) => ({
             Service_ID: serviceId,
           })),
