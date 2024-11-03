@@ -9,7 +9,8 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const OrderID = searchParams.get("OrderID");
+  const OrderID =
+    searchParams.get("OrderID") || localStorage.getItem("OrderID");
   const token = searchParams.get("Token") || localStorage.getItem("Token");
   const callback =
     searchParams.get("URLCallBack") || localStorage.getItem("URLCallBack");
@@ -31,9 +32,11 @@ const AuthProvider = ({ children }) => {
           if (response.ok) {
             const userData = await response.json();
             setUser(userData);
-            localStorage.setItem("Token", token);
-            localStorage.setItem("URLCallBack", callback || "/");
-            localStorage.setItem("OrderID", OrderID);
+
+            if (OrderID) localStorage.setItem("OrderID", OrderID);
+            if (callback) localStorage.setItem("URLCallBack", callback);
+            if (token) localStorage.setItem("Token", token);
+
             navigateBasedOnRole(userData.role);
           } else {
             navigate("/Login");
@@ -51,7 +54,7 @@ const AuthProvider = ({ children }) => {
     };
 
     checkUserAuth();
-  }, [navigate, token, callback]);
+  }, [OrderID, token, callback, navigate, searchParams]);
 
   const navigateBasedOnRole = (role) => {
     const savedCallback = localStorage.getItem("URLCallBack") || "/";
@@ -73,17 +76,12 @@ const AuthProvider = ({ children }) => {
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem("Token", userData.token);
+    localStorage.setItem("OrderID", OrderID);
+    localStorage.setItem("URLCallBack", callback);
     navigateBasedOnRole(userData.role);
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("Token");
-    localStorage.removeItem("URLCallBack");
-    navigate("/Login");
-  };
-
-  const value = useMemo(() => ({ user, login, logout }), [user]);
+  const value = useMemo(() => ({ user, login }), [user]);
 
   if (isLoading) {
     return <div>Loading...</div>;

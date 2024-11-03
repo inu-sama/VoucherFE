@@ -94,7 +94,7 @@ const GetListVoucher = () => {
         },
         body: JSON.stringify({
           _id: idVoucher,
-          Price: Number(orderPrice),
+          Price: Number(note.Price),
         }),
       });
 
@@ -255,12 +255,14 @@ const GetListVoucher = () => {
                   <div className="w-full font-bold text-[#213a57] py-2">
                     Đơn hàng:
                   </div>
-                  <div className="w-full text-end text-[#213a57] py-2">123</div>
+                  <div className="w-full text-end text-[#213a57] py-2">
+                    {note.OrderID}
+                  </div>
                   <div className="w-full font-bold text-[#213a57] py-2">
                     Giá tiền:
                   </div>
                   <div className="w-full text-end text-[#213a57] py-2">
-                    {orderPrice}đ
+                    {note.Price}đ
                   </div>
                   <div className="w-full font-bold text-[#213a57] py-2">
                     Giảm:
@@ -272,7 +274,7 @@ const GetListVoucher = () => {
                     Tổng cộng:
                   </div>
                   <div className="w-full text-end text-[#213a57] py-2 text-xl">
-                    {orderPrice - PriceDiscount}đ
+                    {note.Price - PriceDiscount}đ
                   </div>
                 </div>
               </div>
