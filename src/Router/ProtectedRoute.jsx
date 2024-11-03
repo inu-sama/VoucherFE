@@ -15,6 +15,7 @@ const ProtectedRouter = ({ children }) => {
     setUser(null);
     localStorage.removeItem("Token");
     localStorage.removeItem("URLCallBack");
+    localStorage.removeItem("OrderID");
   };
 
   return (
