@@ -20,9 +20,11 @@ const GetListVoucher = () => {
   const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
+  const OrderID = localStorage.getItem("OrderID");
+
   const FetchNote = async () => {
     try {
-      const response = await fetch(`${URL}/GetNote/OD01`, {
+      const response = await fetch(`${URL}/GetNote/${OrderID}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

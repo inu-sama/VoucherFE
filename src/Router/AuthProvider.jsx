@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  const OrderID = searchParams.get("OrderID");
   const token = searchParams.get("Token") || localStorage.getItem("Token");
   const callback =
     searchParams.get("URLCallBack") || localStorage.getItem("URLCallBack");
@@ -32,6 +33,7 @@ const AuthProvider = ({ children }) => {
             setUser(userData);
             localStorage.setItem("Token", token);
             localStorage.setItem("URLCallBack", callback || "/");
+            localStorage.setItem("OrderID", OrderID);
             navigateBasedOnRole(userData.role);
           } else {
             navigate("/Login");
