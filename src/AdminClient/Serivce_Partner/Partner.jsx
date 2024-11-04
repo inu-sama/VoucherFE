@@ -4,7 +4,6 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 const Partner = () => {
   const [partner, setPartner] = useState([]);
-  const [service, setService] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // const Url = "http://localhost:3000/api";

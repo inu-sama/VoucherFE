@@ -27,12 +27,39 @@ const CreateVoucher = () => {
 
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
+  const Token = localStorage.getItem("Token");
 
   const navigate = useNavigate();
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${URL}/getService`);
+      const response1 = await fetch(
+        "https://server-voucher.vercel.app/api/readtoken",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      );
+
+      if (!response1.ok) {
+        throw new Error(
+          `Error fetching token: ${response1.status} ${response1.statusText}`
+        );
+      }
+
+      const dataToken = await response1.json();
+      const serviceId = dataToken.PartnerService[0].serviceId;
+
+      const response = await fetch(`${URL}/getServiceID/${serviceId}`);
+
+      if (!response.ok) {
+        throw new Error(
+          `Error fetching services: ${response.status} ${response.statusText}`
+        );
+      }
+
       const data = await response.json();
       setServices(data);
     } catch (error) {
@@ -350,24 +377,19 @@ const CreateVoucher = () => {
                 </div>
                 <div className="collapse-content bg-[#4ca771] rounded-r-2xl">
                   <div className="bg-gradient-to-r from-[#eaf9e7] to-[#4ca771] p-4 rounded-xl text-lg mt-4 max-h-36 overflow-scroll">
-                    {services.map((service) => (
-                      <div
-                        key={service._id}
-                        className="flex items-center text-[#2F4F4F]"
-                      >
-                        <input
-                          type="checkbox"
-                          id={service._id}
-                          value={service._id}
-                          checked={selectedServices.includes(service._id)}
-                          onChange={handleServiceChange}
-                          className="accent-[#4ac771]"
-                        />
-                        <label htmlFor={service._id} className="ml-2">
-                          {service.ServiceName}
-                        </label>
-                      </div>
-                    ))}
+                    <div className="flex items-center text-[#2F4F4F]">
+                      <input
+                        type="checkbox"
+                        id={services.id}
+                        value={services.id}
+                        checked={selectedServices.includes(services.id)}
+                        onChange={handleServiceChange}
+                        className="accent-[#4ac771]"
+                      />
+                      <label htmlFor={services.id} className="ml-2">
+                        {services.name}
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>

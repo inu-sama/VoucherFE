@@ -46,12 +46,12 @@ const Service = () => {
       </div>
       <div className="rounded-b-2xl text-[#2F4F4F] text-xl rounded-tr-2xl border-4 border-[#c0e6ba] bg-[#c0e6ba] overflow-hidden">
         {service.map((item) => (
-          <div className="w-full grid grid-cols-12" key={item._id}>
+          <div className="w-full grid grid-cols-12" key={item.id}>
             <div className="col-span-5 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-bl-xl">
-              {item._id}
+              {item.id}
             </div>
             <div className="col-span-5 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center">
-              {item.ServiceName}
+              {item.name}
             </div>
             <div className="col-span-2 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-r-xl">
               <FontAwesomeIcon icon={faCircleInfo} />

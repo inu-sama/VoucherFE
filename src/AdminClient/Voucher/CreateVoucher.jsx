@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateVoucher = () => {
-  // const URL = "http://localhost:3000/api";
   const URL = "https://server-voucher.vercel.app/api";
 
   const [Voucher, setVoucher] = useState({
@@ -47,7 +46,7 @@ const CreateVoucher = () => {
 
   const handleConditionChange = (e) => {
     const { name, value } = e.target;
-    setCondition((prev) => ({ ...prev, [name]: value }));
+    setCondition((prev) => ({ ...prev, [name]: Number(value) }));
   };
 
   const addCondition = () => {
@@ -228,7 +227,10 @@ const CreateVoucher = () => {
                   name="PercentDiscount"
                   value={Voucher.PercentDiscount}
                   onChange={(e) =>
-                    setVoucher({ ...Voucher, PercentDiscount: e.target.value })
+                    setVoucher({
+                      ...Voucher,
+                      PercentDiscount: Number(e.target.value),
+                    })
                   }
                 />
               </div>
@@ -244,7 +246,10 @@ const CreateVoucher = () => {
                   type="number"
                   value={Voucher.RemainQuantity}
                   onChange={(e) =>
-                    setVoucher({ ...Voucher, RemainQuantity: e.target.value })
+                    setVoucher({
+                      ...Voucher,
+                      RemainQuantity: Number(e.target.value),
+                    })
                   }
                 />
               </div>
@@ -345,19 +350,19 @@ const CreateVoucher = () => {
                   <div className="bg-gradient-to-r from-[#eaf9e7] to-[#4ca771] p-4 rounded-xl text-lg mt-4 max-h-36 overflow-scroll">
                     {services.map((service) => (
                       <div
-                        key={service._id}
+                        key={service.id}
                         className="flex items-center text-[#2F4F4F]"
                       >
                         <input
                           type="checkbox"
-                          id={service._id}
-                          value={service._id}
-                          checked={selectedServices.includes(service._id)}
+                          id={service.id}
+                          value={service.id}
+                          checked={selectedServices.includes(service.id)}
                           onChange={handleServiceChange}
                           className="accent-[#4ac771]"
                         />
                         <label htmlFor={service._id} className="ml-2">
-                          {service.ServiceName}
+                          {service.name}
                         </label>
                       </div>
                     ))}
