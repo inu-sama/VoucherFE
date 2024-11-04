@@ -30,11 +30,18 @@ const GetListVoucher = () => {
           "Content-Type": "application/json",
         },
       });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const data = await response.json();
       console.log("data note", data);
       setNote(data);
+      setLoading(false);
     } catch (error) {
       setError(error.message);
+      console.error("Fetch Note Error:", error.message);
       setLoading(false);
     }
   };
@@ -42,12 +49,6 @@ const GetListVoucher = () => {
   useEffect(() => {
     FetchNote();
   }, []);
-
-  useEffect(() => {
-    if (note && note.CusID) {
-      console.log("cusID ", note.CusID);
-    }
-  }, [note]);
 
   const GetVoucher = async () => {
     try {
@@ -65,7 +66,7 @@ const GetListVoucher = () => {
 
       const data = await response.json();
 
-      console.log("data", data);
+      console.log("dataGetList", data);
       if (Array.isArray(data)) {
         setVouchers(data);
       } else {
@@ -80,10 +81,8 @@ const GetListVoucher = () => {
   };
 
   useEffect(() => {
-    if (note && note.CusID && note.Service_ID && note.Price) {
-      GetVoucher();
-    }
-  }, [note]);
+    GetVoucher();
+  }, []);
 
   const setDiscount = async (idVoucher) => {
     try {

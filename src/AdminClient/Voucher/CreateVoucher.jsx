@@ -361,11 +361,7 @@ const CreateVoucher = () => {
                           onChange={handleServiceChange}
                           className="accent-[#4ac771]"
                         />
-<<<<<<< HEAD
                         <label htmlFor={service._id} className="ml-2">
-=======
-                        <label htmlFor={service.id} className="ml-2">
->>>>>>> 098acb9 ("Added axios dependency, updated Service and CreateVoucher components to use 'id' instead of '_id', and modified fetch services API call in CreateVoucher.partner.jsx")
                           {service.name}
                         </label>
                       </div>
