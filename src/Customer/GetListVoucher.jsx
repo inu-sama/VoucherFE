@@ -9,9 +9,38 @@ const GetListVoucher = () => {
   const [PriceDiscount, setPriceDiscount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
 
   const OrderID = localStorage.getItem("OrderID");
+  const Token = localStorage.getItem("Token");
+  const fetchToken = async () => {
+    try {
+      const response = await fetch(`${URL}/readtoken`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setToken(userData);
+        console.log("userData1", userData);
+        console.log("userData", userData.firstName);
+      } else {
+        throw new Error("Failed to get user data");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchToken();
+  }, []);
 
   const FetchNote = async () => {
     try {
@@ -49,7 +78,7 @@ const GetListVoucher = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          CusID: note.CusID,
+          CusID: token.firstName,
           Service_ID: note.Service_ID,
           Price: note.Price,
         }),
@@ -72,8 +101,10 @@ const GetListVoucher = () => {
   };
 
   useEffect(() => {
-    GetVoucher();
-  }, []);
+    if (note) {
+      GetVoucher();
+    }
+  }, [note]);
 
   const setDiscount = async (idVoucher) => {
     try {
@@ -110,7 +141,7 @@ const GetListVoucher = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          CusID: note.CusID,
+          CusID: token.firstName,
           TotalDiscount: PriceDiscount,
           Price: note.Price,
         }),
