@@ -33,11 +33,11 @@ const CreateVoucher = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${URL}/getService`);
-      const data = await response.json();
+      const res = await fetch(`${URL}/getService`);
+      const data = await res.json();
       setServices(data);
     } catch (error) {
-      console.error("Error fetching services:", error);
+      alert("Error: " + (error?.message || "Failed to get service"));
     }
   };
 
@@ -351,19 +351,19 @@ const CreateVoucher = () => {
                   <div className="bg-gradient-to-r from-[#eaf9e7] to-[#4ca771] p-4 rounded-xl text-lg mt-4 max-h-36 overflow-scroll">
                     {services.map((service) => (
                       <div
-                        key={service._id}
+                        key={service.id}
                         className="flex items-center text-[#2F4F4F]"
                       >
                         <input
                           type="checkbox"
-                          id={service._id}
-                          value={service._id}
-                          checked={selectedServices.includes(service._id)}
+                          id={service.id}
+                          value={service.id}
+                          checked={selectedServices.includes(service.id)}
                           onChange={handleServiceChange}
                           className="accent-[#4ac771]"
                         />
-                        <label htmlFor={service._id} className="ml-2">
-                          {service.ServiceName}
+                        <label htmlFor={service.id} className="ml-2">
+                          {service.name}
                         </label>
                       </div>
                     ))}
