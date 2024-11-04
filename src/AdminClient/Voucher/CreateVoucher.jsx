@@ -47,7 +47,7 @@ const CreateVoucher = () => {
 
   const handleConditionChange = (e) => {
     const { name, value } = e.target;
-    setCondition((prev) => ({ ...prev, [name]: value }));
+    setCondition((prev) => ({ ...prev, [name]: Number(value) }));
   };
 
   const addCondition = () => {
@@ -228,7 +228,10 @@ const CreateVoucher = () => {
                   name="PercentDiscount"
                   value={Voucher.PercentDiscount}
                   onChange={(e) =>
-                    setVoucher({ ...Voucher, PercentDiscount: e.target.value })
+                    setVoucher({
+                      ...Voucher,
+                      PercentDiscount: Number(e.target.value),
+                    })
                   }
                 />
               </div>
@@ -244,7 +247,10 @@ const CreateVoucher = () => {
                   type="number"
                   value={Voucher.RemainQuantity}
                   onChange={(e) =>
-                    setVoucher({ ...Voucher, RemainQuantity: e.target.value })
+                    setVoucher({
+                      ...Voucher,
+                      RemainQuantity: Number(e.target.value),
+                    })
                   }
                 />
               </div>
