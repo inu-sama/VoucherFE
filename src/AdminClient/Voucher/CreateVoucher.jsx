@@ -32,11 +32,11 @@ const CreateVoucher = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${URL}/getService`);
-      const data = await response.json();
+      const res = await fetch(`${URL}/getService`);
+      const data = await res.json();
       setServices(data);
     } catch (error) {
-      console.error("Error fetching services:", error);
+      alert("Error: " + (error?.message || "Failed to get service"));
     }
   };
 
@@ -361,7 +361,11 @@ const CreateVoucher = () => {
                           onChange={handleServiceChange}
                           className="accent-[#4ac771]"
                         />
+<<<<<<< HEAD
                         <label htmlFor={service._id} className="ml-2">
+=======
+                        <label htmlFor={service.id} className="ml-2">
+>>>>>>> 098acb9 ("Added axios dependency, updated Service and CreateVoucher components to use 'id' instead of '_id', and modified fetch services API call in CreateVoucher.partner.jsx")
                           {service.name}
                         </label>
                       </div>
