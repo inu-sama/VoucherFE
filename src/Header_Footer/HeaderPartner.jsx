@@ -17,6 +17,7 @@ const Header = () => {
       console.error("Callback URL not found");
     }
     logout();
+    navigate("/login");
   };
 
   return (
