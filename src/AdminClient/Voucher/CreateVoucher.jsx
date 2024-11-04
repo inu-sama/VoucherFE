@@ -361,7 +361,7 @@ const CreateVoucher = () => {
                           onChange={handleServiceChange}
                           className="accent-[#4ac771]"
                         />
-                        <label htmlFor={service._id} className="ml-2">
+                        <label htmlFor={service.id} className="ml-2">
                           {service.name}
                         </label>
                       </div>

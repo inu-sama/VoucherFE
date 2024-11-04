@@ -1,11 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faEdit,
-  faCircleInfo,
-} from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Header from "../Header_Footer/HeaderCus";
 
 const GetListVoucher = () => {
@@ -16,9 +9,7 @@ const GetListVoucher = () => {
   const [PriceDiscount, setPriceDiscount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [orderPrice, setOrderPrice] = useState(500000);
   const URL = "https://server-voucher.vercel.app/api";
-  const navigate = useNavigate();
 
   const OrderID = localStorage.getItem("OrderID");
 
@@ -119,9 +110,9 @@ const GetListVoucher = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          CusID: "Thanh1", //thay thế dữ liệu nha đại ca
+          CusID: note.CusID,
           TotalDiscount: PriceDiscount,
-          Price: 450000, //thay tiền get dữ liệu về nha
+          Price: note.Price,
         }),
       });
       const data = await response.json();
