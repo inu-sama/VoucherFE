@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ListVoucher = () => {
   const [services, setServices] = useState([]);
@@ -11,7 +11,7 @@ const ListVoucher = () => {
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
   const URL = "https://server-voucher.vercel.app/api";
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const fetchServices = async () => {
     try {
@@ -116,6 +116,7 @@ const ListVoucher = () => {
       if (res.status === 200) {
         alert("Xóa voucher thành công");
         selectedServices ? fetchChooseService() : fetchVouchers();
+        navigate("/Partner/ListVoucherPN");
       } else {
         alert("Error: " + (data?.message || "Failed to delete voucher"));
       }
@@ -207,7 +208,24 @@ const ListVoucher = () => {
               key={voucher._id}
               className=" w-full rounded-lg p-4 bg-[#a8d9e4] text-[#3775A2]"
             >
-              <h2 className="text-2xl font-bold mb-3">{voucher.Name}</h2>
+              <div className="flex w-full">
+                <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-3/4">
+                  {voucher.Name}
+                </h2>
+                <div className="w-1/4 ">
+                  {" "}
+                  <span
+                    className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
+                      voucher.States === "Active"
+                        ? "bg-[#4ca771]"
+                        : "bg-[#cf3a3a]"
+                    } `}
+                  >
+                    {voucher.States}
+                  </span>
+                </div>
+              </div>
+
               <div className="grid grid-cols-12">
                 <div className="col-span-8">
                   <p>{voucher.Description}</p>
@@ -230,7 +248,7 @@ const ListVoucher = () => {
                     {date(voucher.ExpiredTime)}
                   </p>
                 </div>
-                <div className="col-span-4 grid grid-rows-2 gap-2">
+                <div className="col-span-4 grid  gap-2">
                   <Link
                     to={`/Partner/DetailVoucherPN/${voucher._id}`}
                     className="bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4c73a7] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"

@@ -66,7 +66,7 @@ const AuthProvider = ({ children }) => {
         navigate(savedCallback);
         break;
       case "partner":
-        navigate("/Partner");
+        navigate("/Partner/DashBoardPartner");
         break;
       default:
         navigate("/Login");

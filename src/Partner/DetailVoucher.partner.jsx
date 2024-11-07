@@ -99,7 +99,7 @@ const DetailVoucher = () => {
   const handleDeleteVoucher = async (id) => {
     try {
       const res = await fetch(`${URL}/deleteVoucher/${id}`, {
-        method: "DELETE",
+        method: "GET",
       });
       const voucher = await res.json();
       if (res.status === 200) {
