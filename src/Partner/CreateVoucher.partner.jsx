@@ -72,15 +72,12 @@ const CreateVoucher = () => {
 
   const fetchServices = async () => {
     try {
-      const response1 = await fetch(
-        "https://server-voucher.vercel.app/api/readtoken",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${Token}`,
-          },
-        }
-      );
+      const response1 = await fetch(`${URL}/readtoken`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      });
 
       if (!response1.ok) {
         throw new Error(
@@ -152,7 +149,6 @@ const CreateVoucher = () => {
     e.preventDefault();
 
     if (
-      !Voucher._id ||
       !Voucher.Name ||
       !ExpiredTime ||
       !ReleaseTime ||
@@ -164,6 +160,9 @@ const CreateVoucher = () => {
     ) {
       alert("Please fill all the fields");
       return;
+    }
+    if (!Voucher._id) {
+      Voucher._id = Math.random().toString(36).substring(5);
     }
 
     const formdata = new FormData();
