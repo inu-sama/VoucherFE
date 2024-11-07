@@ -10,7 +10,7 @@ const ListVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
-  const URL = "http://localhost:4001/api";
+  const URL = "https://server-voucher.vercel.app/api";
   // const navigate = useNavigate();
 
   const fetchServices = async () => {

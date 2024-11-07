@@ -19,7 +19,7 @@ const EditVoucherPN = () => {
   const [minValue, setMinValue] = useState(0);
   const [maxValue, setMaxValue] = useState(0);
 
-  const URL = " http://localhost:4001/api";
+  const URL = " https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
   const formattedPrice = (price) => {

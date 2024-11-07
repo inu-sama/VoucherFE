@@ -6,7 +6,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 const CreateVoucher = () => {
-  const URL = "http://localhost:4001/api";
+  const URL = "https://server-voucher.vercel.app/api";
 
   const [Voucher, setVoucher] = useState({
     _id: "",
