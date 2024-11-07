@@ -216,7 +216,7 @@ const ListVoucher = () => {
                   {" "}
                   <span
                     className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
-                      voucher.States === "Active"
+                      voucher.States === "enable"
                         ? "bg-[#4ca771]"
                         : "bg-[#cf3a3a]"
                     } `}
