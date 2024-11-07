@@ -1,9 +1,12 @@
+import { faSlash } from "@fortawesome/free-solid-svg-icons";
 import React, { createContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 const ProtectedRouter = ({ children }) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const login = (userData) => {
     setUser(userData);
@@ -11,11 +14,8 @@ const ProtectedRouter = ({ children }) => {
   };
 
   const logout = () => {
-    console.log("Logout function triggered");
     setUser(null);
-    localStorage.removeItem("Token");
-    localStorage.removeItem("URLCallBack");
-    localStorage.removeItem("OrderID");
+    localStorage.removeItem("accessToken");
   };
 
   return (

@@ -27,7 +27,10 @@ const CreateVoucher = () => {
 
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-
+  const [ExpiredTime, setExpiredDate] = useState(null);
+  const [ReleaseTime, setReleaseDate] = useState(null);
+  const [showExpiredCalendar, setShowExpiredCalendar] = useState(false);
+  const [showReleaseCalendar, setShowReleaseCalendar] = useState(false);
   const navigate = useNavigate();
 
   const fetchServices = async () => {
@@ -47,6 +50,26 @@ const CreateVoucher = () => {
   const handleConditionChange = (e) => {
     const { name, value } = e.target;
     setCondition((prev) => ({ ...prev, [name]: Number(value) }));
+  };
+
+  const toggleExpiredCalendar = (e) => {
+    e.preventDefault();
+    setShowExpiredCalendar(!showExpiredCalendar);
+  };
+
+  const toggleReleaseCalendar = (e) => {
+    e.preventDefault();
+    setShowReleaseCalendar(!showReleaseCalendar);
+  };
+
+  const handExpiredDateChange = (date) => {
+    setExpiredDate(date);
+    setShowExpiredCalendar(!showExpiredCalendar);
+  };
+
+  const handleReleaseDateChange = (date) => {
+    setReleaseDate(date);
+    setShowReleaseCalendar(!showReleaseCalendar);
   };
 
   const addCondition = () => {
@@ -185,15 +208,23 @@ const CreateVoucher = () => {
               <div className="col-span-12">
                 <label className="font-bold">Release Time</label>
               </div>
-              <div className="col-span-12">
-                <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                  type="date"
-                  value={Voucher.ReleaseTime}
-                  onChange={(e) =>
-                    setVoucher({ ...Voucher, ReleaseTime: e.target.value })
-                  }
-                />
+              <div className="col-span-12" onClick={toggleReleaseCalendar}>
+                <span className="border-2 border-[#75bde0] outline-none text-[#3b7097] placeholder:text-[#75bde0] py-[0.65rem] pr-14 px-2 h-full w-full rounded-lg bg-[#ffffff]">
+                  {ReleaseTime ? (
+                    <span>{formatDate(ReleaseTime)}</span>
+                  ) : (
+                    <span>Chọn ngày</span>
+                  )}
+                  {showReleaseCalendar && (
+                    <div className="absolute mt-6 right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4">
+                      <Calendar
+                        onChange={handleReleaseDateChange}
+                        value={ReleaseTime}
+                        minDate={new Date()}
+                      />
+                    </div>
+                  )}
+                </span>
               </div>
             </div>
             <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">

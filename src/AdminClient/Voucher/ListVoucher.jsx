@@ -90,7 +90,7 @@ const ListVoucher = () => {
   }
 
   return (
-    <div className="lg:bg-[#eaf9e7] bg-[#4ca771]">
+    <div className="lg:bg-[#eaf9e7] bg-[#4c7da7]">
       <div className="w-full bg-[#eaf9e7] rounded-t-xl p-4">
         <h1 className="text-4xl text-[#2F4F4F] mb-4 w-full text-center font-bold">
           Danh sách voucher
@@ -139,7 +139,7 @@ const ListVoucher = () => {
           </div>
           <Link
             to="/Admin/Createvoucher"
-            className="font-semibold bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg"
+            className="font-semibold bg-[#2F4F4F] hover:bg-[#e7eef9] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg"
           >
             Create Voucher
           </Link>

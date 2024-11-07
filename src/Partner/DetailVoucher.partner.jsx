@@ -4,27 +4,22 @@ import {
   faTrash,
   faEdit,
   faXmark,
-  faBug,
   faWrench,
 } from "@fortawesome/free-solid-svg-icons";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 const DetailVoucher = () => {
   const { id } = useParams();
   const [voucher, setVoucher] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [serviceNames, setServiceNames] = useState({});
   const navigate = useNavigate();
-  const URL = "https://server-voucher.vercel.app/api";
-  3;
+  const URL = "http://localhost:4001/api";
 
   const handlestate = async (id) => {
     try {
-      const res = await fetch(`${URL}/updateState/${id}`, {
-        method: "GET",
-      });
+      const res = await fetch(`${URL}/updateState/${id}`, { method: "GET" });
       const voucher = await res.json();
       if (res.status === 400) {
         alert("Error: " + (voucher.message || "Failed to update state"));
@@ -45,30 +40,61 @@ const DetailVoucher = () => {
     });
   };
 
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
   const DetailFetch = async () => {
     try {
       const res = await fetch(`${URL}/DetailVoucher/${id}`);
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
       const data = await res.json();
-      console.log("Dữ liệu nhận được:", data);
-      setVoucher(data[0]);
+      setVoucher(data);
     } catch (error) {
-      setError("Không thể lấy dữ liệu từ máy chủ");
-      console.error("Lỗi fetch:", error);
+      setError("Cannot fetch data from server");
+      console.error("Fetch error:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log("voucher updated:", voucher);
-  }, [voucher]);
-
-  useEffect(() => {
     DetailFetch();
   }, [id]);
+
+  const fetchServiceID = async (serviceId) => {
+    try {
+      const response = await fetch(`${URL}/getServiceID/${serviceId}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.name; // Return the name directly
+      } else {
+        throw new Error("Failed to fetch service name");
+      }
+    } catch (error) {
+      console.error("Error fetching service name:", error);
+      return "Unknown Service"; // Default value in case of error
+    }
+  };
+
+  useEffect(() => {
+    const fetchServiceNames = async () => {
+      const names = {};
+      for (const haveVoucher of voucher.haveVouchers) {
+        names[haveVoucher.Service_ID] = await fetchServiceID(
+          haveVoucher.Service_ID
+        );
+      }
+      setServiceNames(names);
+    };
+
+    if (voucher?.haveVouchers?.length > 0) {
+      fetchServiceNames();
+    }
+  }, [voucher?.haveVouchers]);
 
   const handleDeleteVoucher = async (id) => {
     try {
@@ -86,13 +112,15 @@ const DetailVoucher = () => {
       console.log(error);
     }
   };
+
   if (loading) {
     return (
-      <div className="text-center w-full text-4xl translate-y-1/2 h-full font-extrabold">
-        Loading...
+      <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
+        <span className="font-extrabold text-4xl text-center">Loading...</span>
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="text-center w-full text-4xl translate-y-1/2 h-full font-extrabold">
@@ -102,9 +130,9 @@ const DetailVoucher = () => {
   }
 
   return (
-    <div className="lg:bg-[#eaf9e7] bg-[#4ca771]">
-      <div className="w-full bg-[#eaf9e7] p-4 rounded-t-xl">
-        <div className="grid grid-cols-12 text-[#4ca771]">
+    <div className="lg:bg-[#eaf9e7] bg-[#4c7da7] h-full">
+      <div className="w-full bg-gradient-to-bl to-[#75bde0] h-full from-30% from-[#eeeeee] p-4 ">
+        <div className="grid grid-cols-12 text-[#3b7097]">
           <div className="col-span-11 flex items-center">
             <h1 className="text-4xl mt-4 mb-10 w-full text-left font-bold px-10">
               Chi tiết voucher
@@ -112,7 +140,7 @@ const DetailVoucher = () => {
           </div>
           <div className="col-span-1 flex items-center ">
             <Link to={`/Partner/ListvoucherPN`}>
-              <button className="bg-[#eaf9e7] hover:bg-[#4ca771] w-10 h-10 border-4 border-[#4ca771] hover:text-[#eaf9e7] font-bold rounded-full">
+              <button className="bg-[#eaf9e7] hover:bg-[#5591bc] w-10 h-10 border-4 border-[#5591bc] hover:text-[#eaf9e7] font-bold rounded-full">
                 <FontAwesomeIcon icon={faXmark} />
               </button>
             </Link>
@@ -124,21 +152,26 @@ const DetailVoucher = () => {
               className="w-full rounded-xl h-auto object-cover"
               src={voucher.Image}
               alt="Voucher"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg";
+              }}
             />
             <p className="text-xl my-2 flex justify-between">
-              <span className="font-bold text-[#4ca771]">Hạn sử dụng:</span>
-              <span>
+              <span className="font-bold text-[#3b7097]">Hạn sử dụng:</span>
+              <span className="text-[#3b7097]">
                 {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
                 <span> - </span>
                 {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
               </span>
             </p>
           </div>
-          <div className="w-full text-[#2F4F4F]">
+          <div className="w-full text-[#3B7097]">
             <h1 className="text-3xl font-bold mb-2">{voucher.Name}</h1>
-            <div className="w-full border-b border-[#4ca771] mb-10">
-              <span className="text-xl text-[#4ca771]">{voucher._id}</span>
-              <span className="float-right font-bold text-xl text-[#4ca771]">
+            <div className="w-full border-b border-[#3B7097] mb-10">
+              <span className="text-xl text-[#3b7097]">{voucher._id}</span>
+              <span className="float-right font-bold text-xl text-[#3b7097]">
                 Trạng thái:{" "}
                 <span
                   className={`font-normal ${
@@ -153,36 +186,46 @@ const DetailVoucher = () => {
             </div>
             <div>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#4ca771]">
+                <span className="font-bold text-[#3b7097]">
                   Số lượng còn lại:{" "}
                 </span>
-                {voucher.RemainQuantity || "N/A"}
+                <span className=" text-[#3b7097]">
+                  {voucher.RemainQuantity || "N/A"}
+                </span>
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#4ca771]">Mức giảm: </span>
-                {voucher.PercentDiscount || "N/A"}%
+                <span className="font-bold text-[#3b7097]">Mức giảm: </span>
+                <span className=" text-[#3b7097]">
+                  {voucher.PercentDiscount || "N/A"}%
+                </span>
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#4ca771]">Mô tả: </span>
-                {voucher.Description || "N/A"}
+                <span className="font-bold text-[#3b7097]">Mô tả: </span>
+                <span className=" text-[#3b7097]">
+                  {voucher.Description || "N/A"}
+                </span>
               </p>
               <div className="my-4">
                 {voucher.conditions && voucher.conditions.length > 0 ? (
                   voucher.conditions.map((condition) => (
                     <div
                       key={condition._id}
-                      className="shadow-inner shadow-[#c0e6ba] rounded-lg p-2 mb-2 font-semibold bg-white"
+                      className="shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-2 font-semibold bg-white"
                     >
                       <p>
-                        Giá trị tối thiểu:{" "}
-                        <span className="text-[#4ca771] font-normal">
-                          {condition.MinValue}đ
+                        <span className="text-lg font-bold text-[#3b7097]">
+                          Giá trị tối thiểu:{" "}
+                        </span>
+                        <span className="text-lg text-[#3B7097] font-normal">
+                          {formattedPrice(condition.MinValue)}
                         </span>
                       </p>
                       <p>
-                        Giá trị tối đa:{" "}
-                        <span className="text-[#4ca771] font-normal">
-                          {condition.MaxValue}đ
+                        <span className="text-lg font-bold text-[#3b7097]">
+                          Giá trị tối đa:{" "}
+                        </span>
+                        <span className="text-lg text-[#3b7097] font-normal">
+                          {formattedPrice(condition.MaxValue)}
                         </span>
                       </p>
                     </div>
@@ -191,20 +234,22 @@ const DetailVoucher = () => {
                   <p>Không có điều kiện áp dụng.</p>
                 )}
               </div>
-              <div className="my-4 bg-white shadow-inner shadow-[#c0e6ba] rounded-lg p-2 mb-5">
+              <div className="my-4 bg-white shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-5">
                 {voucher.haveVouchers && voucher.haveVouchers.length > 0 ? (
                   voucher.haveVouchers.map((haveVoucher) => (
                     <div key={haveVoucher._id}>
                       <p>
-                        <span className="text-[#4ca771] font-semibold">
+                        <span className="text-[#3b7097] text-lg font-semibold">
                           Service:
                         </span>{" "}
-                        {haveVoucher.Service_ID}
+                        <span className="text-[#3b7097] text-lg font-normal">
+                          {serviceNames[haveVoucher.Service_ID] || "Loading..."}
+                        </span>
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[#4ca771] font-semibold">
+                  <p className="text-[#3b7097] font-semibold">
                     Toàn bộ service
                   </p>
                 )}
@@ -217,7 +262,7 @@ const DetailVoucher = () => {
           <div className="col-span-3">
             <Link
               to={`/Partner/EditVoucherPN/${id}`}
-              className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#3b7097] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3b7097] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>

@@ -49,7 +49,7 @@ const DetailVoucher = () => {
       }
       const data = await res.json();
       console.log("Dữ liệu nhận được:", data);
-      setVoucher(data[0]);
+      setVoucher(data);
     } catch (error) {
       setError("Không thể lấy dữ liệu từ máy chủ");
       console.error("Lỗi fetch:", error);
