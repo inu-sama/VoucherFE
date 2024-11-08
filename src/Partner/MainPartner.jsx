@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Nav from "../Header_Footer/NavPartner.jsx";
 import Header from "../Header_Footer/HeaderPartner.jsx";
+import Footer from "../Header_Footer/Footer.jsx";
 
 const MainParter = () => {
   return (
@@ -14,6 +15,7 @@ const MainParter = () => {
           <Outlet />
         </div>
       </div>
+      <Footer className="w-full" />
     </div>
   );
 };

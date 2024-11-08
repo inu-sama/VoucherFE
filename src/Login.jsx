@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { SSO } from "@htilssu/wowo";
 import axios from "axios";
 const sso = new SSO("V4U");
-
+import imagelogin from "./assets/imagelogin.jpg";
 const Login = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -57,7 +57,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full h-screen bg-cover bg-[url('https://cdnb.artstation.com/p/assets/images/images/057/530/061/4k/arnold-folls-greenscenerywallpapers4k-51.jpg?1671839033')]">
+    <div
+      className={`flex items-center justify-center w-full h-screen bg-cover bg-[${imagelogin}]`}
+    >
       <div
         className="w-full lg:w-1/3 bg-white bg-opacity-50 backdrop-blur-md rounded-3xl text-[#2F4F4F] overflow-hidden shadow-xl shadow-[#2F4F4F]"
         id="loginForm"
