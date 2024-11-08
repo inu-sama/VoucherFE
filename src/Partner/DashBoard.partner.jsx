@@ -50,7 +50,7 @@ const DashBoardPartner = () => {
   const fetchHistory = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/Staitstical_PartnerService",
+        "https://server-voucher.vercel.app/api/Staitstical_PartnerService",
         {
           method: "GET",
           headers: {

@@ -18,8 +18,14 @@ const ProtectedRouter = ({ children }) => {
     localStorage.removeItem("accessToken");
   };
 
+  const ReloadPay = (reload) => {
+    if (user) {
+      window.location.href = reload;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, ReloadPay }}>
       {children}
     </AuthContext.Provider>
   );
