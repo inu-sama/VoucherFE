@@ -13,11 +13,12 @@ const Header = () => {
     const callback = localStorage.getItem("URLCallBack");
     if (callback) {
       window.location.href = callback;
+      logout();
     } else {
       console.error("Callback URL not found");
+      logout();
+      navigate("/login");
     }
-    logout();
-    navigate("/login");
   };
 
   return (
