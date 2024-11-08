@@ -23,33 +23,33 @@ const GetListVoucher = () => {
     );
   }
   const Token = localStorage.getItem("Token");
-  const fetchToken = async () => {
-    try {
-      const response = await fetch(`${URL}/readtoken`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${Token}`,
-        },
-      });
+  // const fetchToken = async () => {
+  //   try {
+  //     const response = await fetch(`${URL}/readtoken`, {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${Token}`,
+  //       },
+  //     });
 
-      if (response.ok) {
-        const userData = await response.json();
-        setToken(userData);
-        console.log("userData1", userData);
-        console.log("userData", userData.firstName);
-      } else {
-        throw new Error("Failed to get user data");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setError(error.message);
-      setLoading(false);
-    }
-  };
+  //     if (response.ok) {
+  //       const userData = await response.json();
+  //       setToken(userData);
+  //       console.log("userData1", userData);
+  //       console.log("userData", userData.firstName);
+  //     } else {
+  //       throw new Error("Failed to get user data");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     setError(error.message);
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchToken();
-  }, []);
+  // useEffect(() => {
+  //   fetchToken();
+  // }, []);
 
   const FetchNote = async () => {
     try {
@@ -89,10 +89,11 @@ const GetListVoucher = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${Token}`,
         },
         body: JSON.stringify({
-          CusID: token.firstName,
           Service_ID: note.Service_ID,
+          Partner_ID: note.Partner_ID,
           Price: note.Price,
         }),
       });
