@@ -62,14 +62,14 @@ const AuthProvider = ({ children }) => {
     const savedCallback = localStorage.getItem("URLCallBack") || "/null";
     switch (role) {
       case "Admin":
-        if (window.location.pathname === "/Login") {
+        if (window.location.pathname === "/sso") {
           navigate("/Admin/DashBoardAdmin");
         } else {
           navigate(window.location.pathname);
         }
         break;
       case "user":
-        navigate(window.location.pathname);
+        navigate("/");
         savedCallback();
         break;
       case "partner":
