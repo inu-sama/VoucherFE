@@ -110,18 +110,23 @@ const ListVoucher = () => {
   };
 
   const handleDeleteVoucher = async (id) => {
-    try {
-      const res = await fetch(`${URL}/deleteVoucher/${id}`);
-      const data = await res.json();
-      if (res.status === 200) {
-        alert("Xóa voucher thành công");
-        selectedServices ? fetchChooseService() : fetchVouchers();
-        window.location.reload();
-      } else {
-        alert("Error: " + (data?.message || "Failed to delete voucher"));
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa voucher?");
+    if (confirmDelete) {
+      try {
+        const res = await fetch(`${URL}/deleteVoucher/${id}`);
+        const data = await res.json();
+        if (res.status === 200) {
+          alert("Xóa voucher thành công");
+          selectedServices ? fetchChooseService() : fetchVouchers();
+          window.location.reload();
+        } else {
+          alert("Error: " + (data?.message || "Failed to delete voucher"));
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      return;
     }
   };
 

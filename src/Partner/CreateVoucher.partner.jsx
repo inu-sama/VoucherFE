@@ -29,6 +29,13 @@ const CreateVoucher = () => {
     PercentDiscount: "",
   });
 
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const Token = localStorage.getItem("Token");
@@ -342,6 +349,7 @@ const CreateVoucher = () => {
                   }
                   className="border-2 placeholder-[#5b91de] border-[#c6d6ff] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
+                  max={99}
                   name="PercentDiscount"
                   onChange={(e) =>
                     setVoucher({
@@ -462,17 +470,21 @@ const CreateVoucher = () => {
                 </div>
               </div>
               <div className="mt-5 px-4">
+                <span className="mb-2 text-xl text-[#4c84a7] font-semibold">
+                  <span className=" font-bold text-xl text-black">•</span> Giảm
+                  giá {Voucher.PercentDiscount}%, tối đa{" "}
+                </span>
                 <ul>
                   {Voucher.Conditions.map((cond, index) => (
                     <li
                       key={index}
-                      className="mb-2 text-[#4c84a7] font-semibold"
+                      className="mb-2 text-xl text-[#4c84a7] font-semibold"
                     >
                       <span className="text-[#2F4F4F] font-bold text-xl">
                         •{" "}
                       </span>
-                      Giảm {Voucher.PercentDiscount}%, tối đa {cond.MaxValue}đ
-                      cho đơn hàng từ {cond.MinValue}đ
+                      {formattedPrice(cond.MaxValue)} cho đơn hàng từ{" "}
+                      {formattedPrice(cond.MinValue)}
                       <button
                         className="float-right"
                         onClick={() => deleteCondition(index)}

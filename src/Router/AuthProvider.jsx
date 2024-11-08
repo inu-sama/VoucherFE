@@ -70,7 +70,6 @@ const AuthProvider = ({ children }) => {
         break;
       case "user":
         navigate("/");
-        savedCallback();
         break;
       case "partner":
         if (window.location.pathname === "/sso") {

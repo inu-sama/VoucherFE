@@ -293,6 +293,7 @@ const EditVoucherPN = () => {
                       placeholder={`Phần trăm giảm giá: ${data.PercentDiscount}`}
                       className="border-2 border-[#75bde0] bg-white outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="number"
+                      max={99}
                       onChange={(e) =>
                         setVoucher({
                           ...Voucher,

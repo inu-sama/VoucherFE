@@ -76,8 +76,12 @@ const GetListVoucher = () => {
   };
 
   useEffect(() => {
-    FetchNote();
-  }, []);
+    if (!note) {
+      FetchNote();
+    } else {
+      console.log("note is null");
+    }
+  }, [note]);
 
   const GetVoucher = async () => {
     try {

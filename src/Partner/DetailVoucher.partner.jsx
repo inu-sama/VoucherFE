@@ -97,19 +97,25 @@ const DetailVoucher = () => {
   }, [voucher?.haveVouchers]);
 
   const handleDeleteVoucher = async (id) => {
-    try {
-      const res = await fetch(`${URL}/deleteVoucher/${id}`, {
-        method: "GET",
-      });
-      const voucher = await res.json();
-      if (res.status === 200) {
-        alert("Xóa voucher thành công");
-        navigate("/Partner/ListVoucherPN");
-      } else {
-        alert("Error: " + (voucher.message || "Failed to delete voucher"));
+    const confirm = window.confirm(
+      "Are you sure you want to delete this voucher?"
+    );
+    if (!confirm) return;
+    else {
+      try {
+        const res = await fetch(`${URL}/deleteVoucher/${id}`, {
+          method: "GET",
+        });
+        const voucher = await res.json();
+        if (res.status === 200) {
+          alert("Xóa voucher thành công");
+          navigate("/Partner/ListVoucherPN");
+        } else {
+          alert("Error: " + (voucher.message || "Failed to delete voucher"));
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 

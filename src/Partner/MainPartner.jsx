@@ -15,7 +15,7 @@ const MainParter = () => {
           <Outlet />
         </div>
       </div>
-      <Footer className="w-full" />
+      <Footer className="w-full mt-6" />
     </div>
   );
 };
