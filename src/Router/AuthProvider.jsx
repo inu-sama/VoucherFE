@@ -57,16 +57,19 @@ const AuthProvider = ({ children }) => {
   }, [OrderID, token, callback, navigate, searchParams]);
 
   const navigateBasedOnRole = (role) => {
-    const savedCallback = localStorage.getItem("URLCallBack") || "/";
+    const savedCallback = localStorage.getItem("URLCallBack") || "/null";
     switch (role) {
       case "Admin":
-        navigate(window.location.pathname);
+        if (savedCallback === "/null") navigate("/Admin");
+        else navigate(window.location.pathname);
         break;
       case "user":
-        navigate(savedCallback);
+        if (savedCallback === "/null") navigate("/User");
+        else navigate(window.location.pathname);
         break;
       case "partner":
-        navigate(window.location.pathname);
+        if (savedCallback === "/null") navigate("/Partner");
+        else navigate(window.location.pathname);
         break;
       default:
         navigate("/Login");
