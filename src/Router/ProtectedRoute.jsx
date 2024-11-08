@@ -1,12 +1,9 @@
-import { faSlash } from "@fortawesome/free-solid-svg-icons";
-import React, { createContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
 const ProtectedRouter = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   const login = (userData) => {
     setUser(userData);
@@ -18,14 +15,8 @@ const ProtectedRouter = ({ children }) => {
     localStorage.removeItem("accessToken");
   };
 
-  const ReloadPay = (reload) => {
-    if (user) {
-      window.location.href = reload;
-    }
-  };
-
   return (
-    <AuthContext.Provider value={{ user, login, logout, ReloadPay }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -147,19 +147,18 @@ const CreateVoucher = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (
-      !Voucher.Name ||
-      !ExpiredTime ||
-      !ReleaseTime ||
-      !Voucher.Description ||
       !Voucher.Image ||
+      !Voucher.Name ||
+      !Voucher.Description ||
+      !Voucher.PercentDiscount ||
       !Voucher.RemainQuantity ||
-      !Voucher.Conditions.length ||
-      !selectedServices.length
+      !Voucher.Conditions ||
+      !selectedServices ||
+      !ReleaseTime ||
+      !ExpiredTime
     ) {
-      alert("Please fill all the fields");
-      return;
+      alert("Please fill in all fields");
     }
     if (!Voucher._id) {
       Voucher._id = Math.random().toString(36).substring(5);
@@ -246,6 +245,9 @@ const CreateVoucher = () => {
                     setVoucher({ ...Voucher, Name: e.target.value })
                   }
                 />
+                {!Voucher.Name && (
+                  <p className="text-red-500 text-sm">Please enter a name</p>
+                )}
               </div>
             </div>
           </div>
@@ -263,6 +265,11 @@ const CreateVoucher = () => {
                   setVoucher({ ...Voucher, Description: e.target.value })
                 }
               />
+              {!Voucher.Description && (
+                <p className="text-red-500 text-sm">
+                  Please enter a description
+                </p>
+              )}
             </div>
           </div>
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -343,6 +350,11 @@ const CreateVoucher = () => {
                     })
                   }
                 />
+                {!Voucher.PercentDiscount && (
+                  <p className="text-red-500 text-sm">
+                    Please enter a discount percentage
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-12 items-center bg-[#c6d6ff] text-[#3775A2] pl-4 rounded-lg h-12">
@@ -365,6 +377,11 @@ const CreateVoucher = () => {
                     })
                   }
                 />
+                {!Voucher.RemainQuantity && (
+                  <p className="text-red-500 text-sm">
+                    Please enter a quantity
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -382,9 +399,14 @@ const CreateVoucher = () => {
                 }
                 className="file-input outline-none file:border-0 file:rounded-full file:shadow-md file:shadow-[#ffffff] file:text-[#5b91de] file:bg-[#ffffff] w-full bg-[#ffffff] shadow-md shadow-[#ffffff] text-[#5b91de] placeholder-[#5b91de] text-lg rounded-full"
               />
+              {!Voucher.Image && (
+                <p className="text-red-500 my-2 text-sm">
+                  Please upload an image
+                </p>
+              )}
             </div>
           </div>
-          <div className="mt-10 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center border border-transparent border-t-[#c0e6ba]">
+          <div className="mt-10 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center">
             <div className="grid grid-cols-12 items-center bg-[#c6d6ff] text-[#3775A2] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-4">
                 <label className="font-bold w-full text-[#3775A2] line-clamp-1">

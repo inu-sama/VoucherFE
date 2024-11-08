@@ -25,7 +25,7 @@ const DetailVoucher = () => {
         alert("Error: " + (voucher.message || "Failed to update state"));
       } else {
         alert("Update State Success");
-        navigate(`/Partner/ListVoucherPN/`);
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -104,7 +104,7 @@ const DetailVoucher = () => {
       const voucher = await res.json();
       if (res.status === 200) {
         alert("Xóa voucher thành công");
-        DetailFetch();
+        navigate("/Partner/ListVoucherPN");
       } else {
         alert("Error: " + (voucher.message || "Failed to delete voucher"));
       }

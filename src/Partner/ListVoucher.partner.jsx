@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -116,7 +116,7 @@ const ListVoucher = () => {
       if (res.status === 200) {
         alert("Xóa voucher thành công");
         selectedServices ? fetchChooseService() : fetchVouchers();
-        navigate("/Partner/ListVoucherPN");
+        window.location.reload();
       } else {
         alert("Error: " + (data?.message || "Failed to delete voucher"));
       }

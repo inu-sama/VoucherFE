@@ -99,6 +99,7 @@ const EditVoucherPN = () => {
       } else {
         setError("");
         alert("Condition updated successfully");
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);

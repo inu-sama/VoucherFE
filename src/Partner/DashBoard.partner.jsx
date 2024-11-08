@@ -59,7 +59,7 @@ const DashBoardPartner = () => {
         }
       );
       if (!res.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Hiện bạn có chưa có dữ liệu nào");
       }
       const data = await res.json();
       setHistory(data);
@@ -320,7 +320,7 @@ const DashBoardPartner = () => {
       {noDataFound && !noFilterData && (
         <div className=" h-full flex items-center justify-center">
           <p className="font-extrabold text-4xl text-center">
-            Không tìm thấy dữ liệu, vui lòng chọn lại
+            Can not find data, please choose another
           </p>
         </div>
       )}
@@ -370,7 +370,6 @@ const DashBoardPartner = () => {
 
       {filteredData.length > 0 && !noDataFound && !noFilterData && (
         <div className="w-full p-8">
-          {/* Line Chart - Voucher ID vs Total Discount */}
           <div className="w-full">
             <Line data={lineData} />
           </div>
