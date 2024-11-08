@@ -15,6 +15,8 @@ const AuthProvider = ({ children }) => {
   const callback =
     searchParams.get("URLCallBack") || localStorage.getItem("URLCallBack");
 
+  const login = "";
+
   useEffect(() => {
     const checkUserAuth = async () => {
       if (token) {
@@ -60,29 +62,35 @@ const AuthProvider = ({ children }) => {
     const savedCallback = localStorage.getItem("URLCallBack") || "/null";
     switch (role) {
       case "Admin":
-        if (savedCallback === "/null") navigate("/Admin");
-        else navigate(window.location.pathname);
+        if (window.location.pathname === "/Login") {
+          navigate("/Admin/DashBoardAdmin");
+        } else {
+          navigate(window.location.pathname);
+        }
         break;
       case "user":
-        if (savedCallback === "/null") navigate("/User");
-        else navigate(window.location.pathname);
+        navigate(window.location.pathname);
+        savedCallback();
         break;
       case "partner":
-        if (savedCallback === "/null") navigate("/Partner");
-        else navigate(window.location.pathname);
+        if (window.location.pathname === "/sso") {
+          navigate("/Partner/DashBoardPartner");
+        } else {
+          navigate(window.location.pathname);
+        }
         break;
       default:
         navigate("/Login");
     }
   };
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("Token", userData.token);
-    localStorage.setItem("OrderID", OrderID);
-    localStorage.setItem("URLCallBack", callback);
-    navigateBasedOnRole(userData.role);
-  };
+  // const login = (userData) => {
+  //   setUser(userData);
+  //   localStorage.setItem("Token", userData.token);
+  //   localStorage.setItem("OrderID", OrderID);
+  //   localStorage.setItem("URLCallBack", callback);
+  //   navigateBasedOnRole(userData.role);
+  // };
 
   const value = useMemo(() => ({ user, login }), [user]);
 
