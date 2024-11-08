@@ -13,6 +13,15 @@ const GetListVoucher = () => {
   const URL = "https://server-voucher.vercel.app/api";
 
   const OrderID = localStorage.getItem("OrderID");
+  if (!OrderID) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="font-extrabold text-4xl text-center ">
+          This is page of customer you make have OrderID to access this page
+        </p>
+      </div>
+    );
+  }
   const Token = localStorage.getItem("Token");
   const fetchToken = async () => {
     try {
@@ -180,7 +189,6 @@ const GetListVoucher = () => {
   for (let i = 0; i < Math.ceil(vouchers.length / 4); i++) {
     pages.push(i + 1);
   }
-  //bg-gradient-to-r from-[#80ed99] to-[#0ad1c8]
   return (
     <div>
       <Header />
