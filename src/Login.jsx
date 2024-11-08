@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { SSO } from "@htilssu/wowo";
 import axios from "axios";
 const sso = new SSO("V4U");
-import imagelogin from "./assets/imagelogin.jpg";
 const Login = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -16,7 +15,7 @@ const Login = () => {
 
   const URL = "https://server-voucher.vercel.app/api";
   function handleLoginSSO() {
-    sso.redirectToLogin("http://localhost:2106/sso");
+    sso.redirectToLogin("https://voucher4u-fe.vercel.app/sso");
   }
 
   const handleLogin = async (e) => {
@@ -58,7 +57,7 @@ const Login = () => {
 
   return (
     <div
-      className={`flex items-center justify-center w-full h-screen bg-cover bg-[${imagelogin}]`}
+      className={`flex items-center justify-center w-full h-screen bg-cover bg-[url(./assets/imagelogin.jpg)]`}
     >
       <div
         className="w-full lg:w-1/3 bg-white bg-opacity-50 backdrop-blur-md rounded-3xl text-[#2F4F4F] overflow-hidden shadow-xl shadow-[#2F4F4F]"
