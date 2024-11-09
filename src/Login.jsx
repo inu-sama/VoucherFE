@@ -38,7 +38,7 @@ const Login = () => {
 
       if (response.status === 200) {
         const token = response.data.AccessTokken;
-        window.location.href = `https://voucher4u-fe.vercel.app/?Token=${token}`;
+        window.location.href = `https://voucher4u-fe.vercel.app/sso?Token=${token}`;
       } else {
         throw new Error("Đăng nhập không thành công.");
       }
