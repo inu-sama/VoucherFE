@@ -63,7 +63,7 @@ const AuthProvider = ({ children }) => {
     switch (role) {
       case "Admin":
         if (window.location.pathname === "/sso") {
-          navigate("/Admin/DashBoardAdmin");
+          navigate("/Admin/ChartVoucher");
         } else {
           navigate(window.location.pathname);
         }
