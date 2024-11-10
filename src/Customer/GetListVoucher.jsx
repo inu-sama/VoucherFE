@@ -10,7 +10,6 @@ const GetListVoucher = () => {
   const [PriceDiscount, setPriceDiscount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
@@ -144,7 +143,7 @@ const GetListVoucher = () => {
       const data = await response.json();
       if (response.status === 200) {
         alert("Áp dụng voucher thành công");
-        navigate(-1);
+        navigate(-3);
       } else {
         alert("Error: " + (data.message || "Failed to apply voucher"));
       }
