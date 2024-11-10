@@ -174,7 +174,7 @@ const GetListVoucher = () => {
       const data = await response.json();
       if (response.status === 200) {
         alert("Áp dụng voucher thành công");
-        navigate(-3);
+        window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
       } else {
         alert("Error: " + (data.message || "Failed to apply voucher"));
       }
