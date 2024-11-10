@@ -127,10 +127,10 @@ const GetListVoucher = () => {
   };
 
   useEffect(() => {
-    if (note) {
+    if (note && ServiceID) {
       GetVoucher();
     }
-  }, [note]);
+  }, [note, ServiceID]);
 
   const setDiscount = async (idVoucher) => {
     try {
