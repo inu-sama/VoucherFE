@@ -143,7 +143,7 @@ const EditVoucher = () => {
                 Trạng thái:{" "}
                 <span
                   className={`font-normal ${
-                    data.States === "enable" ? "text-green-500" : "text-red-500"
+                    data.States === "Enable" ? "text-green-500" : "text-red-500"
                   }`}
                 >
                   {data.States}

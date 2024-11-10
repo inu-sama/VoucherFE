@@ -1,4 +1,7 @@
 import { memo, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -36,6 +39,7 @@ const DashBoardPartner = () => {
   const [noDataFound, setNoDataFound] = useState(false);
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
+  const URL = "https://server-voucher.vercel.app/api";
 
   const [showServiceDropdown, setShowServiceDropdown] = useState(false);
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
@@ -49,17 +53,14 @@ const DashBoardPartner = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(
-        "https://server-voucher.vercel.app/api/Staitstical_PartnerService",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("Token")}`,
-          },
-        }
-      );
+      const res = await fetch(`${URL}/Statistical_VoucherAdmin`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("Token")}`,
+        },
+      });
       if (!res.ok) {
-        throw new Error("Hiện bạn có chưa có dữ liệu nào");
+        throw new Error("You currently do not data display");
       }
       const data = await res.json();
       setHistory(data);
@@ -189,20 +190,44 @@ const DashBoardPartner = () => {
     ],
   };
 
+  const options = {
+    scales: {
+      x: {
+        ticks: {
+          color: "#000000",
+        },
+      },
+      y: {
+        ticks: {
+          color: "#000000",
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: "#000000",
+        },
+      },
+    },
+  };
+
   const months = Array.from({ length: 12 }, (_, index) => index + 1);
 
   if (isLoading) {
     return (
       <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
-        <span className="font-extrabold text-4xl text-center">Loading...</span>
+        <span className="font-extrabold text-4xl text-black text-center">
+          Loading...
+        </span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center text-4xl translate-y-1/2 h-full font-extrabold">
-        Error: {error}
+      <div className="text-center text-4xl text-black translate-y-1/2 h-full font-extrabold">
+        {error}
       </div>
     );
   }
@@ -337,32 +362,83 @@ const DashBoardPartner = () => {
         </div>
         <div className="col-span-8">
           <div className="p-6">
-            <h1 className="text-4xl text-[#3775A2] mb-4 w-full text-center font-bold">
-              chỗ này lỏ thông cảm từ fix
-            </h1>
             {filteredData.length > 0 && (
-              <table className="bg-yellow-300">
-                <thead>
-                  <tr className="text-left">
-                    <th>Voucher ID</th>
-                    <th>Service IDs</th>
-                    <th>Total Used</th>
-                    <th>Total Discount</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(voucherStatistics).map((voucherId) => (
-                    <tr key={voucherId}>
-                      <td>{voucherId}</td>
-                      <td>{voucherStatistics[voucherId].serviceIDs}</td>
-                      <td>{voucherStatistics[voucherId].totalUsed}</td>
-                      <td>{voucherStatistics[voucherId].totalDiscount}</td>
-                      <td>{voucherStatistics[voucherId].date}</td>
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-left rtl:text-right text-lg text-white dark:text-black">
+                  <thead className="text-sm text-gray-700 uppercase  dark:bg-[#3775A2] dark:text-white">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        Voucher ID
+                      </th>
+                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        Service IDs
+                      </th>
+                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        Total Used
+                      </th>
+                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        Price
+                      </th>
+                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        Total Discount
+                      </th>
+                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        Date
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 whitespace-nowrap"
+                      ></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {Object.keys(voucherStatistics).map((voucherId) => (
+                      <tr
+                        key={voucherId}
+                        className="odd:bg-[#73B9EA] odd:dark:bg-[#73B9EA] even:bg-gray-50 even:dark:bg-[#5C97C5] border-b dark:border-[#67a1cd]"
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
+                        >
+                          {voucherId}
+                        </th>
+                        <td className="px-6 py-4">
+                          {voucherStatistics[voucherId].serviceIDs}
+                        </td>
+                        <td className="px-6 py-4">
+                          {voucherStatistics[voucherId].totalUsed}
+                        </td>
+                        <td className="px-6 py-4">
+                          {formattedPrice(
+                            voucherStatistics[voucherId].totalDiscount
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {formattedPrice(
+                            voucherStatistics[voucherId].totalDiscount
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {voucherStatistics[voucherId].date}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-lg font-medium">
+                          <Link
+                            to="#"
+                            className="font-medium text-black dark:text-black "
+                          >
+                            <FontAwesomeIcon
+                              className="mr-2 mt-2"
+                              icon={faCircleInfo}
+                            />
+                            Detail
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
@@ -371,7 +447,7 @@ const DashBoardPartner = () => {
       {filteredData.length > 0 && !noDataFound && !noFilterData && (
         <div className="w-full p-8">
           <div className="w-full">
-            <Line data={lineData} />
+            <Line data={lineData} options={options} />
           </div>
         </div>
       )}

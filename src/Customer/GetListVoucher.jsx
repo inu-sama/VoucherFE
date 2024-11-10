@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../Header_Footer/HeaderCus";
+import { useNavigate } from "react-router-dom";
 
 const GetListVoucher = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
@@ -11,6 +12,14 @@ const GetListVoucher = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
+  const navigate = useNavigate();
+
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
 
   const OrderID = localStorage.getItem("OrderID");
   if (!OrderID) {
@@ -23,33 +32,6 @@ const GetListVoucher = () => {
     );
   }
   const Token = localStorage.getItem("Token");
-  // const fetchToken = async () => {
-  //   try {
-  //     const response = await fetch(`${URL}/readtoken`, {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${Token}`,
-  //       },
-  //     });
-
-  //     if (response.ok) {
-  //       const userData = await response.json();
-  //       setToken(userData);
-  //       console.log("userData1", userData);
-  //       console.log("userData", userData.firstName);
-  //     } else {
-  //       throw new Error("Failed to get user data");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     setError(error.message);
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchToken();
-  // }, []);
 
   const FetchNote = async () => {
     try {
@@ -65,7 +47,6 @@ const GetListVoucher = () => {
       }
 
       const data = await response.json();
-      console.log("data note", data);
       setNote(data);
       setLoading(false);
     } catch (error) {
@@ -78,8 +59,6 @@ const GetListVoucher = () => {
   useEffect(() => {
     if (!note) {
       FetchNote();
-    } else {
-      console.log("note is null");
     }
   }, [note]);
 
@@ -98,9 +77,12 @@ const GetListVoucher = () => {
         }),
       });
 
+      if (!response.ok) {
+        setError("Now voucher disavailable for this service");
+      }
+
       const data = await response.json();
 
-      console.log("dataGetList", data);
       if (Array.isArray(data)) {
         setVouchers(data);
       } else {
@@ -136,7 +118,6 @@ const GetListVoucher = () => {
       if (!response.ok) {
         throw new Error("Server error: " + response.statusText);
       }
-
       const data = await response.json();
 
       setPriceDiscount(data);
@@ -153,9 +134,9 @@ const GetListVoucher = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${Token}`,
         },
         body: JSON.stringify({
-          CusID: token.firstName,
           TotalDiscount: PriceDiscount,
           Price: note.Price,
         }),
@@ -163,12 +144,12 @@ const GetListVoucher = () => {
       const data = await response.json();
       if (response.status === 200) {
         alert("Áp dụng voucher thành công");
-        GetVoucher();
+        navigate(-1);
       } else {
         alert("Error: " + (data.message || "Failed to apply voucher"));
       }
     } catch (error) {
-      console.log(error);
+      setError(error);
     }
   };
 
@@ -191,7 +172,7 @@ const GetListVoucher = () => {
     );
   }
   const pages = [];
-  for (let i = 0; i < Math.ceil(vouchers.length / 4); i++) {
+  for (let i = 0; i < Math.ceil(vouchers.length / 6); i++) {
     pages.push(i + 1);
   }
   return (
@@ -211,7 +192,7 @@ const GetListVoucher = () => {
                 {vouchers.map((voucher, index) => {
                   while (
                     index >= selectedPage * 4 - 4 &&
-                    index < selectedPage * 4
+                    index < selectedPage * 6
                   ) {
                     return (
                       <div
@@ -256,7 +237,11 @@ const GetListVoucher = () => {
                     return (
                       <p
                         key={page}
-                        className="rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        }`}
                         onClick={() => {
                           setSelectedPage(page);
                         }}
@@ -296,19 +281,19 @@ const GetListVoucher = () => {
                     Giá tiền:
                   </div>
                   <div className="w-full text-end text-[#213a57] py-2">
-                    {note.Price}đ
+                    {formattedPrice(note.Price)}
                   </div>
                   <div className="w-full font-bold text-[#213a57] py-2">
                     Giảm:
                   </div>
                   <div className="w-full text-end text-[#213a57] py-2">
-                    {PriceDiscount}đ
+                    {formattedPrice(PriceDiscount)}
                   </div>
                   <div className="w-full font-bold text-[#213a57] py-2 text-xl">
                     Tổng cộng:
                   </div>
                   <div className="w-full text-end text-[#213a57] py-2 text-xl">
-                    {note.Price - PriceDiscount}đ
+                    {formattedPrice(note.Price - PriceDiscount)}
                   </div>
                 </div>
               </div>
@@ -342,18 +327,18 @@ const GetListVoucher = () => {
                         </span>{" "}
                         cho đơn hàng từ{" "}
                         <span className="font-bold">
-                          {selectedVoucher.MinCondition}đ
+                          {formattedPrice(selectedVoucher.MinCondition)}
                         </span>
                       </p>
                       {selectedVoucher.conditions.map((condition) => (
                         <p className="text-lg" key={condition._id}>
                           Giảm tối đa{" "}
                           <span className="font-bold">
-                            {condition.MaxValue}đ
+                            {formattedPrice(condition.MaxValue)}
                           </span>{" "}
                           cho đơn hàng từ{" "}
                           <span className="font-bold">
-                            {condition.MinValue}đ
+                            {formattedPrice(condition.MinValue)}
                           </span>
                         </p>
                       ))}
@@ -367,12 +352,19 @@ const GetListVoucher = () => {
               )}
               <div className="w-full p-1 bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] mb-4 mt-10 rounded-xl cursor-pointer">
                 <div className="bg-white rounded-lg">
-                  <p
+                  <button
                     id="applyBtn"
+                    onClick={() => {
+                      if (selectedVoucher) {
+                        submitApplyVouhcer(selectedVoucher._id);
+                      } else {
+                        alert("Chưa chọn voucher");
+                      }
+                    }}
                     className="w-full text-center font-bold text-3xl bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] text-white hover:bg-clip-text hover:text-transparent p-4 rounded-lg"
                   >
                     APPLY
-                  </p>
+                  </button>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import logo from "../assets/logo-2da.png";
 
 const Footer = () => {
   return (
-    <div className="w-full bg-[#75bde0] grid grid-cols-12 shadow-inner shadow-[#f6e2bc] py-10 px-20 text-[#f6e2bc] text-xl">
+    <div className="w-full bg-[#75bde0]  grid grid-cols-12 shadow-inner shadow-[#ffffff] py-10 px-20 text-[#16233b] text-xl">
       <div className="col-span-4 w-full">
         <div className="flex items-center">
           <img src={logo} alt="logo" className="w-28 h-28 rounded-full" />

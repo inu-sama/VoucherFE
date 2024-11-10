@@ -137,7 +137,9 @@ const ListVoucher = () => {
   if (loading) {
     return (
       <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
-        <span className="font-extrabold text-4xl text-center">Loading...</span>
+        <span className="font-extrabold text-black text-4xl text-center">
+          Loading...
+        </span>
       </div>
     );
   }
@@ -152,7 +154,7 @@ const ListVoucher = () => {
   return (
     <div className="lg:bg-[#e7f3f9] h-full bg-[#4c98a7]">
       <div className="w-full bg-gradient-to-bl to-[#75bde0] from-30% h-full from-[#eeeeee]  p-4">
-        <h1 className="text-4xl text-[#3775A2] mb-4 w-full text-center font-bold">
+        <h1 className="text-4xl text-[#16233B] mb-4 w-full text-center font-bold">
           Danh sách voucher
         </h1>
         <div className="flex justify-between my-2 h-fit w-full p-2">
@@ -161,7 +163,7 @@ const ListVoucher = () => {
               onClick={toggleshow}
               tabIndex={0}
               role="button"
-              className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
+              className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
             >
               Sort by Service
             </div>
@@ -170,7 +172,7 @@ const ListVoucher = () => {
                 tabIndex={0}
                 className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
               >
-                <li className="flex items-center text-[#3775A2] text-lg">
+                <li className="flex items-center text-[#16233B] text-lg">
                   <a
                     onClick={() => {
                       setSelectedServices(null),
@@ -185,7 +187,7 @@ const ListVoucher = () => {
                 {services.map((service) => (
                   <li
                     key={service.id}
-                    className="flex items-center text-[#3775A2] text-lg"
+                    className="flex items-center text-[#16233B] text-lg"
                   >
                     <a
                       onClick={() => {
@@ -202,7 +204,7 @@ const ListVoucher = () => {
           </div>
           <Link
             to="/Partner/CreatevoucherPN"
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] px-4 py-2 rounded-lg"
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#3775A2] px-4 py-2 rounded-lg"
           >
             Create Voucher
           </Link>
@@ -211,7 +213,7 @@ const ListVoucher = () => {
           {vouchers.map((voucher) => (
             <div
               key={voucher._id}
-              className=" w-full rounded-lg p-4 bg-[#a8d9e4] text-[#3775A2]"
+              className=" w-full rounded-lg p-4 bg-[#a8d9e4] text-[#16233B]"
             >
               <div className="flex w-full">
                 <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-3/4">
@@ -221,7 +223,7 @@ const ListVoucher = () => {
                   {" "}
                   <span
                     className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
-                      voucher.States === "enable"
+                      voucher.States === "Enable"
                         ? "bg-[#4ca771]"
                         : "bg-[#cf3a3a]"
                     } `}
@@ -235,19 +237,19 @@ const ListVoucher = () => {
                 <div className="col-span-8">
                   <p>{voucher.Description}</p>
                   <p>
-                    <span className="font-bold text-[#4c73a7]">
+                    <span className="font-bold text-[#3f5f89]">
                       Số lượng còn lại:
                     </span>{" "}
                     {voucher.RemainQuantity}
                   </p>
                   <p>
-                    <span className="font-bold text-[#4c73a7]">
+                    <span className="font-bold text-[#3f5f89]">
                       Thời gian bắt đầu:
                     </span>{" "}
                     {date(voucher.ReleaseTime)}
                   </p>
                   <p>
-                    <span className="font-bold text-[#4c73a7]">
+                    <span className="font-bold text-[#3f5f89]">
                       Thời gian hết hạn:
                     </span>{" "}
                     {date(voucher.ExpiredTime)}
@@ -256,14 +258,14 @@ const ListVoucher = () => {
                 <div className="col-span-4 grid  gap-2">
                   <Link
                     to={`/Partner/DetailVoucherPN/${voucher._id}`}
-                    className="bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4c73a7] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"
+                    className="bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"
                   >
                     <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
                     Detail
                   </Link>
                   <button
                     onClick={() => handleDeleteVoucher(voucher._id)}
-                    className="bg-[#2f414f] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
+                    className="bg-[#2f414f] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
                   >
                     <FontAwesomeIcon icon={faTrash} className="mr-2" />
                     Delete

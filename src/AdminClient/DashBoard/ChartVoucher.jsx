@@ -49,11 +49,8 @@ const ChartVoucher = () => {
     const fetchHistory = async () => {
       try {
         const res = await fetch(
-          "https://server-voucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
+          "https://server-voucher.vercel.app/api/Statistical_VoucherAdmin"
         );
-        // const res = await fetch(
-        //   "https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
-        // );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }

@@ -53,6 +53,7 @@ const DetailVoucher = () => {
       if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
       const data = await res.json();
       setVoucher(data);
+      console.log("Dữ liệu nhận được:", data);
     } catch (error) {
       setError("Cannot fetch data from server");
       console.error("Fetch error:", error);
@@ -122,7 +123,9 @@ const DetailVoucher = () => {
   if (loading) {
     return (
       <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
-        <span className="font-extrabold text-4xl text-center">Loading...</span>
+        <span className="font-extrabold text-black text-4xl text-center">
+          Loading...
+        </span>
       </div>
     );
   }
@@ -138,7 +141,7 @@ const DetailVoucher = () => {
   return (
     <div className="lg:bg-[#eaf9e7] bg-[#4c7da7] h-full">
       <div className="w-full bg-gradient-to-bl to-[#75bde0] h-full from-30% from-[#eeeeee] p-4 ">
-        <div className="grid grid-cols-12 text-[#3b7097]">
+        <div className="grid grid-cols-12 text-[#3f5f89]">
           <div className="col-span-11 flex items-center">
             <h1 className="text-4xl mt-4 mb-10 w-full text-left font-bold px-10">
               Chi tiết voucher
@@ -165,8 +168,8 @@ const DetailVoucher = () => {
               }}
             />
             <p className="text-xl my-2 flex justify-between">
-              <span className="font-bold text-[#3b7097]">Hạn sử dụng:</span>
-              <span className="text-[#3b7097]">
+              <span className="font-bold text-[#3f5f89]">Hạn sử dụng:</span>
+              <span className="text-[#3f5f89]">
                 {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
                 <span> - </span>
                 {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
@@ -176,12 +179,12 @@ const DetailVoucher = () => {
           <div className="w-full text-[#3B7097]">
             <h1 className="text-3xl font-bold mb-2">{voucher.Name}</h1>
             <div className="w-full border-b border-[#3B7097] mb-10">
-              <span className="text-xl text-[#3b7097]">{voucher._id}</span>
-              <span className="float-right font-bold text-xl text-[#3b7097]">
+              <span className="text-xl text-[#3f5f89]">{voucher._id}</span>
+              <span className="float-right font-bold text-xl text-[#3f5f89]">
                 Trạng thái:{" "}
                 <span
                   className={`font-normal ${
-                    voucher.States === "enable"
+                    voucher.States === "Enable"
                       ? "text-green-500"
                       : "text-red-500"
                   }`}
@@ -192,22 +195,22 @@ const DetailVoucher = () => {
             </div>
             <div>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#3b7097]">
+                <span className="font-bold text-[#3f5f89]">
                   Số lượng còn lại:{" "}
                 </span>
-                <span className=" text-[#3b7097]">
+                <span className=" text-[#3f5f89]">
                   {voucher.RemainQuantity || "N/A"}
                 </span>
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#3b7097]">Mức giảm: </span>
-                <span className=" text-[#3b7097]">
+                <span className="font-bold text-[#3f5f89]">Mức giảm: </span>
+                <span className=" text-[#3f5f89]">
                   {voucher.PercentDiscount || "N/A"}%
                 </span>
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#3b7097]">Mô tả: </span>
-                <span className=" text-[#3b7097]">
+                <span className="font-bold text-[#3f5f89]">Mô tả: </span>
+                <span className=" text-[#3f5f89]">
                   {voucher.Description || "N/A"}
                 </span>
               </p>
@@ -219,7 +222,7 @@ const DetailVoucher = () => {
                       className="shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-2 font-semibold bg-white"
                     >
                       <p>
-                        <span className="text-lg font-bold text-[#3b7097]">
+                        <span className="text-lg font-bold text-[#3f5f89]">
                           Giá trị tối thiểu:{" "}
                         </span>
                         <span className="text-lg text-[#3B7097] font-normal">
@@ -227,10 +230,10 @@ const DetailVoucher = () => {
                         </span>
                       </p>
                       <p>
-                        <span className="text-lg font-bold text-[#3b7097]">
+                        <span className="text-lg font-bold text-[#3f5f89]">
                           Giá trị tối đa:{" "}
                         </span>
-                        <span className="text-lg text-[#3b7097] font-normal">
+                        <span className="text-lg text-[#3f5f89] font-normal">
                           {formattedPrice(condition.MaxValue)}
                         </span>
                       </p>
@@ -245,17 +248,17 @@ const DetailVoucher = () => {
                   voucher.haveVouchers.map((haveVoucher) => (
                     <div key={haveVoucher._id}>
                       <p>
-                        <span className="text-[#3b7097] text-lg font-semibold">
+                        <span className="text-[#3f5f89] text-lg font-semibold">
                           Service:
                         </span>{" "}
-                        <span className="text-[#3b7097] text-lg font-normal">
+                        <span className="text-[#3f5f89] text-lg font-normal">
                           {serviceNames[haveVoucher.Service_ID] || "Loading..."}
                         </span>
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[#3b7097] font-semibold">
+                  <p className="text-[#3f5f89] font-semibold">
                     Toàn bộ service
                   </p>
                 )}
@@ -268,7 +271,7 @@ const DetailVoucher = () => {
           <div className="col-span-3">
             <Link
               to={`/Partner/EditVoucherPN/${id}`}
-              className="bg-[#3b7097] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3b7097] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#3f5f89] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>

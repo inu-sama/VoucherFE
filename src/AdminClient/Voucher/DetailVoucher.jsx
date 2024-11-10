@@ -131,7 +131,7 @@ const DetailVoucher = () => {
                 Trạng thái:{" "}
                 <span
                   className={`font-normal ${
-                    voucher.States === "enable"
+                    voucher.States === "Enable"
                       ? "text-green-500"
                       : "text-red-500"
                   }`}

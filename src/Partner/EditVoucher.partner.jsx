@@ -146,7 +146,9 @@ const EditVoucherPN = () => {
   if (loading) {
     return (
       <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
-        <span className="font-extrabold text-4xl text-center">Loading...</span>
+        <span className="font-extrabold text-4xl text-black text-center">
+          Loading...
+        </span>
       </div>
     );
   }
@@ -164,7 +166,7 @@ const EditVoucherPN = () => {
         <h1 className="text-4xl text-[#2F4F4F] px-4 mt-4 w-full text-left font-bold">
           Sửa voucher
         </h1>
-        <p className="p-4 text-[#4c6fa7] w-full text-xl mb-10">
+        <p className="p-4 text-[#3F5F89] w-full text-xl mb-10">
           <span className="font-bold">Chú ý:</span> Sửa những trường voucher mà
           bạn muốn
         </p>
@@ -174,12 +176,12 @@ const EditVoucherPN = () => {
               {data.Name}
             </h1>
             <div className="w-full border-b-2">
-              <span className="text-xl text-[#4c6fa7]">{data._id}</span>
-              <span className="float-right font-bold text-xl text-[#4c6fa7]">
+              <span className="text-xl text-[#3F5F89]">{data._id}</span>
+              <span className="float-right font-bold text-xl text-[#3F5F89]">
                 Trạng thái:{" "}
                 <span
                   className={`font-normal ${
-                    data.States === "enable" ? "text-green-500" : "text-red-500"
+                    data.States === "Enable" ? "text-green-500" : "text-red-500"
                   }`}
                 >
                   {data.States}
@@ -312,15 +314,15 @@ const EditVoucherPN = () => {
                       className="grid grid-cols-12 shadow-inner shadow-[#bad7e6] rounded-lg py-2 px-4 mb-2 font-semibold bg-white"
                     >
                       <div className="col-span-5 grid grid-rows-2 gap-2">
-                        <p className="text-[#4c6fa7] text-lg">
+                        <p className="text-[#3F5F89] text-lg">
                           Giá trị tối thiểu:{" "}
-                          <span className="text-[#4c6fa7] font-normal" id="min">
+                          <span className="text-[#3F5F89] font-normal" id="min">
                             {formattedPrice(condition?.MinValue || 0)}
                           </span>
                         </p>
-                        <p className="text-[#4c6fa7] text-lg">
+                        <p className="text-[#3F5F89] text-lg">
                           Giá trị tối đa:{" "}
-                          <span className="text-[#4c6fa7] font-normal" id="min">
+                          <span className="text-[#3F5F89] font-normal" id="min">
                             {formattedPrice(condition?.MaxValue || 0)}
                           </span>
                         </p>
@@ -330,13 +332,13 @@ const EditVoucherPN = () => {
                           type="number"
                           id="updateMin"
                           onChange={(e) => setMinValue(e.target.value)}
-                          className="border-2 bg-white border-[#4c86a7] outline-none text-[#4c6fa7] px-4 rounded-lg"
+                          className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
                         />
                         <input
                           type="number"
                           id="updateMax"
                           onChange={(e) => setMaxValue(e.target.value)}
-                          className="border-2 bg-white border-[#4c86a7] outline-none text-[#4c6fa7] px-4 rounded-lg"
+                          className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
                         />
                       </div>
                       <div className="col-span-3 flex items-center justify-end">
@@ -345,7 +347,7 @@ const EditVoucherPN = () => {
                           onClick={() => {
                             updateCondition(condition._id);
                           }}
-                          className="py-4 px-8 bg-[#bad7e6] rounded-lg text-[#4c6fa7] font-bold cursor-pointer"
+                          className="py-4 px-8 bg-[#bad7e6] rounded-lg text-[#3F5F89] font-bold cursor-pointer"
                         >
                           Update
                         </div>
@@ -371,7 +373,7 @@ const EditVoucherPN = () => {
           <div className="col-span-4">
             <button
               onClick={handleSubmit}
-              className="bg-[#4c84a7] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4c6fa7] border-2 border-[#4c86a7] p-2 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#4c84a7] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#3F5F89] border-2 border-[#4c86a7] p-2 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} /> Sửa
             </button>
