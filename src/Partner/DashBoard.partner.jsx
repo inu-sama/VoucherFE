@@ -364,7 +364,7 @@ const DashBoardPartner = () => {
           <div className="p-6">
             {filteredData.length > 0 && (
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-left rtl:text-right text-lg text-white dark:text-black">
+                <table className="w-full text-center rtl:text-center text-lg text-white dark:text-black">
                   <thead className="text-sm text-gray-700 uppercase  dark:bg-[#3775A2] dark:text-white">
                     <tr>
                       <th scope="col" className="px-6 py-3 whitespace-nowrap">
