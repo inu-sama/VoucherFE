@@ -10,6 +10,7 @@ const GetListVoucher = () => {
   const [PriceDiscount, setPriceDiscount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [ServiceID, setServiceID] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
@@ -61,6 +62,36 @@ const GetListVoucher = () => {
     }
   }, [note]);
 
+  const fetchServicesID = async () => {
+    try {
+      const response = await fetch(
+        `${URL}/getServiceShotID/${note.Service_ID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setServiceID(data.id);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      console.error("Fetch Service ID Error:", error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (note) {
+      fetchServicesID();
+    }
+  }, [note]);
+
   const GetVoucher = async () => {
     try {
       const response = await fetch(`${URL}/getVoucherByCus`, {
@@ -70,7 +101,7 @@ const GetListVoucher = () => {
           Authorization: `Bearer ${Token}`,
         },
         body: JSON.stringify({
-          Service_ID: note.Service_ID,
+          Service_ID: ServiceID,
           Partner_ID: note.Partner_ID,
           Price: note.Price,
         }),
