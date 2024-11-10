@@ -169,6 +169,7 @@ const GetListVoucher = () => {
         body: JSON.stringify({
           TotalDiscount: PriceDiscount,
           Price: note.Price,
+          OrderID: OrderID,
         }),
       });
       const data = await response.json();
