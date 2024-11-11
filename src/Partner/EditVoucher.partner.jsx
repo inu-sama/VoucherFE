@@ -8,7 +8,7 @@ import "react-calendar/dist/Calendar.css";
 
 const EditVoucherPN = () => {
   const { id } = useParams();
-  const URL = "http://localhost:3000/api";
+  const URL = "https://server-voucher.vercel.app/api";
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
