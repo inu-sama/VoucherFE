@@ -8,6 +8,7 @@ import "react-calendar/dist/Calendar.css";
 
 const EditVoucherPN = () => {
   const { id } = useParams();
+  const URL = "http://localhost:3000/api";
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +17,78 @@ const EditVoucherPN = () => {
   const [ReleaseTime, setReleaseDate] = useState(null);
   const [showExpiredCalendar, setShowExpiredCalendar] = useState(false);
   const [showReleaseCalendar, setShowReleaseCalendar] = useState(false);
-  const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(0);
-
-  const URL = " https://server-voucher.vercel.app/api";
+  const [updatedConditions, setUpdatedConditions] = useState([]);
   const navigate = useNavigate();
+
+  const OnChangeMinValue = (idCondition, e) => {
+    let { value } = e.target;
+    value =
+      value && !isNaN(value) && value >= 0
+        ? parseInt(value)
+        : data.conditions.find((item) => item.idCondition === idCondition)
+            ?.MinValue;
+
+    setUpdatedConditions((prev) =>
+      prev.map((item) =>
+        item.idCondition === idCondition ? { ...item, MinValue: value } : item
+      )
+    );
+  };
+
+  const OnChangeMaxValue = (e, idCondition) => {
+    let { value } = e.target;
+    value =
+      value && !isNaN(value) && value >= 0
+        ? parseInt(value)
+        : data.conditions.find((item) => item.idCondition === idCondition)
+            ?.MaxValue;
+
+    setUpdatedConditions((prev) =>
+      prev.map((item) =>
+        item.idCondition === idCondition ? { ...item, MaxValue: value } : item
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (data.conditions && data.conditions.length > 0) {
+      const initialConditions = data.conditions.map((condition) => ({
+        idCondition: condition._id,
+        MinValue: condition.MinValue,
+        MaxValue: condition.MaxValue,
+      }));
+      setUpdatedConditions(initialConditions);
+    }
+  }, [data.conditions]);
+
+  const updateConditions = async () => {
+    try {
+      updatedConditions.forEach((condition) => {
+        const { idCondition, MinValue, MaxValue } = condition;
+        console.log(idCondition, MinValue, MaxValue);
+      });
+
+      const updatePromises = updatedConditions.map((condition) => {
+        const { idCondition, MinValue, MaxValue } = condition;
+        return fetch(`${URL}/updateCondition/${idCondition}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ MinValue, MaxValue }),
+        });
+      });
+
+      const results = await Promise.all(updatePromises);
+
+      results.forEach((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to update some conditions");
+        }
+      });
+      console.log("Cập nhật điều kiện thành công");
+    } catch (error) {
+      setError("Error: " + (error.message || "Failed to update conditions"));
+    }
+  };
 
   const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -37,8 +105,11 @@ const EditVoucherPN = () => {
     });
   };
 
-  let nextDate = new Date();
-  nextDate.setDate(nextDate.getDate() + 1);
+  const nextDate = (a) => {
+    const result = new Date(a);
+    result.setDate(a.getDate() + 1);
+    return result;
+  };
 
   const toggleExpiredCalendar = (e) => {
     e.preventDefault();
@@ -58,6 +129,7 @@ const EditVoucherPN = () => {
   const handleReleaseDateChange = (date) => {
     setReleaseDate(date);
     setShowReleaseCalendar(!showReleaseCalendar);
+    setShowExpiredCalendar(!showExpiredCalendar);
   };
 
   const DetailFetch = async () => {
@@ -77,42 +149,15 @@ const EditVoucherPN = () => {
     DetailFetch();
   }, [id]);
 
-  const updateCondition = async (conditionID) => {
-    try {
-      if (!minValue || !maxValue) {
-        alert("Vui lòng nhập giá trị tối thiểu và tối đa");
-        return;
-      }
-      const res = await fetch(`${URL}/updateCondition/${conditionID}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          MinValue: minValue,
-          MaxValue: maxValue,
-        }),
-      });
-      const data = await res.json();
-      if (res.status === 400) {
-        setError("Error: " + (data?.message || "Failed to update condition"));
-      } else {
-        setError("");
-        alert("Condition updated successfully");
-        window.location.reload();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await updateConditions();
+
     const updatedVoucher = {
       PercentDiscount: Voucher.PercentDiscount || data.PercentDiscount,
       Description: Voucher.Description || data.Description,
-      ExpiredTime: Voucher.ExpiredTime || data.ExpiredTime,
-      ReleaseTime: Voucher.ReleaseTime || data.ReleaseTime,
+      ExpiredTime: ExpiredTime || Voucher.ExpiredTime || data.ExpiredTime,
+      ReleaseTime: ReleaseTime || Voucher.ReleaseTime || data.ReleaseTime,
       RemainQuantity: Voucher.RemainQuantity || data.RemainQuantity,
     };
 
@@ -124,25 +169,20 @@ const EditVoucherPN = () => {
         },
         body: JSON.stringify(updatedVoucher),
       });
+
       const result = await res.json();
       if (!res.ok) {
         alert("Error: " + (result.message || "Failed to update voucher"));
       } else {
-        const res1 = await fetch(`${URL}/updateState/${id}`, {
-          method: "POST",
-        });
-        const data = await res1.json();
-        if (res.status === 400) {
-          alert("Error: " + (data?.message || "Failed to update state"));
-        }
-        alert("Voucher updated successfully");
-        navigate("/Partner/Listvoucher");
+        alert("Cập nhật voucher thành công");
+        navigate(`/Partner/DetailvoucherPN/${id}`);
       }
     } catch (err) {
       alert("Error: " + (err.message || "Failed to update voucher"));
       console.log(err);
     }
   };
+
   if (loading) {
     return (
       <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
@@ -225,11 +265,14 @@ const EditVoucherPN = () => {
                         <span>{formatDate(Voucher.ReleaseTime)}</span>
                       )}
                       {showReleaseCalendar && (
-                        <div className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4 w-fit">
+                        <div
+                          className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4 w-fit"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Calendar
                             onChange={handleReleaseDateChange}
                             value={ReleaseTime}
-                            minDate={new Date()}
+                            minDate={nextDate(new Date())}
                           />
                         </div>
                       )}
@@ -253,11 +296,14 @@ const EditVoucherPN = () => {
                         <span>{formatDate(Voucher.ExpiredTime)}</span>
                       )}
                       {showExpiredCalendar && (
-                        <div className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4">
+                        <div
+                          className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Calendar
                             onChange={handExpiredDateChange}
                             value={ExpiredTime}
-                            minDate={nextDate}
+                            minDate={nextDate(ReleaseTime)}
                           />
                         </div>
                       )}
@@ -306,61 +352,9 @@ const EditVoucherPN = () => {
                   </div>
                 </div>
               </div>
-              <div className="my-4">
-                {data.conditions && data.conditions.length > 0 ? (
-                  data.conditions.map((condition) => (
-                    <div
-                      key={condition._id}
-                      className="grid grid-cols-12 shadow-inner shadow-[#bad7e6] rounded-lg py-2 px-4 mb-2 font-semibold bg-white"
-                    >
-                      <div className="col-span-5 grid grid-rows-2 gap-2">
-                        <p className="text-[#3F5F89] text-lg">
-                          Giá trị tối thiểu:{" "}
-                          <span className="text-[#3F5F89] font-normal" id="min">
-                            {formattedPrice(condition?.MinValue || 0)}
-                          </span>
-                        </p>
-                        <p className="text-[#3F5F89] text-lg">
-                          Giá trị tối đa:{" "}
-                          <span className="text-[#3F5F89] font-normal" id="min">
-                            {formattedPrice(condition?.MaxValue || 0)}
-                          </span>
-                        </p>
-                      </div>
-                      <div className="col-span-4 grid grid-rows-2 gap-2">
-                        <input
-                          type="number"
-                          id="updateMin"
-                          onChange={(e) => setMinValue(e.target.value)}
-                          className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
-                        />
-                        <input
-                          type="number"
-                          id="updateMax"
-                          onChange={(e) => setMaxValue(e.target.value)}
-                          className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
-                        />
-                      </div>
-                      <div className="col-span-3 flex items-center justify-end">
-                        <div
-                          id="updateCondition"
-                          onClick={() => {
-                            updateCondition(condition._id);
-                          }}
-                          className="py-4 px-8 bg-[#bad7e6] rounded-lg text-[#3F5F89] font-bold cursor-pointer"
-                        >
-                          Update
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>Không có điều kiện áp dụng.</p>
-                )}
-              </div>
             </form>
           </div>
-          <div className="p-10 lg:col-span-4">
+          <div className="p-10 mt-20 lg:col-span-4">
             <img
               className="w-auto rounded-xl h-auto object-cover"
               src={data.Image}
@@ -368,17 +362,89 @@ const EditVoucherPN = () => {
             />
           </div>
         </div>
+        <div className="my-4">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
+              <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
+                <tr className="text-lg">
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Min Value
+                  </th>
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Max DisCount
+                  </th>
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Update Min Value
+                  </th>
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Update Max Discount
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.conditions && data.conditions.length > 0 ? (
+                  data.conditions
+                    .slice(0, data.conditions.length)
+                    .map((condition) => {
+                      const updatedCondition = updatedConditions.find(
+                        (item) => item.idCondition === condition._id
+                      );
+                      return (
+                        <tr
+                          key={condition._id}
+                          className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
+                        >
+                          <td className="px-6 py-4">
+                            {formattedPrice(condition.MinValue)}
+                          </td>
+                          <td className="px-6 py-4">
+                            {formattedPrice(condition.MaxValue)}
+                          </td>
+                          <td className="px-6 py-4">
+                            <input
+                              type="number"
+                              placeholder={condition.MinValue}
+                              onChange={(e) =>
+                                OnChangeMinValue(condition._id, e)
+                              }
+                              className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
+                            />
+                          </td>
+                          <td className="px-6 py-4">
+                            <input
+                              type="number"
+                              placeholder={condition.MaxValue}
+                              onChange={(e) =>
+                                OnChangeMaxValue(e, condition._id)
+                              }
+                              className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      Không có điều kiện
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center px-4">
-          <div className="col-span-4">
+          <div className="col-span-6">
             <button
               onClick={handleSubmit}
-              className="bg-[#4c84a7] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#3F5F89] border-2 border-[#4c86a7] p-2 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#4c84a7] hover:bg-[#e7ebf9] font-bold text-lg text-[#eaf9e7] hover:text-[#3F5F89] border-2 border-[#4c86a7] p-2 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} /> Sửa
             </button>
           </div>
-          <div className="col-span-4">
+          <div className="col-span-6">
             <Link
               to={`/Partner/DetailvoucherPN/${id}`}
               className="bg-[#2f464f] hover:bg-[#e7f4f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
@@ -386,7 +452,7 @@ const EditVoucherPN = () => {
               <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
             </Link>
           </div>
-          <div className="col-span-4"></div>
+          ∂{" "}
         </div>
       </div>
     </div>

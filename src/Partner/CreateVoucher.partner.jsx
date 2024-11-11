@@ -6,7 +6,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 const CreateVoucher = () => {
-  const URL = "https://server-voucher.vercel.app/api";
+  const URL = "http://localhost:3000/api";
 
   const [Voucher, setVoucher] = useState({
     _id: "",
@@ -26,7 +26,6 @@ const CreateVoucher = () => {
   const [condition, setCondition] = useState({
     MinValue: "",
     MaxValue: "",
-    PercentDiscount: "",
   });
 
   const formattedPrice = (price) => {
@@ -126,7 +125,10 @@ const CreateVoucher = () => {
   };
 
   const handleConditionChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (value === null || value < 0) {
+      value = 0;
+    }
     setCondition((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -136,7 +138,7 @@ const CreateVoucher = () => {
       return;
     }
 
-    if (!condition.MinValue || !condition.MaxValue) {
+    if (!condition.MaxValue) {
       alert("Please fill all the condition fields");
       return;
     }
@@ -146,7 +148,7 @@ const CreateVoucher = () => {
       Conditions: [...prev.Conditions, condition],
     }));
 
-    setCondition({ MinValue: "", MaxValue: "", PercentDiscount: "" });
+    setCondition({ MinValue: "", MaxValue: "" });
   };
 
   const handleServiceChange = (e) => {
@@ -402,16 +404,18 @@ const CreateVoucher = () => {
                   }
                   className="border-2 placeholder-[#5b91de] border-[#c6d6ff] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
-                  value={
-                    formattedPrice(Voucher.RemainQuantity) ||
-                    "Nhập phần số lượng voucher"
-                  }
-                  onChange={(e) =>
-                    setVoucher({
-                      ...Voucher,
-                      RemainQuantity: Number(e.target.value),
-                    })
-                  }
+                  name="RemainQuantity"
+                  value={Voucher.RemainQuantity || "Nhập số lượng voucher"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (value.length <= 5) {
+                      setVoucher({
+                        ...Voucher,
+                        RemainQuantity: Number(e.target.value),
+                      });
+                    }
+                  }}
                 />
                 {!Voucher.RemainQuantity && (
                   <p className="text-red-500 text-sm font-bold">
@@ -564,7 +568,7 @@ const CreateVoucher = () => {
             <div className="col-span-6">
               <Link
                 to="/Partner/ListVoucherPN"
-                className="bg-[#2f414f] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
+                className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
               >
                 Back
               </Link>

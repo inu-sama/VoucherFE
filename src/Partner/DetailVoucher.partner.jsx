@@ -15,7 +15,7 @@ const DetailVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [serviceNames, setServiceNames] = useState({});
   const navigate = useNavigate();
-  const URL = "https://server-voucher.vercel.app/api";
+  const URL = "http://localhost:3000/api";
 
   const handlestate = async (id) => {
     try {
@@ -215,43 +215,58 @@ const DetailVoucher = () => {
                 </span>
               </p>
               <div className="my-4">
-                {voucher.conditions && voucher.conditions.length > 0 ? (
-                  voucher.conditions.map((condition) => (
-                    <div
-                      key={condition._id}
-                      className="shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-2 font-semibold bg-white"
-                    >
-                      <p>
-                        <span className="text-lg font-bold text-[#3f5f89]">
-                          Giá trị tối thiểu:{" "}
-                        </span>
-                        <span className="text-lg text-[#3B7097] font-normal">
-                          {formattedPrice(condition.MinValue)}
-                        </span>
-                      </p>
-                      <p>
-                        <span className="text-lg font-bold text-[#3f5f89]">
-                          Giá trị tối đa:{" "}
-                        </span>
-                        <span className="text-lg text-[#3f5f89] font-normal">
-                          {formattedPrice(condition.MaxValue)}
-                        </span>
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>Không có điều kiện áp dụng.</p>
-                )}
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                  <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
+                    <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
+                      <tr className="text-lg">
+                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                          STT
+                        </th>
+                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                          Giá trị tối thiểu
+                        </th>
+                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                          Giá trị tối đa
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {voucher.conditions && voucher.conditions.length > 0 ? (
+                        voucher.conditions.map((condition, index) => (
+                          <tr
+                            key={(condition._id, voucher.conditions.length)}
+                            className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
+                          >
+                            <td className="px-6 py-4">{index + 1}</td>
+                            <td className="px-6 py-4">
+                              {formattedPrice(condition.MinValue)}
+                            </td>
+                            <td className="px-6 py-4">
+                              {formattedPrice(condition.MaxValue)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={3} className="text-center">
+                            {" "}
+                            Không có điều kiện
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div className="my-4 bg-white shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-5">
+              <div className="my-4 bg-[#c5e2eb] shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-5">
                 {voucher.haveVouchers && voucher.haveVouchers.length > 0 ? (
                   voucher.haveVouchers.map((haveVoucher) => (
                     <div key={haveVoucher._id}>
                       <p>
-                        <span className="text-[#3f5f89] text-lg font-semibold">
+                        <span className="text-[#3f5f89] text-xl font-semibold">
                           Service:
                         </span>{" "}
-                        <span className="text-[#3f5f89] text-lg font-normal">
+                        <span className="text-[#3f5f89] text-xl font-normal">
                           {serviceNames[haveVoucher.Service_ID] || "Loading..."}
                         </span>
                       </p>
@@ -279,7 +294,7 @@ const DetailVoucher = () => {
           </div>
           <div className="col-span-3 gap-10">
             <button
-              className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#2f434f] hover:bg-[#e7f2f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}
             >
               <FontAwesomeIcon icon={faTrash} />
@@ -288,7 +303,7 @@ const DetailVoucher = () => {
           </div>
           <div className="col-span-3 gap-10">
             <button
-              className="bg-[#3bb0b0] hover:bg-[#eaf9e7] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#3bb0b0] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handlestate(id)}
             >
               <FontAwesomeIcon icon={faWrench} />

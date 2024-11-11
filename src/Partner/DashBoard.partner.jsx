@@ -39,6 +39,8 @@ const DashBoardPartner = () => {
   const [noDataFound, setNoDataFound] = useState(false);
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
+  const [serviceNames, setServiceNames] = useState({});
+
   const URL = "https://server-voucher.vercel.app/api";
 
   const [showServiceDropdown, setShowServiceDropdown] = useState(false);
@@ -53,17 +55,23 @@ const DashBoardPartner = () => {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`${URL}/Statistical_VoucherAdmin`, {
+      const res = await fetch(`${URL}/Statistical_PartnerService`, {
         method: "GET",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("Token")}`,
         },
       });
       if (!res.ok) {
-        throw new Error("You currently do not data display");
+        setError("You currently do not have data to display");
+        return;
       }
       const data = await res.json();
       setHistory(data);
+
+      if (data.length === 0) {
+        setError("No data found");
+      }
 
       const serviceIds = data.flatMap((item) =>
         item.haveVouchers.map((voucher) => voucher.Service_ID)
@@ -84,6 +92,36 @@ const DashBoardPartner = () => {
   useEffect(() => {
     fetchHistory();
   }, []);
+
+  const fetchServiceID = async (serviceId) => {
+    try {
+      const response = await fetch(`${URL}/getServiceID/${serviceId}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.name;
+      } else {
+        throw new Error("Failed to fetch service name");
+      }
+    } catch (error) {
+      console.error("Error fetching service name:", error);
+      return "Unknown Service";
+    }
+  };
+
+  useEffect(() => {
+    const fetchServiceNames = async () => {
+      const names = {};
+      for (const haveVoucher of history.flatMap((item) => item.haveVouchers)) {
+        const name = await fetchServiceID(haveVoucher.Service_ID);
+        names[haveVoucher.Service_ID] = name;
+      }
+      setServiceNames(names);
+    };
+
+    if (history?.length > 0) {
+      fetchServiceNames();
+    }
+  }, [history]);
 
   const filterData = () => {
     if (history.length === 0) return;
@@ -377,9 +415,6 @@ const DashBoardPartner = () => {
                         Total Used
                       </th>
                       <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                        Price
-                      </th>
-                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
                         Total Discount
                       </th>
                       <th scope="col" className="px-6 py-3 whitespace-nowrap">
@@ -404,15 +439,12 @@ const DashBoardPartner = () => {
                           {voucherId}
                         </th>
                         <td className="px-6 py-4">
-                          {voucherStatistics[voucherId].serviceIDs}
+                          {serviceNames[
+                            voucherStatistics[voucherId]?.serviceIDs
+                          ] || "Unknown Service"}
                         </td>
                         <td className="px-6 py-4">
                           {voucherStatistics[voucherId].totalUsed}
-                        </td>
-                        <td className="px-6 py-4">
-                          {formattedPrice(
-                            voucherStatistics[voucherId].totalDiscount
-                          )}
                         </td>
                         <td className="px-6 py-4">
                           {formattedPrice(

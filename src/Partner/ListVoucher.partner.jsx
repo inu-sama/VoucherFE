@@ -258,14 +258,14 @@ const ListVoucher = () => {
                 <div className="col-span-4 grid  gap-2">
                   <Link
                     to={`/Partner/DetailVoucherPN/${voucher._id}`}
-                    className="bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"
+                    className="bg-[#3775A2] hover:bg-[#e7edf9] text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"
                   >
                     <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
                     Detail
                   </Link>
                   <button
                     onClick={() => handleDeleteVoucher(voucher._id)}
-                    className="bg-[#2f414f] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
+                    className="bg-[#2f414f] hover:bg-[#e7ebf9] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
                   >
                     <FontAwesomeIcon icon={faTrash} className="mr-2" />
                     Delete
