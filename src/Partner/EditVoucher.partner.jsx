@@ -37,6 +37,7 @@ const EditVoucherPN = () => {
 
   const OnChangeMaxValue = (e, idCondition) => {
     let { value } = e.target;
+    console.log("checkmax", value);
     value =
       value && !isNaN(value) && value >= 0
         ? parseInt(value)
@@ -322,12 +323,16 @@ const EditVoucherPN = () => {
                       placeholder={`Số lượng còn lại: ${data.RemainQuantity}`}
                       className="border-2 border-[#75bde0] bg-white outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="number"
-                      onChange={(e) =>
-                        setVoucher({
-                          ...Voucher,
-                          RemainQuantity: e.target.value,
-                        })
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (value.length <= 5) {
+                          setVoucher({
+                            ...Voucher,
+                            RemainQuantity: Number(e.target.value),
+                          });
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -342,12 +347,16 @@ const EditVoucherPN = () => {
                       className="border-2 border-[#75bde0] bg-white outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="number"
                       max={99}
-                      onChange={(e) =>
-                        setVoucher({
-                          ...Voucher,
-                          PercentDiscount: e.target.value,
-                        })
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (value.length <= 2) {
+                          setVoucher({
+                            ...Voucher,
+                            PercentDiscount: Number(value),
+                          });
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -404,9 +413,15 @@ const EditVoucherPN = () => {
                             <input
                               type="number"
                               placeholder={condition.MinValue}
-                              onChange={(e) =>
-                                OnChangeMinValue(condition._id, e)
-                              }
+                              onChange={(e) => {
+                                if (
+                                  e.target.value < 0 ||
+                                  isNaN(e.target.value) ||
+                                  e.target.value.length > 8
+                                )
+                                  e.target.value = 0;
+                                OnChangeMinValue(condition._id, e);
+                              }}
                               className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
                             />
                           </td>
@@ -414,9 +429,15 @@ const EditVoucherPN = () => {
                             <input
                               type="number"
                               placeholder={condition.MaxValue}
-                              onChange={(e) =>
-                                OnChangeMaxValue(e, condition._id)
-                              }
+                              onChange={(e) => {
+                                if (
+                                  e.target.value < 0 ||
+                                  isNaN(e.target.value) ||
+                                  e.target.value.length > 8
+                                )
+                                  e.target.value = 0;
+                                OnChangeMaxValue(e, condition._id);
+                              }}
                               className="border-2 bg-white border-[#4c86a7] outline-none text-[#3F5F89] px-4 rounded-lg"
                             />
                           </td>
