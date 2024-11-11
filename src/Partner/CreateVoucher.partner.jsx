@@ -126,10 +126,16 @@ const CreateVoucher = () => {
 
   const handleConditionChange = (e) => {
     let { name, value } = e.target;
-    if (value === null || value < 0) {
+    if (value === null || value < 0 || value > 99999999) {
       value = 0;
     }
     setCondition((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleKeyPress = (e) => {
+    if (!/[0-9]/.test(e.key)) {
+      e.preventDefault();
+    }
   };
 
   const addCondition = () => {
@@ -460,6 +466,7 @@ const CreateVoucher = () => {
                   type="number"
                   name="MinValue"
                   value={condition.MinValue}
+                  onKeyPress={handleKeyPress}
                   onChange={handleConditionChange}
                 />
               </div>
@@ -477,6 +484,7 @@ const CreateVoucher = () => {
                   type="number"
                   name="MaxValue"
                   value={condition.MaxValue}
+                  onKeyPress={handleKeyPress}
                   onChange={handleConditionChange}
                 />
               </div>

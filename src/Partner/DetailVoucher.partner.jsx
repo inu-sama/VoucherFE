@@ -232,20 +232,22 @@ const DetailVoucher = () => {
                     </thead>
                     <tbody>
                       {voucher.conditions && voucher.conditions.length > 0 ? (
-                        voucher.conditions.map((condition, index) => (
-                          <tr
-                            key={(condition._id, voucher.conditions.length)}
-                            className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
-                          >
-                            <td className="px-6 py-4">{index + 1}</td>
-                            <td className="px-6 py-4">
-                              {formattedPrice(condition.MinValue)}
-                            </td>
-                            <td className="px-6 py-4">
-                              {formattedPrice(condition.MaxValue)}
-                            </td>
-                          </tr>
-                        ))
+                        voucher.conditions
+                          .slice(0, voucher.conditions.length)
+                          .map((condition, index) => (
+                            <tr
+                              key={(condition._id, index)}
+                              className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
+                            >
+                              <td className="px-6 py-4">{index + 1}</td>
+                              <td className="px-6 py-4">
+                                {formattedPrice(condition.MinValue)}
+                              </td>
+                              <td className="px-6 py-4">
+                                {formattedPrice(condition.MaxValue)}
+                              </td>
+                            </tr>
+                          ))
                       ) : (
                         <tr>
                           <td colSpan={3} className="text-center">

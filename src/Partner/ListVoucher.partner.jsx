@@ -163,7 +163,7 @@ const ListVoucher = () => {
               onClick={toggleshow}
               tabIndex={0}
               role="button"
-              className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
+              className="font-semibold bg-[#3775A2] hover:bg-[#e7f0f9] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
             >
               Sort by Service
             </div>
