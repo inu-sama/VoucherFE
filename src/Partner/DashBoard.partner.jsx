@@ -109,11 +109,10 @@ const DashBoardPartner = () => {
   
 
   const generateRandomColor = () => {
-   // Chọn màu ngẫu nhiên cho các giá trị R, G, B
-  const r = Math.floor(Math.random() * 128 + 127); // Tạo giá trị từ 127 đến 255 (tương đối sáng)
-  const g = Math.floor(Math.random() * 128 + 127);
-  const b = Math.floor(Math.random() * 128 + 127);
-  return `rgb(${r}, ${g}, ${b})`; // Trả về màu dưới dạng RGB
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r}, ${g}, ${b})`;
   };
 
   
