@@ -95,6 +95,10 @@ const ChartVoucher = () => {
 
       return matchesMonthYear && matchesService;
     });
+  
+    const popUpData = () =>{
+
+    }
 
     setFilteredData(filtered);
     updateVoucherStatistics(filtered);
@@ -283,6 +287,7 @@ const ChartVoucher = () => {
                     <th>Total Used</th>
                     <th>Total Discount</th>
                     <th>Date</th>
+                    <th>Detail</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -294,6 +299,7 @@ const ChartVoucher = () => {
                       <td>{voucherStatistics[voucherId].totalUsed}</td>
                       <td>{voucherStatistics[voucherId].totalDiscount}</td>
                       <td>{voucherStatistics[voucherId].date}</td>
+                      <td><button>xem chi tiết</button></td>
                     </tr>
                   ))}
                 </tbody>
