@@ -11,7 +11,7 @@ const GetListVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [ServiceID, setServiceID] = useState(null);
-  const URL = "https://server-voucher.vercel.app/api";
+  const URL = "http://localhost:3001/api";
   const navigate = useNavigate();
 
   const formattedPrice = (price) => {
@@ -48,6 +48,7 @@ const GetListVoucher = () => {
 
       const data = await response.json();
       setNote(data);
+      console.log("Note:", data);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -78,6 +79,7 @@ const GetListVoucher = () => {
       }
       const data = await response.json();
       setServiceID(data.id);
+      console.log("Service ID:", data.id);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -118,6 +120,7 @@ const GetListVoucher = () => {
       } else {
         setVouchers([]);
       }
+      console.log("Vouchers:", data);
 
       setLoading(false);
     } catch (error) {
@@ -231,9 +234,6 @@ const GetListVoucher = () => {
                         className="w-full text-[#213a57] hover:text-[#fff] bg-[#fff] hover:bg-[#213a57] border-4 border-[#213a57] rounded-xl p-4 cursor-pointer"
                         onClick={() => {
                           setSelectedVoucher(voucher);
-                          // setPriceDiscount(
-                          //   orderPrice * (voucher.PercentDiscount / 100)
-                          // );
                           setDiscount(voucher._id);
                         }}
                       >
@@ -272,7 +272,7 @@ const GetListVoucher = () => {
                           selectedPage === page
                             ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
                             : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
-                        }`}
+                        } ${page < 6 ? "hidden" : ""}`}
                         onClick={() => {
                           setSelectedPage(page);
                         }}
@@ -281,9 +281,6 @@ const GetListVoucher = () => {
                       </p>
                     );
                   })}
-                  {/* <p className="rounded-full">
-                    {Math.ceil(vouchers.length / 4)}
-                  </p> */}
                 </div>
               </div>
               <p

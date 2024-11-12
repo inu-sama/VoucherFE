@@ -109,7 +109,7 @@ const EditVoucher = () => {
 
   if (loading) {
     return (
-      <div className="text-center text-4xl translate-y-1/2 h-full font-extrabold">
+      <div className="bg-gradient-to-bl to-[#dffbd8] from-30% from-[#eeeeee] text-center text-4xl translate-y-1/2 h-full font-extrabold">
         Loading...
       </div>
     );

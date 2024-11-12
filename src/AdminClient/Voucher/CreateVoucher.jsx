@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const CreateVoucher = () => {
-  const URL = "https://server-voucher.vercel.app/api";
+  const URL = "http://localhost:3001/api";
 
   const [Voucher, setVoucher] = useState({
     _id: "",
@@ -22,34 +26,36 @@ const CreateVoucher = () => {
   const [condition, setCondition] = useState({
     MinValue: "",
     MaxValue: "",
-    PercentDiscount: "",
   });
+
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
 
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
+  const navigate = useNavigate();
+
   const [ExpiredTime, setExpiredDate] = useState(null);
   const [ReleaseTime, setReleaseDate] = useState(null);
   const [showExpiredCalendar, setShowExpiredCalendar] = useState(false);
   const [showReleaseCalendar, setShowReleaseCalendar] = useState(false);
-  const navigate = useNavigate();
 
-  const fetchServices = async () => {
-    try {
-      const res = await fetch(`${URL}/getService`);
-      const data = await res.json();
-      setServices(data);
-    } catch (error) {
-      alert("Error: " + (error?.message || "Failed to get service"));
-    }
+  const formatDate = (a) => {
+    return new Date(a).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const handleConditionChange = (e) => {
-    const { name, value } = e.target;
-    setCondition((prev) => ({ ...prev, [name]: Number(value) }));
+  const nextDate = (a) => {
+    const result = new Date(a);
+    result.setDate(a.getDate() + 1);
+    return result;
   };
 
   const toggleExpiredCalendar = (e) => {
@@ -70,6 +76,42 @@ const CreateVoucher = () => {
   const handleReleaseDateChange = (date) => {
     setReleaseDate(date);
     setShowReleaseCalendar(!showReleaseCalendar);
+    setShowExpiredCalendar(!showExpiredCalendar);
+  };
+
+  const fetchServices = async () => {
+    try {
+      const response = await fetch(`${URL}/getService`);
+      const data = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const deleteCondition = (indexToDelete) => {
+    setVoucher((prevVoucher) => ({
+      ...prevVoucher,
+      Conditions: prevVoucher.Conditions.filter((_, i) => i !== indexToDelete),
+    }));
+  };
+
+  const handleConditionChange = (e) => {
+    let { name, value } = e.target;
+    if (value === null || value < 0 || value > 99999999) {
+      value = 0;
+    }
+    setCondition((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleKeyPress = (e) => {
+    if (!/[0-9]/.test(e.key)) {
+      e.preventDefault();
+    }
   };
 
   const addCondition = () => {
@@ -78,7 +120,7 @@ const CreateVoucher = () => {
       return;
     }
 
-    if (!condition.MinValue || !condition.MaxValue) {
+    if (!condition.MaxValue) {
       alert("Please fill all the condition fields");
       return;
     }
@@ -88,7 +130,7 @@ const CreateVoucher = () => {
       Conditions: [...prev.Conditions, condition],
     }));
 
-    setCondition({ MinValue: "", MaxValue: "", PercentDiscount: "" });
+    setCondition({ MinValue: "", MaxValue: "" });
   };
 
   const handleServiceChange = (e) => {
@@ -100,42 +142,53 @@ const CreateVoucher = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (
-      !Voucher._id ||
-      !Voucher.Name ||
-      !Voucher.ExpiredTime ||
-      !Voucher.ReleaseTime ||
-      !Voucher.Description ||
       !Voucher.Image ||
+      !Voucher.Name ||
+      !Voucher.Description ||
+      !Voucher.PercentDiscount ||
       !Voucher.RemainQuantity ||
-      !Voucher.Conditions.length ||
-      !selectedServices.length
+      !Voucher.Conditions ||
+      !selectedServices ||
+      !ReleaseTime ||
+      !ExpiredTime
     ) {
-      alert(
-        "Please fill all the fields, add at least one condition, and select at least one service"
-      );
-      return;
+      alert("Please fill in all fields");
     }
+    if (!Voucher._id) {
+      Voucher._id = Math.random().toString(36).substring(5);
+    }
+
+    const formdata = new FormData();
+    const imageFile = Voucher.Image;
+    formdata.append("voucher", imageFile);
+    formdata.append("_id", Voucher._id);
+    formdata.append("Name", Voucher.Name);
+    formdata.append("ReleaseTime", ReleaseTime);
+    formdata.append("ExpiredTime", ExpiredTime);
+    formdata.append("Description", Voucher.Description);
+    formdata.append("RemainQuantity", Number(Voucher.RemainQuantity));
+    formdata.append("PercentDiscount", Number(Voucher.PercentDiscount));
+
+    Voucher.Conditions.forEach((cond, index) => {
+      formdata.append(`Conditions[${index}][MinValue]`, Number(cond.MinValue));
+      formdata.append(`Conditions[${index}][MaxValue]`, Number(cond.MaxValue));
+    });
+
+    selectedServices.forEach((serviceId, index) => {
+      formdata.append(`HaveVouchers[${index}][Service_ID]`, serviceId);
+    });
 
     try {
       const response = await fetch(`${URL}/createVoucherByAdmin`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...Voucher,
-          HaveVouchers: selectedServices.map((serviceId) => ({
-            Service_ID: serviceId,
-          })),
-        }),
+        body: formdata,
       });
 
       const data = await response.json();
       if (response.ok) {
         alert("Voucher created successfully");
-        navigate("/Admin/Listvoucher");
+        navigate("/Admin/ListVoucher");
       } else {
         alert("Error: " + (data?.message || "Failed to create voucher"));
       }
@@ -146,37 +199,37 @@ const CreateVoucher = () => {
   };
 
   return (
-    <div className="lg:bg-[#eaf9e7] bg-[#4ca771]">
-      <div className="w-full bg-[#eaf9e7] p-4 px-10 rounded-t-xl">
-        <h1 className="text-4xl text-[#2F4F4F] mb-10 mt-4 w-full text-center font-bold">
+    <div className="lg:bg-[#EAF8E6] bg-[#EAF8E6]">
+      <div className="w-full bg-[#eaf9e7] p-4 px-10 bg-gradient-to-bl to-[#dffbd8] from-30% from-[#eeeeee]">
+        <h1 className="text-4xl text-[#2E4F4F] mb-10 mt-4 w-full text-center font-bold">
           Tạo voucher
         </h1>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-12">
-                <label className="font-bold">ID</label>
+                <label className="font-bold text-[#3f885e]">Mã Voucher</label>
               </div>
               <div className="col-span-12">
                 <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  className="border-2 placeholder:text-[#698b64] border-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="text"
                   placeholder="Nhập mã voucher"
                   value={Voucher._id}
-                  maxLength={5}
+                  maxLength={10}
                   onChange={(e) =>
                     setVoucher({ ...Voucher, _id: e.target.value })
                   }
                 />
               </div>
             </div>
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12 my-2">
               <div className="col-span-12">
-                <label className="font-bold">Name</label>
+                <label className="font-bold text-[#3f885e]">Name</label>
               </div>
               <div className="col-span-12">
                 <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  className="border-2 placeholder:text-[#698b64] border-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="text"
                   placeholder="Nhập tên voucher"
                   value={Voucher.Name}
@@ -184,16 +237,21 @@ const CreateVoucher = () => {
                     setVoucher({ ...Voucher, Name: e.target.value })
                   }
                 />
+                {!Voucher.Name && (
+                  <p className="text-red-500 text-sm font-bold">
+                    Please enter a name
+                  </p>
+                )}
               </div>
             </div>
           </div>
-          <div className="mt-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+          <div className="mt-10 grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12 ">
             <div className="col-span-12">
-              <label className="font-bold">Description</label>
+              <label className="font-bold text-[#3f885e]">Description</label>
             </div>
             <div className="col-span-12">
               <input
-                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                className="border-2 placeholder:text-[#698b64] border-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                 type="text"
                 placeholder="Nhập mô tả"
                 value={Voucher.Description}
@@ -201,135 +259,205 @@ const CreateVoucher = () => {
                   setVoucher({ ...Voucher, Description: e.target.value })
                 }
               />
+              {!Voucher.Description && (
+                <p className="text-red-500 text-sm font-bold">
+                  Please enter a description
+                </p>
+              )}
             </div>
           </div>
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-12">
-                <label className="font-bold">Release Time</label>
+                <label className="font-bold text-[#3f885e]">Release Time</label>
               </div>
-              <div className="col-span-12" onClick={toggleReleaseCalendar}>
-                <span className="border-2 border-[#75bde0] outline-none text-[#3b7097] placeholder:text-[#75bde0] py-[0.65rem] pr-14 px-2 h-full w-full rounded-lg bg-[#ffffff]">
+              <div
+                className="col-span-12 w-full"
+                onClick={toggleReleaseCalendar}
+              >
+                <span className="block border-2 border-[#eaf9e7] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                   {ReleaseTime ? (
                     <span>{formatDate(ReleaseTime)}</span>
                   ) : (
-                    <span>Chọn ngày</span>
+                    <span>Chọn ngày </span>
                   )}
                   {showReleaseCalendar && (
-                    <div className="absolute mt-6 right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4">
+                    <div
+                      className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#98b894] p-4 w-fit"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Calendar
                         onChange={handleReleaseDateChange}
                         value={ReleaseTime}
-                        minDate={new Date()}
+                        minDate={nextDate(new Date())}
                       />
                     </div>
                   )}
                 </span>
               </div>
             </div>
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-12">
-                <label className="font-bold">Expired Time</label>
+                <label className="font-bold text-[#3f885e]">Expired Time</label>
               </div>
-              <div className="col-span-12">
-                <input
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                  type="date"
-                  value={Voucher.ExpiredTime}
-                  onChange={(e) =>
-                    setVoucher({ ...Voucher, ExpiredTime: e.target.value })
-                  }
-                />
+              <div
+                className="col-span-12 w-full"
+                onClick={toggleExpiredCalendar}
+              >
+                <span className="block border-2 border-[#eaf9e7] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
+                  {ExpiredTime ? (
+                    <span>
+                      {ReleaseTime > ExpiredTime
+                        ? "Chọn ngày"
+                        : formatDate(ExpiredTime)}
+                    </span>
+                  ) : (
+                    <span>Chọn ngày</span>
+                  )}
+                  {showExpiredCalendar && (
+                    <div
+                      className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#98b894] p-4"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Calendar
+                        onChange={handExpiredDateChange}
+                        value={ExpiredTime}
+                        minDate={nextDate(ReleaseTime)}
+                      />
+                    </div>
+                  )}
+                </span>
               </div>
             </div>
           </div>
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] pl-4 rounded-lg h-12 my-2">
               <div className="col-span-5">
-                <label className="font-bold line-clamp-1">
+                <label className="font-bold text-[#3f885e] line-clamp-1">
                   Discount Percentage
                 </label>
               </div>
               <div className="col-span-12">
                 <input
-                  placeholder="Nhập phần trăm giảm giá"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                  type="number"
-                  name="PercentDiscount"
-                  value={Voucher.PercentDiscount}
-                  onChange={(e) =>
-                    setVoucher({
-                      ...Voucher,
-                      PercentDiscount: Number(e.target.value),
-                    })
+                  placeholder={
+                    Voucher.PercentDiscount === 0
+                      ? "Nhập phần trăm giảm giá"
+                      : Voucher.PercentDiscount
                   }
+                  className="border-2 placeholder:text-[#698b64] border-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  type="number"
+                  max={99}
+                  name="PercentDiscount"
+                  value={Voucher.PercentDiscount || "Nhập phần trăm giảm giá"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (value.length <= 2) {
+                      setVoucher({
+                        ...Voucher,
+                        PercentDiscount: Number(value),
+                      });
+                    }
+                  }}
                 />
+
+                {!Voucher.PercentDiscount && (
+                  <p className="text-red-500 text-sm font-bold">
+                    Please enter a discount percentage
+                  </p>
+                )}
               </div>
             </div>
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] pl-4 rounded-lg h-12">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] pl-4 rounded-lg h-12 my-2">
               <div className="col-span-5">
-                <label className="font-bold">Quantity</label>
+                <label className="font-bold text-[#3f885e] line-clamp-1">
+                  Quantity
+                </label>
               </div>
               <div className="col-span-12">
                 <input
-                  placeholder="Nhập số lượng"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                  type="number"
-                  value={Voucher.RemainQuantity}
-                  onChange={(e) =>
-                    setVoucher({
-                      ...Voucher,
-                      RemainQuantity: Number(e.target.value),
-                    })
+                  placeholder={
+                    Voucher.RemainQuantity == 0
+                      ? "Nhập phần số lượng voucher"
+                      : Voucher.RemainQuantity
                   }
+                  className="border-2 placeholder:text-[#698b64] border-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  type="number"
+                  name="RemainQuantity"
+                  value={Voucher.RemainQuantity || "Nhập số lượng voucher"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (value.length <= 5) {
+                      setVoucher({
+                        ...Voucher,
+                        RemainQuantity: Number(e.target.value),
+                      });
+                    }
+                  }}
                 />
+                {!Voucher.RemainQuantity && (
+                  <p className="text-red-500 text-sm font-bold">
+                    Please enter a quantity
+                  </p>
+                )}
               </div>
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+          <div className="mt-10 grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
             <div className="col-span-12">
-              <label className="font-bold">Image</label>
+              <label className="font-bold text-[#3f885e]">Image</label>
             </div>
             <div className="col-span-12">
               <input
-                placeholder="Nhập link ảnh"
-                className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                type="text"
-                value={Voucher.Image}
+                type="file"
+                accept="image/*"
                 onChange={(e) =>
-                  setVoucher({ ...Voucher, Image: e.target.value })
+                  setVoucher({ ...Voucher, Image: e.target.files[0] })
                 }
+                className="file-input outline-none file:border-0 file:rounded-full file:shadow-md file:shadow-[#ffffff] file:text-[#698b64] file:bg-[#ffffff] w-full bg-[#ffffff] shadow-md shadow-[#ffffff] text-[#698b64] placeholder:text-[#698b64] text-lg rounded-full"
               />
+              {!Voucher.Image && (
+                <p className="text-red-500 text-sm my-2 font-bold">
+                  Please upload an image
+                </p>
+              )}
             </div>
           </div>
-          <div className="mt-10 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center border border-transparent border-t-[#c0e6ba]">
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+          <div className="mt-12 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-4">
-                <label className="font-bold line-clamp-1">Min Value</label>
+                <label className="font-bold w-full text-[#3f885e] line-clamp-1">
+                  Số tiền tối thiểu
+                </label>
               </div>
               <div className="col-span-12">
                 <input
-                  placeholder="Nhập giá trị đơn hàng tối thiểu"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  placeholder="Nhập giá trị đơn hàng tối thiểu để giám giá"
+                  className="border-2 placeholder:text-[#698b64] border-[#BFE6BA] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
                   name="MinValue"
                   value={condition.MinValue}
+                  onKeyPress={handleKeyPress}
                   onChange={handleConditionChange}
                 />
               </div>
             </div>
-            <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+            <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-4">
-                <label className="font-bold line-clamp-1">Max Discount</label>
+                <label className="font-bold text-[#3f885e] line-clamp-1">
+                  Số tiền tối đa giảm
+                </label>
               </div>
               <div className="col-span-12">
                 <input
                   placeholder="Nhập giá trị tối đa được giảm"
-                  className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  className="border-2 placeholder:text-[#698b64] border-[#BFE6BA] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="number"
                   name="MaxValue"
                   value={condition.MaxValue}
+                  onKeyPress={handleKeyPress}
                   onChange={handleConditionChange}
                 />
               </div>
@@ -337,17 +465,17 @@ const CreateVoucher = () => {
           </div>
 
           <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center">
-            <div className="border-8 border-[#4ca771] rounded-lg h-fit">
+            <div className="border-8 border-[#4BA771] rounded-lg h-fit">
               <div className="grid grid-cols-2 items-center">
                 <div>
-                  <h2 className="text-xl font-bold text-[#2F4F4F] ml-4">
+                  <h2 className="text-xl font-bold text-[#3f885e] ml-4">
                     Conditions:
                   </h2>
                 </div>
                 <div className="flex justify-end">
                   <button
                     type="button"
-                    className="lg:col-span-2 border-2 border-[#4ca771] bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] px-4 py-2 rounded-bl-lg"
+                    className="lg:col-span-2 border-2 border-[#4BA771] bg-[#4BA771] hover:bg-[#e7f9e9] text-[#e7f1f9] hover:text-[#2E4F4F] px-4 py-2 rounded-bl-lg"
                     onClick={addCondition}
                   >
                     Add Condition
@@ -355,17 +483,27 @@ const CreateVoucher = () => {
                 </div>
               </div>
               <div className="mt-5 px-4">
+                <span className="mb-2 text-xl text-[#2E4F4F] font-semibold">
+                  <span className=" font-bold text-xl text-black">•</span> Giảm
+                  giá {Voucher.PercentDiscount}%
+                </span>
                 <ul>
                   {Voucher.Conditions.map((cond, index) => (
                     <li
                       key={index}
-                      className="mb-2 text-[#4ca771] font-semibold"
+                      className="mb-2 text-xl text-[#2E4F4F] font-semibold"
                     >
                       <span className="text-[#2F4F4F] font-bold text-xl">
                         •{" "}
                       </span>
-                      Giảm {Voucher.PercentDiscount}%, tối đa {cond.MaxValue}đ
-                      cho đơn hàng từ {cond.MinValue}đ
+                      Tối đa {formattedPrice(cond.MaxValue)} cho đơn hàng từ{" "}
+                      {formattedPrice(cond.MinValue)}
+                      <button
+                        className="float-right"
+                        onClick={() => deleteCondition(index)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -406,58 +544,17 @@ const CreateVoucher = () => {
           <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center">
             {/* <div className="col-span-1"></div> */}
             <div className="col-span-6">
-              <button className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg flex items-center justify-center w-full">
+              <button className="bg-[#4BA771] hover:bg-[#e7f9e7] font-bold text-lg text-[#e7eef9] hover:text-[#2E4F4F] border-2 border-[#4BA771] p-2 rounded-lg flex items-center justify-center w-full">
                 Create
               </button>
             </div>
-            <div className="col-span-3">
+            <div className="col-span-6">
               <Link
-                to="/Admin/Listvoucher"
-                className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
+                to="/Admin/ListVoucher"
+                className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2E4F4F] border-2 border-[#2E4F4F] p-2 rounded-lg flex items-center justify-center w-full"
               >
                 Back
               </Link>
-            </div>
-            <div className="col-span-3">
-              <div>
-                <div
-                  className="hover:bg-[#c0e6ba] bg-[#eaf9e7] font-bold text-lg hover:text-[#eaf9e7] text-[#c0e6ba] border-2 border-[#c0e6ba] p-2 rounded-lg flex items-center justify-center w-full"
-                  onClick={() =>
-                    document.getElementById("my_modal_1").showModal()
-                  }
-                >
-                  {/* <FontAwesomeIcon icon={faBug} /> */}
-                  <span className="ml-2">Report</span>
-                </div>
-                <dialog id="my_modal_1" className="modal">
-                  <div className="modal-box bg-[#2F4F4F]">
-                    <h3 className="font-bold text-xl text-[#eaf9e7]">
-                      What's wrong?
-                    </h3>
-                    <div className="grid grid-cols-4 items-center bg-gradient-to-r from-[#eaf9e7] from-10% to-[#2F4F4F] text-[#2F4F4F] py-1 pl-4 rounded-lg h-12">
-                      <div className="col-span-4">
-                        <label className="font-bold">Lỗi gặp phải</label>
-                      </div>
-                      <div className="col-span-2 h-24">
-                        <textarea
-                          className="border-l-4 border-[#2F4F4F] bg-[#eaf9e7] outline-none px-2 py-2 h-full w-full rounded-2xl text-wrap resize-none"
-                          placeholder="Mô tả vấn đề"
-                          rows={5}
-                          onChange={() => {}}
-                        />
-                      </div>
-                    </div>
-                    <div className="modal-action mt-7">
-                      <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn bg-[#eaf9e7] hover:bg-[#2F4F4F] border-2 border-[#eaf9e7] text-[#2F4F4F] hover:text-[#eaf9e7]">
-                          Close
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </dialog>
-              </div>
             </div>
           </div>
         </form>

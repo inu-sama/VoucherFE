@@ -139,7 +139,7 @@ const DetailVoucher = () => {
   }
 
   return (
-    <div className="lg:bg-[#eaf9e7] bg-[#4c7da7] h-full">
+    <div className="lg:bg-[#e7eef9] bg-[#e7eef9] h-full">
       <div className="w-full bg-gradient-to-bl to-[#75bde0] h-full from-30% from-[#eeeeee] p-4 ">
         <div className="grid grid-cols-12 text-[#3f5f89]">
           <div className="col-span-11 flex items-center">

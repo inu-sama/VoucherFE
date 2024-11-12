@@ -226,8 +226,8 @@ const CreateVoucher = () => {
   };
 
   return (
-    <div className="lg:bg-[#eaf9e7] bg-[#75bde0]">
-      <div className="w-full bg-[#eaf9e7] p-4 px-10 bg-gradient-to-bl to-[#75bde0] from-30% from-[#eeeeee]">
+    <div className="lg:bg-[#e7eef9] bg-[#e7eef9]">
+      <div className="w-full bg-[#e7eef9] p-4 px-10 bg-gradient-to-bl to-[#75bde0] from-30% from-[#eeeeee]">
         <h1 className="text-4xl text-[#274f6c] mb-10 mt-4 w-full text-center font-bold">
           Tạo voucher
         </h1>

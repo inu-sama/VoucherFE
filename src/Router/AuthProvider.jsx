@@ -15,8 +15,6 @@ const AuthProvider = ({ children }) => {
   const callback =
     searchParams.get("URLCallBack") || localStorage.getItem("URLCallBack");
 
-  const login = "";
-
   useEffect(() => {
     const checkUserAuth = async () => {
       if (token) {
@@ -38,6 +36,7 @@ const AuthProvider = ({ children }) => {
             if (OrderID) localStorage.setItem("OrderID", OrderID);
             if (callback) localStorage.setItem("URLCallBack", callback);
             if (token) localStorage.setItem("Token", token);
+            if (userData.role) localStorage.setItem("Role", userData.role);
 
             navigateBasedOnRole(userData.role);
           } else {
@@ -60,22 +59,43 @@ const AuthProvider = ({ children }) => {
 
   const navigateBasedOnRole = (role) => {
     const savedCallback = localStorage.getItem("URLCallBack") || "/null";
+    const currentPath = window.location.pathname;
+
     switch (role) {
       case "Admin":
-        if (window.location.pathname === "/sso") {
+        if (currentPath === "/sso") {
           navigate("/Admin/ChartVoucher");
         } else {
-          navigate(window.location.pathname);
+          if (!currentPath.includes("/Admin")) {
+            navigate("/Admin/ChartVoucher");
+          } else {
+            navigate(currentPath);
+          }
         }
         break;
       case "user":
-        navigate("/");
+        if (currentPath === "/sso") {
+          navigate("/");
+        } else {
+          if (
+            currentPath.includes("/Partner") ||
+            currentPath.includes("/Admin")
+          ) {
+            navigate("/");
+          } else {
+            navigate(currentPath);
+          }
+        }
         break;
       case "partner":
-        if (window.location.pathname === "/sso") {
+        if (currentPath === "/sso") {
           navigate("/Partner/DashBoardPartner");
         } else {
-          navigate(window.location.pathname);
+          if (!currentPath.includes("/Partner")) {
+            navigate("/Partner/DashBoardPartner");
+          } else {
+            navigate(currentPath);
+          }
         }
         break;
       default:
@@ -83,13 +103,14 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // const login = (userData) => {
-  //   setUser(userData);
-  //   localStorage.setItem("Token", userData.token);
-  //   localStorage.setItem("OrderID", OrderID);
-  //   localStorage.setItem("URLCallBack", callback);
-  //   navigateBasedOnRole(userData.role);
-  // };
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem("Token", userData.token);
+    localStorage.setItem("OrderID", OrderID);
+    localStorage.setItem("URLCallBack", callback);
+    localStorage.setItem("Role", userData.role);
+    navigateBasedOnRole(userData.role);
+  };
 
   const value = useMemo(() => ({ user, login }), [user]);
 

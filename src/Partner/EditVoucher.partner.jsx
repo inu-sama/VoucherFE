@@ -107,6 +107,9 @@ const EditVoucherPN = () => {
   };
 
   const nextDate = (a) => {
+    if (!a) {
+      return new Date();
+    }
     const result = new Date(a);
     result.setDate(a.getDate() + 1);
     return result;
