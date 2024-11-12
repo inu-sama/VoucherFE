@@ -81,7 +81,7 @@ const CreateVoucher = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${URL}/getService`);
+      const response = await fetch(`${URL}/getServices`);
       const data = await response.json();
       setServices(data);
     } catch (error) {
