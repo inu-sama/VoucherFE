@@ -176,11 +176,7 @@ const ChartVoucher = () => {
 
     if (voucher.length > 0) {
       setFilterDetail(voucher);
-<<<<<<< HEAD
-      setVoucherName(voucher.vouchers.Name); // Lưu tên voucher vào state
-=======
-      setVoucherName(voucher.voucherName); // Lưu tên voucher vào state
->>>>>>> 346e4c67275c7248bc293ae31e1ac9f10db26d6b
+      // setVoucherName(voucher.voucherName); // Lưu tên voucher vào state
     }
 
     setNoDataFound(voucher.length === 0);

@@ -14,7 +14,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const URL = "https://server-voucher.vercel.app/api";
-  const URL_CALLBACK = "https://voucher4u.io.vn/sso";
+  const URL_CALLBACK = "http://localhost:2106/";
   function handleLoginSSO() {
     sso.redirectToLogin(`${URL_CALLBACK}`);
   }
