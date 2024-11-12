@@ -109,10 +109,11 @@ const DashBoardPartner = () => {
   
 
   const generateRandomColor = () => {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
+   // Chọn màu ngẫu nhiên cho các giá trị R, G, B
+  const r = Math.floor(Math.random() * 128 + 127); // Tạo giá trị từ 127 đến 255 (tương đối sáng)
+  const g = Math.floor(Math.random() * 128 + 127);
+  const b = Math.floor(Math.random() * 128 + 127);
+  return `rgb(${r}, ${g}, ${b})`; // Trả về màu dưới dạng RGB
   };
 
   
@@ -129,7 +130,7 @@ const DashBoardPartner = () => {
     
     if (voucher.length > 0) {
       setFilterDetail(voucher);
-      
+      setVoucherName(voucher.vouchers.Name); // Lưu tên voucher vào state
     }
   
     setNoDataFound(voucher.length === 0);
@@ -166,7 +167,7 @@ const DashBoardPartner = () => {
       ];
       setYear(uniqueYears);
     } catch (error) {
-      setError("You currently do not have data to display");
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -183,10 +184,10 @@ const DashBoardPartner = () => {
         const data = await response.json();
         return data.name;
       } else {
-        throw new Error("You currently do not have data to display");
+        throw new Error("Failed to fetch service name");
       }
     } catch (error) {
-      setError("You currently do not have data to display");
+      console.error("Error fetching service name:", error);
       return "Unknown Service";
     }
   };
@@ -549,7 +550,8 @@ const DashBoardPartner = () => {
       {filteredData.length > 0 && !noDataFound && !noFilterData && (
         <div className="w-full p-8">
           <div className="w-full">
-            <Line data={lineData} options={options} />
+            <Line data={lineData} options={options}  />
+            
           </div>
         </div>
       )}

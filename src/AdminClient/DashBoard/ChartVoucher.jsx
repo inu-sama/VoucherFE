@@ -36,9 +36,14 @@ const ChartVoucher = () => {
   const [noDataFound, setNoDataFound] = useState(false);
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
-  const [colors, setColors] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [filterDetail, setFilterDetail] = useState([]);
+  const [voucherName, setVoucherName] = useState(""); // Thêm state để lưu tên voucher
+
+  
+
+  
+
 
   const generateRandomColor = () => {
     const r = Math.floor(Math.random() * 256);
@@ -48,6 +53,15 @@ const ChartVoucher = () => {
   };
 
   const Popup = () => {
+    const [currentPage, setCurrentPage] = useState(1); 
+    const itemsPerPage = 10;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filterDetail.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filterDetail.length / itemsPerPage);
+
+    
+    
     return (
       <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
         <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
@@ -58,8 +72,8 @@ const ChartVoucher = () => {
           >
             &times; {/* Biểu tượng đóng (X) */}
           </button>
-
-          <h3 className="text-2xl font-semibold mb-4">Voucher Detail</h3>
+  
+          <h3>{voucherName ? voucherName : "Voucher Detail"}</h3>
           <table className="w-full table-auto">
             <thead>
               <tr>
@@ -67,6 +81,8 @@ const ChartVoucher = () => {
                 <th className="px-4 py-2 text-left border-b">Partner ID</th>
                 <th className="px-4 py-2 text-left border-b">Service ID</th>
                 <th className="px-4 py-2 text-left border-b">Discount</th>
+                <th className="px-4 py-2 text-left border-b">Date</th>
+
               </tr>
             </thead>
             <tbody>
@@ -74,12 +90,9 @@ const ChartVoucher = () => {
                 <tr key={voucher.Voucher_ID}>
                   <td className="px-4 py-2 border-b">{voucher.Voucher_ID}</td>
                   <td className="px-4 py-2 border-b">{voucher.Partner_ID}</td>
-                  <td className="px-4 py-2 border-b">
-                    {voucher.haveVouchers.map((v) => v.Service_ID).join(", ")}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {voucher.TotalDiscount}
-                  </td>
+                  <td className="px-4 py-2 border-b">{voucher.haveVouchers.map((v) => v.Service_ID).join(", ")}</td>
+                  <td className="px-4 py-2 border-b">{voucher.TotalDiscount}</td>
+                  <td className="px-4 py-2 border-b">{new Date(voucher.Date).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -88,6 +101,7 @@ const ChartVoucher = () => {
       </div>
     );
   };
+  
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -162,12 +176,13 @@ const ChartVoucher = () => {
     
     if (voucher.length > 0) {
       setFilterDetail(voucher);
-      setVoucherName(voucher.); // Lưu tên voucher vào state
+      setVoucherName(voucher.vouchers.Name); // Lưu tên voucher vào state
     }
   
     setNoDataFound(voucher.length === 0);
-    setShowPopup(true); // Show the popup when a voucher is selected
+    setShowPopup(true); // Hiển thị popup
   };
+  
 
   useEffect(() => {
     filterData();
@@ -205,22 +220,8 @@ const ChartVoucher = () => {
         data: Object.values(voucherStatistics).map(
           (voucher) => voucher.totalUsed
         ),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-          "rgba(255, 159, 64, 0.6)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
+        backgroundColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Màu ngẫu nhiên cho mỗi phần
+        borderColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Viền màu ngẫu nhiên
         borderWidth: 1,
       },
     ],
@@ -235,7 +236,7 @@ const ChartVoucher = () => {
           (voucher) => voucher.totalDiscount
         ),
         fill: false,
-        borderColor: "rgba(75, 192, 192, 1)",
+        borderColor:  Object.keys(voucherStatistics).map(() => generateRandomColor()), // Viền màu ngẫu nhiên
         tension: 0.1,
       },
     ],
