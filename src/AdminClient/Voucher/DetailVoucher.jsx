@@ -288,7 +288,7 @@ const DetailVoucher = () => {
           <div className="col-span-3">
             <Link
               to={`/Admin/EditVoucher/${id}`}
-              className="bg-[#339d33] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#32803a] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#339d33] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#339d33] p-5 rounded-lg flex items-center justify-center w-full"
             >
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
@@ -296,7 +296,7 @@ const DetailVoucher = () => {
           </div>
           <div className="col-span-3 gap-10">
             <button
-              className="bg-[#1a402f] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#32803a] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#1a402f] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#1a402f] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}
             >
               <FontAwesomeIcon icon={faTrash} />
@@ -305,7 +305,7 @@ const DetailVoucher = () => {
           </div>
           <div className="col-span-3 gap-10">
             <button
-              className="bg-[#3bb0b0] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#32807a] p-5 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#3bb0b0] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handlestate(id)}
             >
               <FontAwesomeIcon icon={faWrench} />

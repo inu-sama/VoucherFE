@@ -11,7 +11,7 @@ const GetListVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [ServiceID, setServiceID] = useState(null);
-  const URL = "http://localhost:3001/api";
+  const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
   const formattedPrice = (price) => {

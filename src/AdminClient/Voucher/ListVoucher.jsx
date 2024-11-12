@@ -11,11 +11,10 @@ const ListVoucher = () => {
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
   const URL = "https://server-voucher.vercel.app/api";
-  const navigate = useNavigate();
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${URL}/getService`);
+      const response = await fetch(`${URL}/getServices`);
       const data = await response.json();
       setServices(data);
     } catch (error) {
@@ -45,7 +44,6 @@ const ListVoucher = () => {
       );
       const data = await response.json();
       if (data && data.length > 0) {
-        console.log(data);
         setVouchers(data);
       } else {
         setVouchers([]);
@@ -71,7 +69,6 @@ const ListVoucher = () => {
       }
       const data = await res.json();
       setVouchers(data);
-      console.log("Dữ liệu nhận được:", data);
     } catch (error) {
       console.error("Error fetching vouchers:", error);
     } finally {

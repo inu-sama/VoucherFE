@@ -1,38 +1,148 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Calendar } from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const EditVoucher = () => {
   const { id } = useParams();
+  const URL = "https://server-voucher.vercel.app/api";
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [Voucher, setVoucher] = useState({});
-  const [description, setDescription] = useState({
-    value: Voucher.Description,
-  });
-  const [img, setImg] = useState(null);
-  const URL = "https://server-voucher.vercel.app/api";
+  const [ExpiredTime, setExpiredDate] = useState(null);
+  const [ReleaseTime, setReleaseDate] = useState(null);
+  const [showExpiredCalendar, setShowExpiredCalendar] = useState(false);
+  const [showReleaseCalendar, setShowReleaseCalendar] = useState(false);
+  const [updatedConditions, setUpdatedConditions] = useState([]);
   const navigate = useNavigate();
 
-  const date = (a) => {
-    return new Date(a).toLocaleDateString("en-CA", {
+  const OnChangeMinValue = (idCondition, e) => {
+    let { value } = e.target;
+    value =
+      value && !isNaN(value) && value >= 0
+        ? parseInt(value)
+        : data.conditions.find((item) => item.idCondition === idCondition)
+            ?.MinValue;
+
+    setUpdatedConditions((prev) =>
+      prev.map((item) =>
+        item.idCondition === idCondition ? { ...item, MinValue: value } : item
+      )
+    );
+  };
+
+  const OnChangeMaxValue = (e, idCondition) => {
+    let { value } = e.target;
+    console.log("checkmax", value);
+    value =
+      value && !isNaN(value) && value >= 0
+        ? parseInt(value)
+        : data.conditions.find((item) => item.idCondition === idCondition)
+            ?.MaxValue;
+
+    setUpdatedConditions((prev) =>
+      prev.map((item) =>
+        item.idCondition === idCondition ? { ...item, MaxValue: value } : item
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (data.conditions && data.conditions.length > 0) {
+      const initialConditions = data.conditions.map((condition) => ({
+        idCondition: condition._id,
+        MinValue: condition.MinValue,
+        MaxValue: condition.MaxValue,
+      }));
+      setUpdatedConditions(initialConditions);
+    }
+  }, [data.conditions]);
+
+  const updateConditions = async () => {
+    try {
+      updatedConditions.forEach((condition) => {
+        const { idCondition, MinValue, MaxValue } = condition;
+        console.log(idCondition, MinValue, MaxValue);
+      });
+
+      const updatePromises = updatedConditions.map((condition) => {
+        const { idCondition, MinValue, MaxValue } = condition;
+        return fetch(`${URL}/updateCondition/${idCondition}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ MinValue, MaxValue }),
+        });
+      });
+
+      const results = await Promise.all(updatePromises);
+
+      results.forEach((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to update some conditions");
+        }
+      });
+      console.log("Cập nhật điều kiện thành công");
+    } catch (error) {
+      setError("Error: " + (error.message || "Failed to update conditions"));
+    }
+  };
+
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  const formatDate = (a) => {
+    return new Date(a).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     });
   };
 
+  const nextDate = (a) => {
+    if (!a) {
+      return new Date();
+    }
+    const result = new Date(a);
+    result.setDate(a.getDate() + 1);
+    return result;
+  };
+
+  const toggleExpiredCalendar = (e) => {
+    e.preventDefault();
+    setShowExpiredCalendar(!showExpiredCalendar);
+  };
+
+  const toggleReleaseCalendar = (e) => {
+    e.preventDefault();
+    setShowReleaseCalendar(!showReleaseCalendar);
+  };
+
+  const handExpiredDateChange = (date) => {
+    setExpiredDate(date);
+    setShowExpiredCalendar(!showExpiredCalendar);
+  };
+
+  const handleReleaseDateChange = (date) => {
+    setReleaseDate(date);
+    setShowReleaseCalendar(!showReleaseCalendar);
+    setShowExpiredCalendar(!showExpiredCalendar);
+  };
+
   const DetailFetch = async () => {
     try {
       const res = await fetch(`${URL}/Detailvoucher/${id}`);
       const data = await res.json();
-      setData(data[0]);
-      setVoucher(data[0]);
-      setImg(data[0].Image);
+      setData(data);
+      setVoucher(data);
     } catch (error) {
-      setError("Không thể lấy dữ liệu từ máy chủ");
+      setError("Không thể lấy dữ liệu từ máy chủ", error);
     } finally {
       setLoading(false);
     }
@@ -42,41 +152,16 @@ const EditVoucher = () => {
     DetailFetch();
   }, [id]);
 
-  const updateCondition = async (id) => {
-    try {
-      const res = await fetch(`${URL}/updateCondition/:${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          MinValue: document.getElementById("updateMin").value,
-          MaxValue: document.getElementById("updateMax").value,
-          PercentDiscount: document.getElementById("updatePercentage").value,
-        }),
-      });
-      const data = await res.json();
-      if (res.status === 400) {
-        alert("Error: " + (data?.message || "Failed to update condition"));
-      } else {
-        alert("Condition updated successfully");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    await updateConditions();
+
     const updatedVoucher = {
       PercentDiscount: Voucher.PercentDiscount || data.PercentDiscount,
       Description: Voucher.Description || data.Description,
-      ExpiredTime: Voucher.ExpiredTime || data.ExpiredTime,
-      ReleaseTime: Voucher.ReleaseTime || data.ReleaseTime,
-      Image: Voucher.Image || data.Image,
+      ExpiredTime: ExpiredTime || Voucher.ExpiredTime || data.ExpiredTime,
+      ReleaseTime: ReleaseTime || Voucher.ReleaseTime || data.ReleaseTime,
       RemainQuantity: Voucher.RemainQuantity || data.RemainQuantity,
-      MinValue: Voucher.MinValue || data.MinValue,
-      MaxValue: Voucher.MaxValue || data.MaxValue,
     };
 
     try {
@@ -87,19 +172,13 @@ const EditVoucher = () => {
         },
         body: JSON.stringify(updatedVoucher),
       });
+
       const result = await res.json();
       if (!res.ok) {
         alert("Error: " + (result.message || "Failed to update voucher"));
       } else {
-        const res1 = await fetch(`${URL}/updateState/${id}`, {
-          method: "POST",
-        });
-        const data = await res1.json();
-        if (res.status === 400) {
-          alert("Error: " + (data?.message || "Failed to update state"));
-        }
-        alert("Voucher updated successfully");
-        navigate("/Admin/Listvoucher");
+        alert("Cập nhật voucher thành công");
+        navigate(`/Admin/DetailVoucher/${id}`);
       }
     } catch (err) {
       alert("Error: " + (err.message || "Failed to update voucher"));
@@ -109,8 +188,10 @@ const EditVoucher = () => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-bl to-[#dffbd8] from-30% from-[#eeeeee] text-center text-4xl translate-y-1/2 h-full font-extrabold">
-        Loading...
+      <div className="bg-gradient-to-bl to-[#75e080] from-[#eeeeee] h-full flex items-center justify-center">
+        <span className="font-extrabold text-4xl text-black text-center">
+          Loading...
+        </span>
       </div>
     );
   }
@@ -123,12 +204,12 @@ const EditVoucher = () => {
   }
 
   return (
-    <div>
-      <div className="w-auto h-full bg-[#eaf9e7] p-4">
+    <div className="h-full">
+      <div className="w-full  to-[#d8ffce] from-30% h-full from-[#ffffff]  p-4">
         <h1 className="text-4xl text-[#2F4F4F] px-4 mt-4 w-full text-left font-bold">
           Sửa voucher
         </h1>
-        <p className="p-4 text-[#4ca771] w-full text-xl mb-10">
+        <p className="p-4 text-[#4BA771] w-full text-xl mb-10">
           <span className="font-bold">Chú ý:</span> Sửa những trường voucher mà
           bạn muốn
         </p>
@@ -138,8 +219,8 @@ const EditVoucher = () => {
               {data.Name}
             </h1>
             <div className="w-full border-b-2">
-              <span className="text-xl text-[#4ca771]">{data._id}</span>
-              <span className="float-right font-bold text-xl text-[#4ca771]">
+              <span className="text-xl text-[#4BA771]">{data._id}</span>
+              <span className="float-right font-bold text-xl text-[#4BA771]">
                 Trạng thái:{" "}
                 <span
                   className={`font-normal ${
@@ -151,17 +232,18 @@ const EditVoucher = () => {
               </span>
             </div>
             <form onSubmit={handleSubmit}>
-              <div className="my-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+              <div className="my-8 grid grid-cols-12 items-center bg-[#BFE6BA] text-[#4BA771] py-1 pl-4 rounded-lg h-12">
                 <div className="col-span-12">
-                  <label className="font-bold">Description</label>
+                  <label className="font-bold text-[#4BA771]">
+                    Description
+                  </label>
                 </div>
                 <div className="col-span-12">
                   <input
-                    className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                    className="border-2 placeholder-[#5bde6a] border-[#75e07c] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                     type="text"
-                    value={`${Voucher.Description}`}
-                    // ref={input}
-                    placeholder="Mô tả"
+                    placeholder="Nhập mô tả"
+                    value={Voucher.Description}
                     onChange={(e) =>
                       setVoucher({ ...Voucher, Description: e.target.value })
                     }
@@ -169,75 +251,71 @@ const EditVoucher = () => {
                 </div>
               </div>
               <div className="mb-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#4BA771] py-1 pl-4 rounded-lg h-12">
                   <div className="col-span-12">
-                    <label className="font-bold">Release Time</label>
+                    <label className="font-bold text-[#4BA771]">
+                      Release Time
+                    </label>
                   </div>
-                  <div className="col-span-12">
-                    <input
-                      value={date(Voucher.ReleaseTime)}
-                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
-                      type="date"
-                      onChange={(e) =>
-                        setVoucher({ ...Voucher, ReleaseTime: e.target.value })
-                      }
-                    />
+                  <div
+                    className="col-span-12 w-full"
+                    onClick={toggleReleaseCalendar}
+                  >
+                    <span className="block border-2 border-[#75e07c] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
+                      {ReleaseTime ? (
+                        <span>{formatDate(ReleaseTime)}</span>
+                      ) : (
+                        <span>{formatDate(Voucher.ReleaseTime)}</span>
+                      )}
+                      {showReleaseCalendar && (
+                        <div
+                          className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75e07c] p-4 w-fit"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Calendar
+                            onChange={handleReleaseDateChange}
+                            value={ReleaseTime}
+                            minDate={nextDate(new Date())}
+                          />
+                        </div>
+                      )}
+                    </span>
                   </div>
                 </div>
-                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#4BA771] py-1 pl-4 rounded-lg h-12">
                   <div className="col-span-12">
-                    <label className="font-bold">Expired Time</label>
+                    <label className="font-bold text-[#4BA771]">
+                      Expired Time
+                    </label>
                   </div>
-                  <div className="col-span-12">
-                    <input
-                      value={date(data.ExpiredTime)}
-                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
-                      type="date"
-                      onChange={(e) =>
-                        setVoucher({ ...Voucher, ExpiredTime: e.target.value })
-                      }
-                    />
+                  <div
+                    className="col-span-12 w-full"
+                    onClick={toggleExpiredCalendar}
+                  >
+                    <span className="block border-2 border-[#75e07c] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
+                      {ExpiredTime ? (
+                        <span>{formatDate(ExpiredTime)}</span>
+                      ) : (
+                        <span>{formatDate(Voucher.ExpiredTime)}</span>
+                      )}
+                      {showExpiredCalendar && (
+                        <div
+                          className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75e07c] p-4"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Calendar
+                            onChange={handExpiredDateChange}
+                            value={ExpiredTime}
+                            minDate={nextDate(ReleaseTime)}
+                          />
+                        </div>
+                      )}
+                    </span>
                   </div>
-                </div>
-              </div>
-              <div className="mb-10 grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
-                <div className="col-span-12">
-                  <label className="font-bold">Image</label>
-                </div>
-                <div className="col-span-12">
-                  <input
-                    placeholder="Ảnh minh họa"
-                    value={Voucher.Image}
-                    className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
-                    type="text"
-                    onChange={(e) => {
-                      setVoucher({ ...Voucher, Image: e.target.value });
-                      setImg(e.target.value);
-                    }}
-                  />
                 </div>
               </div>
               <div className="mb-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
-                  <div className="col-span-12">
-                    <label className="font-bold">Discount Percent</label>
-                  </div>
-                  <div className="col-span-12">
-                    <input
-                      value={Voucher.PercentDiscount}
-                      placeholder={`Phần trăm giảm: ${data.PercentDiscount}%`}
-                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
-                      type="number"
-                      onChange={(e) =>
-                        setVoucher({
-                          ...Voucher,
-                          PercentDiscount: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-12 items-center bg-[#c0e6ba] text-[#4ca771] py-1 pl-4 rounded-lg h-12">
+                <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#4BA771] py-1 pl-4 rounded-lg h-12">
                   <div className="col-span-12">
                     <label className="font-bold">Quantity</label>
                   </div>
@@ -245,100 +323,159 @@ const EditVoucher = () => {
                     <input
                       value={Voucher.RemainQuantity}
                       placeholder={`Số lượng còn lại: ${data.RemainQuantity}`}
-                      className="border-2 border-[#c0e6ba] outline-none px-2 py-2 h-full w-full rounded-lg"
+                      className="border-2 border-[#75e07c] bg-white outline-none px-2 py-2 h-full w-full rounded-lg"
                       type="number"
-                      onChange={(e) =>
-                        setVoucher({
-                          ...Voucher,
-                          RemainQuantity: e.target.value,
-                        })
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (value.length <= 5) {
+                          setVoucher({
+                            ...Voucher,
+                            RemainQuantity: Number(e.target.value),
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#4BA771] py-1 pl-4 rounded-lg h-12">
+                  <div className="col-span-12">
+                    <label className="font-bold">Percent Discount</label>
+                  </div>
+                  <div className="col-span-12">
+                    <input
+                      value={Voucher.PercentDiscount}
+                      placeholder={`Phần trăm giảm giá: ${data.PercentDiscount}`}
+                      className="border-2 border-[#75e07c] bg-white outline-none px-2 py-2 h-full w-full rounded-lg"
+                      type="number"
+                      max={99}
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        if (value.length <= 2) {
+                          setVoucher({
+                            ...Voucher,
+                            PercentDiscount: Number(value),
+                          });
+                        }
+                      }}
                     />
                   </div>
                 </div>
               </div>
-              <div className="my-4">
-                {data.conditions && data.conditions.length > 0 ? (
-                  data.conditions.map((condition) => (
-                    <div
-                      key={condition._id}
-                      className="grid grid-cols-12 shadow-inner shadow-[#c0e6ba] rounded-lg py-3 px-4 mb-2 font-semibold bg-white"
-                    >
-                      <div className="col-span-5 grid grid-rows-2 gap-2">
-                        <p>
-                          Giá trị tối thiểu:{" "}
-                          <span className="text-[#4ca771] font-normal" id="min">
-                            {condition.MinValue}đ
-                          </span>
-                        </p>
-                        <p>
-                          Giá trị tối đa:{" "}
-                          <span className="text-[#4ca771] font-normal" id="max">
-                            {condition.MaxValue}đ
-                          </span>
-                        </p>
-                      </div>
-                      <div className="col-span-4 grid grid-rows-2 gap-2">
-                        <input
-                          type="number"
-                          id="updateMin"
-                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] pl-4 rounded-lg"
-                        />
-                        <input
-                          type="number"
-                          id="updateMax"
-                          className="border-2 border-[#4ca771] outline-none text-[#4ca771] pl-4 rounded-lg"
-                        />
-                      </div>
-                      <div className="col-span-3 flex items-center justify-end">
-                        <div
-                          id="updateCondition"
-                          className="py-4 px-8 bg-[#c0e6ba] rounded-lg text-[#4ca771] font-bold cursor-pointer"
-                          // onClick={() => {
-                          //   document.getElementsByClassName("conditions").t;
-                          //   document
-                          //     .getElementById("#updateCondition")
-                          //     .textContent("Lock");
-                          // }}
-                        >
-                          Update
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>Không có điều kiện áp dụng.</p>
-                )}
-              </div>
             </form>
           </div>
-          <div className="p-10 lg:col-span-4">
+          <div className="p-10 mt-20 lg:col-span-4">
             <img
               className="w-auto rounded-xl h-auto object-cover"
-              src={img}
+              src={data.Image}
               alt="Car"
             />
           </div>
         </div>
+        <div className="my-4">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#32792a]">
+              <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8de28a] dark:text-[#32792a]">
+                <tr className="text-lg">
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Min Value
+                  </th>
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Max DisCount
+                  </th>
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Update Min Value
+                  </th>
+                  <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                    Update Max Discount
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.conditions && data.conditions.length > 0 ? (
+                  data.conditions
+                    .slice(0, data.conditions.length)
+                    .map((condition) => {
+                      const updatedCondition = updatedConditions.find(
+                        (item) => item.idCondition === condition._id
+                      );
+                      return (
+                        <tr
+                          key={condition._id}
+                          className="odd:bg-[#DAEAD8] odd:dark:bg-[#DAEAD8] even:bg-gray-50 even:dark:bg-[#C9E9CC] border-b dark:border-[#C9E9CC] text-md"
+                        >
+                          <td className="px-6 py-4">
+                            {formattedPrice(condition.MinValue)}
+                          </td>
+                          <td className="px-6 py-4">
+                            {formattedPrice(condition.MaxValue)}
+                          </td>
+                          <td className="px-6 py-4">
+                            <input
+                              type="number"
+                              placeholder={condition.MinValue}
+                              onChange={(e) => {
+                                if (
+                                  e.target.value < 0 ||
+                                  isNaN(e.target.value) ||
+                                  e.target.value.length > 8
+                                )
+                                  e.target.value = 0;
+                                OnChangeMinValue(condition._id, e);
+                              }}
+                              className="border-2 bg-white border-[#4ca757] outline-none text-[#4BA771] px-4 rounded-lg"
+                            />
+                          </td>
+                          <td className="px-6 py-4">
+                            <input
+                              type="number"
+                              placeholder={condition.MaxValue}
+                              onChange={(e) => {
+                                if (
+                                  e.target.value < 0 ||
+                                  isNaN(e.target.value) ||
+                                  e.target.value.length > 8
+                                )
+                                  e.target.value = 0;
+                                OnChangeMaxValue(e, condition._id);
+                              }}
+                              className="border-2 bg-white border-[#4ca757] outline-none text-[#4BA771] px-4 rounded-lg"
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      Không có điều kiện
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center px-4">
-          <div className="col-span-4">
+          <div className="col-span-6">
             <button
               onClick={handleSubmit}
-              className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg flex items-center justify-center w-full"
+              className="bg-[#4ca754] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#58a74c] p-2 rounded-lg flex items-center justify-center w-full"
             >
-              <FontAwesomeIcon icon={faEdit} className="mr-2" /> Sửa
+              <FontAwesomeIcon icon={faEdit} /> Sửa
             </button>
           </div>
-          <div className="col-span-4">
+          <div className="col-span-6">
             <Link
-              to={`/Admin/Detailvoucher/${id}`}
-              className="bg-[#2F4F4F] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
+              to={`/Admin/DetailVoucher/${id}`}
+              className="bg-[#1d4721] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#1d4721] p-2 rounded-lg flex items-center justify-center w-full"
             >
-              <FontAwesomeIcon icon={faXmark} className="mr-2" /> Hủy
+              <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
             </Link>
           </div>
-          <div className="col-span-4"></div>
+          ∂{" "}
         </div>
       </div>
     </div>
