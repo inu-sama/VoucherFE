@@ -11,6 +11,7 @@ const ListVoucher = () => {
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
   const URL = "https://server-voucher.vercel.app/api";
+  const [selectedPage, setSelectedPage] = useState(1);
   const navigate = useNavigate();
 
   const fetchServices = async () => {
@@ -151,6 +152,11 @@ const ListVoucher = () => {
     );
   }
 
+  const pages = [];
+  for (let i = 0; i < Math.ceil(vouchers.length / 6); i++) {
+    pages.push(i + 1);
+  }
+
   return (
     <div className="lg:bg-[#e7eef9] h-full bg-[#e7eef9]">
       <div className="w-full bg-gradient-to-bl to-[#75bde0] from-30% h-full from-[#eeeeee]  p-4">
@@ -210,71 +216,98 @@ const ListVoucher = () => {
           </Link>
         </div>
         <div className="grid mx-2 grid-cols-1 lg:grid-cols-2 gap-4">
-          {vouchers.map((voucher) => (
-            <div
-              key={voucher._id}
-              className=" w-full rounded-lg p-4 bg-[#a8d9e4] text-[#16233B]"
-            >
-              <div className="flex w-full">
-                <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-3/4">
-                  {voucher.Name}
-                </h2>
-                <div className="w-1/4 ">
-                  {" "}
-                  <span
-                    className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
-                      voucher.States === "Enable"
-                        ? "bg-[#4ca771]"
-                        : "bg-[#cf3a3a]"
-                    } `}
-                  >
-                    {voucher.States}
-                  </span>
-                </div>
-              </div>
+          {vouchers.map((voucher, index) => {
+            while (index >= selectedPage * 6 - 6 && index < selectedPage * 6) {
+              return (
+                <div
+                  key={voucher._id}
+                  className=" w-full rounded-lg p-4 bg-[#a8d9e4] text-[#16233B]"
+                >
+                  <div className="flex w-full">
+                    <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-3/4">
+                      {voucher.Name}
+                    </h2>
+                    <div className="w-1/4 ">
+                      {" "}
+                      <span
+                        className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
+                          voucher.States === "Enable"
+                            ? "bg-[#4ca771]"
+                            : "bg-[#cf3a3a]"
+                        } `}
+                      >
+                        {voucher.States}
+                      </span>
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-12">
-                <div className="col-span-8">
-                  <p>{voucher.Description}</p>
-                  <p>
-                    <span className="font-bold text-[#3f5f89]">
-                      Số lượng còn lại:
-                    </span>{" "}
-                    {voucher.RemainQuantity}
-                  </p>
-                  <p>
-                    <span className="font-bold text-[#3f5f89]">
-                      Thời gian bắt đầu:
-                    </span>{" "}
-                    {date(voucher.ReleaseTime)}
-                  </p>
-                  <p>
-                    <span className="font-bold text-[#3f5f89]">
-                      Thời gian hết hạn:
-                    </span>{" "}
-                    {date(voucher.ExpiredTime)}
-                  </p>
+                  <div className="grid grid-cols-12">
+                    <div className="col-span-8">
+                      <p>{voucher.Description}</p>
+                      <p>
+                        <span className="font-bold text-[#3f5f89]">
+                          Số lượng còn lại:
+                        </span>{" "}
+                        {voucher.RemainQuantity}
+                      </p>
+                      <p>
+                        <span className="font-bold text-[#3f5f89]">
+                          Thời gian bắt đầu:
+                        </span>{" "}
+                        {date(voucher.ReleaseTime)}
+                      </p>
+                      <p>
+                        <span className="font-bold text-[#3f5f89]">
+                          Thời gian hết hạn:
+                        </span>{" "}
+                        {date(voucher.ExpiredTime)}
+                      </p>
+                    </div>
+                    <div className="col-span-4 grid  gap-2">
+                      <Link
+                        to={`/Partner/DetailVoucherPN/${voucher._id}`}
+                        className="bg-[#3775A2] hover:bg-[#e7edf9] text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"
+                      >
+                        <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
+                        Detail
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteVoucher(voucher._id)}
+                        className="bg-[#2f414f] hover:bg-[#e7ebf9] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
+                      >
+                        <FontAwesomeIcon icon={faTrash} className="mr-2" />
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="col-span-4 grid  gap-2">
-                  <Link
-                    to={`/Partner/DetailVoucherPN/${voucher._id}`}
-                    className="bg-[#3775A2] hover:bg-[#e7edf9] text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#3775A2] px-4 py-2 rounded-lg flex items-center"
-                  >
-                    <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
-                    Detail
-                  </Link>
-                  <button
-                    onClick={() => handleDeleteVoucher(voucher._id)}
-                    className="bg-[#2f414f] hover:bg-[#e7ebf9] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
-                  >
-                    <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+              );
+            }
+          })}
         </div>
+        {pages.length === 2 && (
+          <div className="w-full flex justify-center mt-4">
+            <div className="w-1/3 flex justify-between">
+              {pages.map((page) => {
+                return (
+                  <p
+                    key={page}
+                    className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                      selectedPage === page
+                        ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                        : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                    } `}
+                    onClick={() => {
+                      setSelectedPage(page);
+                    }}
+                  >
+                    {page}
+                  </p>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

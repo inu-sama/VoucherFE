@@ -166,7 +166,7 @@ const DashBoardPartner = () => {
       ];
       setYear(uniqueYears);
     } catch (error) {
-      setError(error.message);
+      setError("You currently do not have data to display");
     } finally {
       setIsLoading(false);
     }
@@ -183,10 +183,10 @@ const DashBoardPartner = () => {
         const data = await response.json();
         return data.name;
       } else {
-        throw new Error("Failed to fetch service name");
+        throw new Error("You currently do not have data to display");
       }
     } catch (error) {
-      console.error("Error fetching service name:", error);
+      setError("You currently do not have data to display");
       return "Unknown Service";
     }
   };

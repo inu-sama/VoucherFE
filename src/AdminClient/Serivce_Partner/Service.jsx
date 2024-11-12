@@ -11,7 +11,7 @@ const Service = () => {
 
   const fetchService = async () => {
     try {
-      const res = await fetch(`${Url}/getService`);
+      const res = await fetch(`${Url}/getServices`);
       const data = await res.json();
       setService(data);
     } catch (error) {
