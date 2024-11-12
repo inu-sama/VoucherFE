@@ -159,12 +159,12 @@ const ChartVoucher = () => {
       const matchVoucherId = item.Voucher_ID === voucherId;
       return matchesMonthYear && matchVoucherId;
     });
-    
+
     if (voucher.length > 0) {
       setFilterDetail(voucher);
-      setVoucherName(voucher.); // Lưu tên voucher vào state
+      setVoucherName(voucher.voucherName); // Lưu tên voucher vào state
     }
-  
+
     setNoDataFound(voucher.length === 0);
     setShowPopup(true); // Show the popup when a voucher is selected
   };
