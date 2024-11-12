@@ -70,7 +70,7 @@ const DashBoardPartner = () => {
       setHistory(data);
 
       if (data.length === 0) {
-        setError("No data found");
+        setError("You currently do not have data to display");
       }
 
       const serviceIds = data.flatMap((item) =>

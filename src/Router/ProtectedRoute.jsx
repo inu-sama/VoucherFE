@@ -7,13 +7,14 @@ const ProtectedRouter = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("accessToken", userData.token);
+    localStorage.setItem("Token", userData.token);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("Token");
     localStorage.removeItem("OrderID");
+    localStorage.removeItem("Role");
     localStorage.removeItem("URLCallBack");
     localStorage.removeItem("URLCallBack");
   };

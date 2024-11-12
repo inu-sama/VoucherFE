@@ -1,20 +1,12 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../Router/ProtectedRoute";
+import React from "react";
 import logo from "../assets/logo-2da.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleArrowLeft,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { faCircleArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Hearder = () => {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
+  const OrderID = localStorage.getItem("OrderID");
   const handleLogout = () => {
-    logout();
-    navigate("/login");
+    window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
   };
 
   return (

@@ -152,7 +152,7 @@ const ListVoucher = () => {
   }
 
   return (
-    <div className="lg:bg-[#e7f3f9] h-full bg-[#4c98a7]">
+    <div className="lg:bg-[#e7eef9] h-full bg-[#e7eef9]">
       <div className="w-full bg-gradient-to-bl to-[#75bde0] from-30% h-full from-[#eeeeee]  p-4">
         <h1 className="text-4xl text-[#16233B] mb-4 w-full text-center font-bold">
           Danh sách voucher
