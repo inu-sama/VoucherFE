@@ -37,6 +37,8 @@ const ChartVoucher = () => {
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
   const [colors, setColors] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [filterDetail, setFilterDetail] = useState([]);
 
   const generateRandomColor = () => {
     const r = Math.floor(Math.random() * 256);
@@ -44,6 +46,45 @@ const ChartVoucher = () => {
     const b = Math.floor(Math.random() * 256);
     return `rgb(${r}, ${g}, ${b})`;
   };
+
+  const Popup = () => {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
+          {/* Nút đóng */}
+          <button
+            className="absolute top-4 right-4 text-xl font-bold text-gray-700"
+            onClick={() => setShowPopup(false)} // Đóng popup khi nhấn nút
+          >
+            &times; {/* Biểu tượng đóng (X) */}
+          </button>
+  
+          <h3 className="text-2xl font-semibold mb-4">Voucher Detail</h3>
+          <table className="w-full table-auto">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 text-left border-b">Voucher ID</th>
+                <th className="px-4 py-2 text-left border-b">Partner ID</th>
+                <th className="px-4 py-2 text-left border-b">Service ID</th>
+                <th className="px-4 py-2 text-left border-b">Discount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filterDetail.map((voucher) => (
+                <tr key={voucher.Voucher_ID}>
+                  <td className="px-4 py-2 border-b">{voucher.Voucher_ID}</td>
+                  <td className="px-4 py-2 border-b">{voucher.Partner_ID}</td>
+                  <td className="px-4 py-2 border-b">{voucher.haveVouchers.map((v) => v.Service_ID).join(", ")}</td>
+                  <td className="px-4 py-2 border-b">{voucher.TotalDiscount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+  
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -55,7 +96,6 @@ const ChartVoucher = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        console.log(data);
         setHistory(data);
 
         const serviceIds = data.flatMap((item) =>
@@ -95,11 +135,6 @@ const ChartVoucher = () => {
 
       return matchesMonthYear && matchesService;
     });
-  
-    const popUpData = () =>{
-
-    }
-
     setFilteredData(filtered);
     updateVoucherStatistics(filtered);
     setNoDataFound(filtered.length === 0);
@@ -109,6 +144,21 @@ const ChartVoucher = () => {
         !selectedYear &&
         !selectedService
     );
+  };
+
+  const filterDetailData = (voucherId) => {
+    const voucher = history.filter((item) => {
+      const voucherDate = new Date(item.Date);
+      const matchesMonthYear =
+        (!selectedMonth ||
+          voucherDate.getMonth() + 1 === parseInt(selectedMonth)) &&
+        (!selectedYear || voucherDate.getFullYear() === parseInt(selectedYear));
+      const matchVoucherId = item.Voucher_ID === voucherId;
+      return matchesMonthYear && matchVoucherId;
+    });
+    setFilterDetail(voucher);
+    setNoDataFound(voucher.length === 0);
+    setShowPopup(true); // Show the popup when a voucher is selected
   };
 
   useEffect(() => {
@@ -214,7 +264,7 @@ const ChartVoucher = () => {
             }}
             className="w-full"
           >
-            <option value="">All Services</option>
+            <option value="">Select Service</option>
             {service.map((serviceId, index) => (
               <option key={index} value={serviceId}>
                 {serviceId}
@@ -267,12 +317,9 @@ const ChartVoucher = () => {
       <div className="grid lg:grid-cols-12">
         <div className="lg:col-span-4">
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
-            <>
-              {/* Pie Chart - Voucher ID vs Total Used */}
-              <div style={{ width: "400px", margin: "50px auto" }}>
-                <Pie data={pieData} />
-              </div>
-            </>
+            <div style={{ width: "400px", margin: "50px auto" }}>
+              <Pie data={pieData} />
+            </div>
           )}
         </div>
         <div className="lg:col-span-8">
@@ -287,6 +334,7 @@ const ChartVoucher = () => {
                     <th>Total Used</th>
                     <th>Total Discount</th>
                     <th>Date</th>
+                    <th>Detail</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -298,6 +346,14 @@ const ChartVoucher = () => {
                       <td>{voucherStatistics[voucherId].totalUsed}</td>
                       <td>{voucherStatistics[voucherId].totalDiscount}</td>
                       <td>{voucherStatistics[voucherId].date}</td>
+                      <td>
+                        <button
+                          className="border-2 rounded"
+                          onClick={() => filterDetailData(voucherId)}
+                        >
+                          Xem chi tiết
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -305,17 +361,15 @@ const ChartVoucher = () => {
             )}
           </div>
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
-            <>
-              {/* Line Chart - Voucher ID vs Total Discount */}
-              <div className="w-[600px] my-[50px] mx-auto">
-                <Line data={lineData} />
-              </div>
-            </>
+            <div className="w-[600px] my-[50px] mx-auto">
+              <Line data={lineData} />
+            </div>
           )}
         </div>
       </div>
 
-      {/* Chỉ hiển thị biểu đồ nếu có dữ liệu được lọc */}
+      {/* Show popup when data is available */}
+      {showPopup && <Popup />}
     </div>
   );
 };
