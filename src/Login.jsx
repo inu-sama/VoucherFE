@@ -14,10 +14,12 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const URL = "https://server-voucher.vercel.app/api";
-  const URL_CALLBACK = "https://voucher4u-fe.vercel.app/sso";
+  const URL_CALLBACK = "http://localhost:2106/";
   function handleLoginSSO() {
     sso.redirectToLogin(`${URL_CALLBACK}`);
   }
+
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
