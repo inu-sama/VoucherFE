@@ -19,6 +19,7 @@ import MainHomeAdmin from "../AdminClient/MainHomeAdmin.jsx";
 import MainPartner from "../Partner/MainPartner.jsx";
 import CollectPoint from "../Customer/CollectPoint/CollectPoint.jsx";
 import ChartVoucher from "../AdminClient/DashBoard/ChartVoucher.jsx";
+import DashBoardPartner from "../Partner/DashBoard.partner.jsx";
 
 const AuthLayout = () => {
   return (
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
           {
             path: "DetailVoucherPN/:id",
             element: <DetailVoucherPN />,
+          },
+          {
+            path: "DashBoardPartner",
+            element: <DashBoardPartner />,
           },
         ],
       },

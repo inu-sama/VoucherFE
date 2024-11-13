@@ -36,7 +36,14 @@ const ChartVoucher = () => {
   const [noDataFound, setNoDataFound] = useState(false);
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
-  const [colors, setColors] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [filterDetail, setFilterDetail] = useState([]);
+  const [voucherName, setVoucherName] = useState(""); // Thêm state để lưu tên voucher
+
+  
+
+  
+
 
   const generateRandomColor = () => {
     const r = Math.floor(Math.random() * 256);
@@ -45,20 +52,67 @@ const ChartVoucher = () => {
     return `rgb(${r}, ${g}, ${b})`;
   };
 
+  const Popup = () => {
+    const [currentPage, setCurrentPage] = useState(1); 
+    const itemsPerPage = 10;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filterDetail.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filterDetail.length / itemsPerPage);
+
+    
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
+          {/* Nút đóng */}
+          <button
+            className="absolute top-4 right-4 text-xl font-bold text-gray-700"
+            onClick={() => setShowPopup(false)} // Đóng popup khi nhấn nút
+          >
+            &times; {/* Biểu tượng đóng (X) */}
+          </button>
+  
+          <h3>{voucherName ? voucherName : "Voucher Detail"}</h3>
+          <table className="w-full table-auto">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 text-left border-b">Voucher ID</th>
+                <th className="px-4 py-2 text-left border-b">Partner ID</th>
+                <th className="px-4 py-2 text-left border-b">Service ID</th>
+                <th className="px-4 py-2 text-left border-b">Discount</th>
+                <th className="px-4 py-2 text-left border-b">Date</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {filterDetail.map((voucher) => (
+                <tr key={voucher.Voucher_ID}>
+                  <td className="px-4 py-2 border-b">{voucher.Voucher_ID}</td>
+                  <td className="px-4 py-2 border-b">{voucher.Partner_ID}</td>
+                  <td className="px-4 py-2 border-b">{voucher.haveVouchers.map((v) => v.Service_ID).join(", ")}</td>
+                  <td className="px-4 py-2 border-b">{voucher.TotalDiscount}</td>
+                  <td className="px-4 py-2 border-b">{new Date(voucher.Date).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+  
+
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         const res = await fetch(
-          "https://server-voucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
+          "https://server-voucher.vercel.app/api/Statistical_VoucherAdmin"
         );
-        // const res = await fetch(
-        //   "https://servervoucher.vercel.app/api/Statistical_VoucherFindPartner_Service"
-        // );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        console.log(data);
         setHistory(data);
 
         const serviceIds = data.flatMap((item) =>
@@ -98,7 +152,6 @@ const ChartVoucher = () => {
 
       return matchesMonthYear && matchesService;
     });
-
     setFilteredData(filtered);
     updateVoucherStatistics(filtered);
     setNoDataFound(filtered.length === 0);
@@ -109,6 +162,27 @@ const ChartVoucher = () => {
         !selectedService
     );
   };
+
+  const filterDetailData = (voucherId) => {
+    const voucher = history.filter((item) => {
+      const voucherDate = new Date(item.Date);
+      const matchesMonthYear =
+        (!selectedMonth ||
+          voucherDate.getMonth() + 1 === parseInt(selectedMonth)) &&
+        (!selectedYear || voucherDate.getFullYear() === parseInt(selectedYear));
+      const matchVoucherId = item.Voucher_ID === voucherId;
+      return matchesMonthYear && matchVoucherId;
+    });
+
+    if (voucher.length > 0) {
+      setFilterDetail(voucher);
+      // setVoucherName(voucher.voucherName); // Lưu tên voucher vào state
+    }
+
+    setNoDataFound(voucher.length === 0);
+    setShowPopup(true); // Hiển thị popup
+  };
+  
 
   useEffect(() => {
     filterData();
@@ -146,22 +220,8 @@ const ChartVoucher = () => {
         data: Object.values(voucherStatistics).map(
           (voucher) => voucher.totalUsed
         ),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-          "rgba(255, 159, 64, 0.6)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
+        backgroundColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Màu ngẫu nhiên cho mỗi phần
+        borderColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Viền màu ngẫu nhiên
         borderWidth: 1,
       },
     ],
@@ -176,7 +236,7 @@ const ChartVoucher = () => {
           (voucher) => voucher.totalDiscount
         ),
         fill: false,
-        borderColor: "rgba(75, 192, 192, 1)",
+        borderColor:  Object.keys(voucherStatistics).map(() => generateRandomColor()), // Viền màu ngẫu nhiên
         tension: 0.1,
       },
     ],
@@ -213,7 +273,7 @@ const ChartVoucher = () => {
             }}
             className="w-full"
           >
-            <option value="">All Services</option>
+            <option value="">Select Service</option>
             {service.map((serviceId, index) => (
               <option key={index} value={serviceId}>
                 {serviceId}
@@ -266,12 +326,9 @@ const ChartVoucher = () => {
       <div className="grid lg:grid-cols-12">
         <div className="lg:col-span-4">
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
-            <>
-              {/* Pie Chart - Voucher ID vs Total Used */}
-              <div style={{ width: "400px", margin: "50px auto" }}>
-                <Pie data={pieData} />
-              </div>
-            </>
+            <div style={{ width: "400px", margin: "50px auto" }}>
+              <Pie data={pieData} />
+            </div>
           )}
         </div>
         <div className="lg:col-span-8">
@@ -286,6 +343,7 @@ const ChartVoucher = () => {
                     <th>Total Used</th>
                     <th>Total Discount</th>
                     <th>Date</th>
+                    <th>Detail</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -297,6 +355,14 @@ const ChartVoucher = () => {
                       <td>{voucherStatistics[voucherId].totalUsed}</td>
                       <td>{voucherStatistics[voucherId].totalDiscount}</td>
                       <td>{voucherStatistics[voucherId].date}</td>
+                      <td>
+                        <button
+                          className="border-2 rounded"
+                          onClick={() => filterDetailData(voucherId)}
+                        >
+                          Xem chi tiết
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -304,17 +370,15 @@ const ChartVoucher = () => {
             )}
           </div>
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
-            <>
-              {/* Line Chart - Voucher ID vs Total Discount */}
-              <div className="w-[600px] my-[50px] mx-auto">
-                <Line data={lineData} />
-              </div>
-            </>
+            <div className="w-[600px] my-[50px] mx-auto">
+              <Line data={lineData} />
+            </div>
           )}
         </div>
       </div>
 
-      {/* Chỉ hiển thị biểu đồ nếu có dữ liệu được lọc */}
+      {/* Show popup when data is available */}
+      {showPopup && <Popup />}
     </div>
   );
 };

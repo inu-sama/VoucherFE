@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { SSO } from "@htilssu/wowo";
 import axios from "axios";
 const sso = new SSO("V4U");
-
 const Login = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -15,9 +14,9 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const URL = "https://server-voucher.vercel.app/api";
-  
+  const URL_CALLBACK = "http://localhost:2106/";
   function handleLoginSSO() {
-    sso.redirectToLogin("http://localhost:2106/sso");
+    sso.redirectToLogin(`${URL_CALLBACK}`);
   }
 
   const handleLogin = async (e) => {
@@ -40,7 +39,7 @@ const Login = () => {
 
       if (response.status === 200) {
         const token = response.data.AccessTokken;
-        window.location.href = `https://voucher4u-fe.vercel.app/?Token=${token}`;
+        window.location.href = `${URL_CALLBACK}?Token=${token}`;
       } else {
         throw new Error("Đăng nhập không thành công.");
       }
@@ -58,7 +57,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full h-screen bg-cover bg-[url('https://cdnb.artstation.com/p/assets/images/images/057/530/061/4k/arnold-folls-greenscenerywallpapers4k-51.jpg?1671839033')]">
+    <div
+      className={`flex items-center justify-center w-full h-screen bg-cover bg-[url(./assets/imagelogin.jpg)]`}
+    >
       <div
         className="w-full lg:w-1/3 bg-white bg-opacity-50 backdrop-blur-md rounded-3xl text-[#2F4F4F] overflow-hidden shadow-xl shadow-[#2F4F4F]"
         id="loginForm"

@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
@@ -7,15 +7,16 @@ const ProtectedRouter = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("accessToken", userData.token);
+    localStorage.setItem("Token", userData.token);
   };
 
   const logout = () => {
-    console.log("Logout function triggered");
     setUser(null);
     localStorage.removeItem("Token");
-    localStorage.removeItem("URLCallBack");
     localStorage.removeItem("OrderID");
+    localStorage.removeItem("Role");
+    localStorage.removeItem("URLCallBack");
+    localStorage.removeItem("URLCallBack");
   };
 
   return (
