@@ -20,6 +20,7 @@ import MainPartner from "../Partner/MainPartner.jsx";
 import CollectPoint from "../Customer/CollectPoint/CollectPoint.jsx";
 import ChartVoucher from "../AdminClient/DashBoard/ChartVoucher.jsx";
 import DashBoardPartner from "../Partner/DashBoard.partner.jsx";
+import DetailDashBoard from "../Partner/DetailDashBoard.partner.jsx";
 
 const AuthLayout = () => {
   return (
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
           {
             path: "DashBoardPartner",
             element: <DashBoardPartner />,
+          },
+          {
+            path: "DetailDashBoard/:id",
+            element: <DetailDashBoard />,
           },
         ],
       },
