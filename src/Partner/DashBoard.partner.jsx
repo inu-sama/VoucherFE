@@ -40,9 +40,9 @@ const DashBoardPartner = () => {
   const [voucherStatistics, setVoucherStatistics] = useState({});
   const [noFilterData, setNoFilterData] = useState(false);
   const [serviceNames, setServiceNames] = useState({});
-  const [showPopup, setShowPopup] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
   const [filterDetail, setFilterDetail] = useState([]);
-  const [voucherName, setVoucherName] = useState(""); 
+  const [voucherName, setVoucherName] = useState("");
 
   const URL = "https://server-voucher.vercel.app/api";
 
@@ -56,66 +56,13 @@ const DashBoardPartner = () => {
     }).format(price);
   };
 
-
-  const Popup = () => {
-    const [currentPage, setCurrentPage] = useState(1); 
-    const itemsPerPage = 10;
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filterDetail.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(filterDetail.length / itemsPerPage);
-
-    
-    
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
-          {/* Nút đóng */}
-          <button
-            className="absolute top-4 right-4 text-xl font-bold text-gray-700"
-            onClick={() => setShowPopup(false)} // Đóng popup khi nhấn nút
-          >
-            &times; {/* Biểu tượng đóng (X) */}
-          </button>
-  
-          <h3>{voucherName ? voucherName : "Voucher Detail"}</h3>
-          <table className="w-full table-auto">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left border-b">Voucher ID</th>
-                <th className="px-4 py-2 text-left border-b">Partner ID</th>
-                <th className="px-4 py-2 text-left border-b">Service ID</th>
-                <th className="px-4 py-2 text-left border-b">Discount</th>
-                <th className="px-4 py-2 text-left border-b">Date</th>
-
-              </tr>
-            </thead>
-            <tbody>
-              {filterDetail.map((voucher) => (
-                <tr key={voucher.Voucher_ID}>
-                  <td className="px-4 py-2 border-b">{voucher.Voucher_ID}</td>
-                  <td className="px-4 py-2 border-b">{voucher.Partner_ID}</td>
-                  <td className="px-4 py-2 border-b">{voucher.haveVouchers.map((v) => v.Service_ID).join(", ")}</td>
-                  <td className="px-4 py-2 border-b">{voucher.TotalDiscount}</td>
-                  <td className="px-4 py-2 border-b">{new Date(voucher.Date).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  };
-  
-
   const generateRandomColor = () => {
     const r = Math.floor(Math.random() * 128 + 127); // Tạo giá trị từ 127 đến 255 (tương đối sáng)
-  const g = Math.floor(Math.random() * 128 + 127);
-  const b = Math.floor(Math.random() * 128 + 127);
+    const g = Math.floor(Math.random() * 128 + 127);
+    const b = Math.floor(Math.random() * 128 + 127);
     return `rgb(${r}, ${g}, ${b})`;
   };
 
-  
   const filterDetailData = (voucherId) => {
     const voucher = history.filter((item) => {
       const voucherDate = new Date(item.Date);
@@ -126,14 +73,14 @@ const DashBoardPartner = () => {
       const matchVoucherId = item.Voucher_ID === voucherId;
       return matchesMonthYear && matchVoucherId;
     });
-    
+
     if (voucher.length > 0) {
       setFilterDetail(voucher);
       setVoucherName(voucher.vouchers.Name); // Lưu tên voucher vào state
     }
-  
+
     setNoDataFound(voucher.length === 0);
-    setShowPopup(true); // Hiển thị popup
+    // setShowPopup(true); // Hiển thị popup
   };
 
   const fetchHistory = async () => {
@@ -275,8 +222,10 @@ const DashBoardPartner = () => {
         data: Object.values(voucherStatistics).map(
           (voucher) => voucher.totalUsed
         ),
-        backgroundColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Màu ngẫu nhiên cho mỗi phần
-        borderColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Viền màu ngẫu nhiên
+        backgroundColor: Object.keys(voucherStatistics).map(() =>
+          generateRandomColor()
+        ),
+        borderColor: "black",
         borderWidth: 1,
       },
     ],
@@ -291,7 +240,9 @@ const DashBoardPartner = () => {
           (voucher) => voucher.totalDiscount
         ),
         fill: false,
-        borderColor: Object.keys(voucherStatistics).map(() => generateRandomColor()), // Viền màu ngẫu nhiên
+        borderColor: Object.keys(voucherStatistics).map(() =>
+          generateRandomColor()
+        ), // Viền màu ngẫu nhiên
         tension: 0.1,
       },
     ],
@@ -549,15 +500,11 @@ const DashBoardPartner = () => {
       {filteredData.length > 0 && !noDataFound && !noFilterData && (
         <div className="w-full p-8">
           <div className="w-full">
-            <Line data={lineData} options={options}  />
-            
+            <Line data={lineData} options={options} />
           </div>
         </div>
       )}
-      {showPopup && <Popup />}
-
     </div>
-    
   );
 };
 
