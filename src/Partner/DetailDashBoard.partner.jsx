@@ -2,6 +2,29 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { Pie, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+} from "chart.js";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title
+);
 
 const DetailDashBoard = () => {
   const { id } = useParams();
@@ -17,7 +40,7 @@ const DetailDashBoard = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const URL = "http://localhost:3001/api/";
+  const URL = "https://server-voucher.vercel.app/api";
 
   const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -25,6 +48,49 @@ const DetailDashBoard = () => {
       currency: "VND",
     }).format(price);
   };
+
+ const listDate = (firstdate,lastdate) => {
+  const dates = [];
+  const date1 = new Date(firstdate);
+  const date2 = new Date(lastdate);
+  while (date1 <= date2) {
+    dates.push(new Date(date1));
+    date1.setDate(date1.getDate() + 1); // Tăng ngày lên 1
+  }
+
+  return dates.map(date => date.toISOString().split('T')[0]);
+ }
+
+ const chartData =  {
+  
+    labels:listDate(firstdate,lastdate),
+    datasets:[
+      {
+        label:'Total Discount',
+        data:totalDiscount,
+        fill:false,
+        borderColor:'#4E73DF',
+        tension:0.4
+      },
+      {
+        label:'Total Use',
+        data:totalUse,
+        fill:false,
+        borderColor:'#1CC88A',
+        tension:0.4
+      },
+      {
+        label:'Total Customer',
+        data:totalCus,
+        fill:false,
+        borderColor:'#36B9CC',
+        tension:0.4
+      },
+
+    ]
+  
+ }
+
 
   const date = (a) => {
     return new Date(a).toLocaleDateString("en-GB", {
@@ -101,6 +167,24 @@ const DetailDashBoard = () => {
       }
     }
   }, [voucher]);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Multi-Line Chart Example',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
 
   if (loading) {
     return (
@@ -260,6 +344,9 @@ const DetailDashBoard = () => {
                   </p>
                 </div>
               ))}
+            </div>
+            <div>
+              <Line data={chartData} options={options}></Line>
             </div>
           </div>
         </div>
