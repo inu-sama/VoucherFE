@@ -106,6 +106,8 @@ const DetailDashBoard = () => {
       const data = await response.json();
       setHistory(data.history);
       setVoucher(data.voucher);
+      console.log("his", data.history);
+      console.log("vou", data.voucher);
     } catch (error) {
       setError(error);
     }

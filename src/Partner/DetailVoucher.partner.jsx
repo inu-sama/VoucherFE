@@ -1,35 +1,29 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faEdit,
-  faXmark,
-  faWrench,
-} from "@fortawesome/free-solid-svg-icons";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-const DetailVoucher = () => {
+const DetailDashBoard = () => {
   const { id } = useParams();
+  const [history, setHistory] = useState([]);
   const [voucher, setVoucher] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [totalUse, settotalUse] = useState(0);
+  const [totalDiscount, settotalDiscount] = useState(0);
+  const [firstdate, setfirstdate] = useState("");
+  const [lastdate, setlastdate] = useState("");
+  const [totalCus, settotalCus] = useState(0);
+  const [customer, setCustomer] = useState([]);
   const [serviceNames, setServiceNames] = useState({});
-  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
 
-  const handlestate = async (id) => {
-    try {
-      const res = await fetch(`${URL}/updateState/${id}`, { method: "GET" });
-      const voucher = await res.json();
-      if (res.status === 400) {
-        alert("Error: " + (voucher.message || "Failed to update state"));
-      } else {
-        alert("Update State Success");
-        window.location.reload();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const formattedPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
   };
 
   const date = (a) => {
@@ -40,85 +34,75 @@ const DetailVoucher = () => {
     });
   };
 
-  const formattedPrice = (price) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(price);
-  };
-
-  const DetailFetch = async () => {
+  const fetchDetailHistory = async () => {
     try {
-      const res = await fetch(`${URL}/DetailVoucher/${id}`);
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-      const data = await res.json();
-      setVoucher(data);
-      console.log("Dữ liệu nhận được:", data);
+      const response = await fetch(`${URL}/Statistical_ID/${id}`);
+      const data = await response.json();
+      setHistory(data.history);
+      setVoucher(data.voucher);
+      console.log("his", data.history);
+      console.log("vou", data.voucher);
     } catch (error) {
-      setError("Cannot fetch data from server");
-      console.error("Fetch error:", error);
-    } finally {
-      setLoading(false);
+      setError(error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    DetailFetch();
+    fetchDetailHistory();
   }, [id]);
+
+  useEffect(() => {
+    if (history.length > 0) {
+      setfirstdate(history[0].Date);
+      setlastdate(history[history.length - 1].Date);
+
+      let discountSum = 0;
+      let uniqueCustomers = new Set();
+
+      for (let i = 0; i < history.length; i++) {
+        discountSum += history[i].TotalDiscount;
+        uniqueCustomers.add(history[i].CusID);
+      }
+
+      settotalDiscount(discountSum);
+      settotalCus(uniqueCustomers.size);
+      setCustomer(Array.from(uniqueCustomers));
+      settotalUse(history.length);
+    }
+  }, [history]);
 
   const fetchServiceID = async (serviceId) => {
     try {
       const response = await fetch(`${URL}/getServiceID/${serviceId}`);
       if (response.ok) {
         const data = await response.json();
-        return data.name; // Return the name directly
+        return data.name;
       } else {
         throw new Error("Failed to fetch service name");
       }
     } catch (error) {
       console.error("Error fetching service name:", error);
-      return "Unknown Service"; // Default value in case of error
+      return "Unknown Service";
     }
   };
 
   useEffect(() => {
-    const fetchServiceNames = async () => {
-      const names = {};
-      for (const haveVoucher of voucher.haveVouchers) {
-        names[haveVoucher.Service_ID] = await fetchServiceID(
-          haveVoucher.Service_ID
-        );
-      }
-      setServiceNames(names);
-    };
-
-    if (voucher?.haveVouchers?.length > 0) {
-      fetchServiceNames();
-    }
-  }, [voucher?.haveVouchers]);
-
-  const handleDeleteVoucher = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this voucher?"
-    );
-    if (!confirm) return;
-    else {
-      try {
-        const res = await fetch(`${URL}/deleteVoucher/${id}`, {
-          method: "GET",
-        });
-        const voucher = await res.json();
-        if (res.status === 200) {
-          alert("Xóa voucher thành công");
-          navigate("/Partner/ListVoucherPN");
-        } else {
-          alert("Error: " + (voucher.message || "Failed to delete voucher"));
+    if (voucher) {
+      const fetchServiceNames = async () => {
+        const names = {};
+        for (const haveVoucher of voucher[0].haveVouchers) {
+          names[haveVoucher.Service_ID] = await fetchServiceID(
+            haveVoucher.Service_ID
+          );
         }
-      } catch (error) {
-        console.log(error);
+        setServiceNames(names);
+      };
+      if (voucher[0].haveVouchers.length > 0) {
+        fetchServiceNames();
       }
     }
-  };
+  }, [voucher]);
 
   if (loading) {
     return (
@@ -139,184 +123,151 @@ const DetailVoucher = () => {
   }
 
   return (
-    <div className="lg:bg-[#e7eef9] bg-[#e7eef9] h-full">
-      <div className="w-full bg-gradient-to-bl to-[#75bde0] h-full from-30% from-[#eeeeee] p-4 ">
-        <div className="grid grid-cols-12 text-[#3f5f89]">
-          <div className="col-span-11 flex items-center">
-            <h1 className="text-4xl mt-4 mb-10 w-full text-left font-bold px-10">
-              Chi tiết voucher
+    <div className="text-[#2F4F4F] p-4 w-full h-full bg-gradient-to-bl to-[#75bde0] from-30%  from-[#d0d0d0]">
+      <h1 className="text-3xl text-black font-bold text-center">
+        DETAIL DASHBOARD OF VOUCHER
+      </h1>
+      <div className="col-span-1 float-right mr-4  flex items-center ">
+        <Link to={`/Partner/DashBoardPartner`}>
+          <button className="bg-[#eaf9e7] hover:bg-[#5591bc] w-10 h-10 border-4 border-[#5591bc] hover:text-[#eaf9e7] font-bold rounded-full">
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+        </Link>
+      </div>
+      <p className="text-3xl text-[#517f95] font-bold text-center">{id}</p>
+      <div className="grid grid-cols-4 gap-[30px] mt-[25px] pb-[15px]">
+        <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#4E73DF] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
+          <div>
+            <h2 className="text-[#B589DF] text-[11px] leading-[17px] font-bold">
+              TỔNG TIỀN ĐƯỢC GIẢM GIÁ
+            </h2>
+            <h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
+              {formattedPrice(totalDiscount)}
             </h1>
           </div>
-          <div className="col-span-1 flex items-center ">
-            <Link to={`/Partner/ListvoucherPN`}>
-              <button className="bg-[#eaf9e7] hover:bg-[#5591bc] w-10 h-10 border-4 border-[#5591bc] hover:text-[#eaf9e7] font-bold rounded-full">
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </Link>
+        </div>
+        <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#1CC88A] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
+          <div>
+            <h2 className="text-[#1cc88a] text-[11px] leading-[17px] font-bold">
+              SỐ KHÁCH HÀNG SỬ DỤNG
+            </h2>
+            <h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
+              {totalCus}
+            </h1>
           </div>
         </div>
-        <div className="grid lg:grid-cols-2 grid-cols-1">
-          <div className="p-10">
-            <img
-              className="w-full rounded-xl h-auto object-cover"
-              src={voucher.Image}
-              alt="Voucher"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg";
-              }}
-            />
-            <p className="text-xl my-2 flex justify-between">
-              <span className="font-bold text-[#3f5f89]">Hạn sử dụng:</span>
-              <span className="text-[#3f5f89]">
-                {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
-                <span> - </span>
-                {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
+        <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#36B9CC] flex items-center justify-between px-3 cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
+          <div>
+            <h2 className="text-[#1cc88a] text-[11px] leading-[17px] font-bold">
+              NGÀY BẮT ĐẦU-NGÀY KẾT THÚC
+            </h2>
+            <h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
+              {date(firstdate)} - {date(lastdate)}
+            </h1>
+          </div>
+        </div>
+        <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#F6C23E] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
+          <div>
+            <h2 className="text-[#1cc88a] text-[11px] leading-[17px] font-bold">
+              SỐ LƯỢNG VOUCHER SỬ DỤNG
+            </h2>
+            <h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
+              {totalUse}
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div className="grid lg:grid-cols-2 grid-cols-1">
+        <div className="p-10">
+          <img
+            className="w-full rounded-xl h-auto object-cover"
+            src={voucher[0].Image}
+            alt="Voucher"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src =
+                "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg";
+            }}
+          />
+        </div>
+        <div className="w-full mt-9 text-[#3B7097]">
+          <h1 className="text-3xl font-bold mb-2">{voucher[0].Name}</h1>
+          <div className="w-full border-b border-[#3B7097] mb-10">
+            <span className="text-xl text-[#3f5f89]">{voucher[0]._id}</span>
+            <span className="float-right font-bold text-xl text-[#3f5f89]">
+              Trạng thái:{" "}
+              <span
+                className={`font-normal ${
+                  voucher[0].States === "Enable"
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {voucher[0].States}
+              </span>
+            </span>
+          </div>
+          <div>
+            <p className="text-xl my-2 flex justify-between pr-10">
+              <span className="font-bold text-[#3f5f89]">
+                Số lượng sử dụng:{" "}
+              </span>
+              <span className=" text-[#3f5f89]">
+                {voucher[0].AmountUsed || totalUse}
               </span>
             </p>
-          </div>
-          <div className="w-full text-[#3B7097]">
-            <h1 className="text-3xl font-bold mb-2">{voucher.Name}</h1>
-            <div className="w-full border-b border-[#3B7097] mb-10">
-              <span className="text-xl text-[#3f5f89]">{voucher._id}</span>
-              <span className="float-right font-bold text-xl text-[#3f5f89]">
-                Trạng thái:{" "}
-                <span
-                  className={`font-normal ${
-                    voucher.States === "Enable"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {voucher.States}
-                </span>
+            <p className="text-xl my-2 flex justify-between pr-10">
+              <span className="font-bold text-[#3f5f89]">Mức giảm: </span>
+              <span className=" text-[#3f5f89]">
+                {voucher[0].PercentDiscount || "N/A"}%
               </span>
+            </p>
+            <p className="text-xl my-2 flex justify-between pr-10">
+              <span className="font-bold text-[#3f5f89]">Mô tả: </span>
+              <span className=" text-[#3f5f89]">
+                {voucher[0].Description || "N/A"}
+              </span>
+            </p>
+            <div className="my-4 bg-[#c5e2eb] shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-5">
+              {voucher[0].haveVouchers && voucher[0].haveVouchers.length > 0 ? (
+                voucher[0].haveVouchers.map((haveVoucher) => (
+                  <div key={haveVoucher._id}>
+                    <p>
+                      <span className="text-[#3f5f89] text-xl font-semibold">
+                        Service:
+                      </span>{" "}
+                      <span className="text-[#3f5f89] text-xl font-normal">
+                        {serviceNames[haveVoucher.Service_ID] || "Loading..."}
+                      </span>
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-[#3f5f89] font-semibold">Toàn bộ service</p>
+              )}
             </div>
-            <div>
-              <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#3f5f89]">
-                  Số lượng còn lại:{" "}
-                </span>
-                <span className=" text-[#3f5f89]">
-                  {voucher.RemainQuantity || "N/A"}
-                </span>
-              </p>
-              <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#3f5f89]">Mức giảm: </span>
-                <span className=" text-[#3f5f89]">
-                  {voucher.PercentDiscount || "N/A"}%
-                </span>
-              </p>
-              <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#3f5f89]">Mô tả: </span>
-                <span className=" text-[#3f5f89]">
-                  {voucher.Description || "N/A"}
-                </span>
-              </p>
-              <div className="my-4">
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                  <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
-                    <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
-                      <tr className="text-lg">
-                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                          STT
-                        </th>
-                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                          Giá trị tối thiểu
-                        </th>
-                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                          Giá trị tối đa
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {voucher.conditions && voucher.conditions.length > 0 ? (
-                        voucher.conditions
-                          .slice(0, voucher.conditions.length)
-                          .map((condition, index) => (
-                            <tr
-                              key={(condition._id, index)}
-                              className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
-                            >
-                              <td className="px-6 py-4">{index + 1}</td>
-                              <td className="px-6 py-4">
-                                {formattedPrice(condition.MinValue)}
-                              </td>
-                              <td className="px-6 py-4">
-                                {formattedPrice(condition.MaxValue)}
-                              </td>
-                            </tr>
-                          ))
-                      ) : (
-                        <tr>
-                          <td colSpan={3} className="text-center">
-                            {" "}
-                            Không có điều kiện
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="my-4 bg-[#c5e2eb] shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-5">
-                {voucher.haveVouchers && voucher.haveVouchers.length > 0 ? (
-                  voucher.haveVouchers.map((haveVoucher) => (
-                    <div key={haveVoucher._id}>
-                      <p>
-                        <span className="text-[#3f5f89] text-xl font-semibold">
-                          Service:
-                        </span>{" "}
-                        <span className="text-[#3f5f89] text-xl font-normal">
-                          {serviceNames[haveVoucher.Service_ID] || "Loading..."}
-                        </span>
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-[#3f5f89] font-semibold">
-                    Toàn bộ service
+            <div className="my-4 bg-[#c5e2eb] h-[150px] overflow-auto  shadow-inner shadow-[#82C0DF] rounded-lg p-2 mb-5">
+              <h1 className="text-xl text-center py-2  font-semibold text-[#3f5f89]">
+                DANH SÁCH KHÁCH HÀNG SỬ DỤNG
+              </h1>
+              {customer.map((cus, index) => (
+                <div key={cus}>
+                  <p>
+                    <span className="text-[#3f5f89] text-xl font-semibold">
+                      {index + 1}.
+                    </span>{" "}
+                    <span className="text-[#3f5f89] text-xl font-normal">
+                      {cus}
+                    </span>
                   </p>
-                )}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-        <div className="grid grid-cols-12 gap-10 w-full justify-center mt-10">
-          <div className="col-span-1"></div>
-          <div className="col-span-3">
-            <Link
-              to={`/Partner/EditVoucherPN/${id}`}
-              className="bg-[#3f5f89] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
-            >
-              <FontAwesomeIcon icon={faEdit} />
-              <span className="ml-2">Edit</span>
-            </Link>
-          </div>
-          <div className="col-span-3 gap-10">
-            <button
-              className="bg-[#2f434f] hover:bg-[#e7f2f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={() => handleDeleteVoucher(id)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-              <span className="ml-2">Delete</span>
-            </button>
-          </div>
-          <div className="col-span-3 gap-10">
-            <button
-              className="bg-[#3bb0b0] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={() => handlestate(id)}
-            >
-              <FontAwesomeIcon icon={faWrench} />
-              <span className="ml-2"> State</span>
-            </button>
-          </div>
-          <div className="col-span-1"></div>
         </div>
       </div>
     </div>
   );
 };
 
-export default DetailVoucher;
+export default DetailDashBoard;
