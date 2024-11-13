@@ -17,7 +17,7 @@ const DetailDashBoard = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const URL = "http://localhost:3001/api/";
+  const URL = "https://server-voucher.vercel.app/api";
 
   const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -40,6 +40,8 @@ const DetailDashBoard = () => {
       const data = await response.json();
       setHistory(data.history);
       setVoucher(data.voucher);
+      console.log("his", data.history);
+      console.log("vou", data.voucher);
     } catch (error) {
       setError(error);
     }
