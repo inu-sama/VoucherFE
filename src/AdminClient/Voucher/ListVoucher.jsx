@@ -100,37 +100,32 @@ const ListVoucher = () => {
             <div
               tabIndex={0}
               role="button"
-              className="font-semibold bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] outline-none px-4 py-2 rounded-lg"
-            >
+              className="font-semibold bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] outline-none px-4 py-2 rounded-lg">
               Sort by Service
             </div>
             <ul
               tabIndex={0}
-              className="dropdown-content menu bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4ca771] mt-2"
-            >
+              className="dropdown-content menu bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4ca771] mt-2">
               <li className="flex items-center text-[#2F4F4F] text-lg">
                 <a
                   onClick={() => {
                     setSelectedServices(null);
                     console.log(selectedServices);
                   }}
-                  className="w-full hover:bg-[#4ca771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                >
+                  className="w-full hover:bg-[#4ca771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                   All services
                 </a>
               </li>
               {services.map((service) => (
                 <li
                   key={service._id}
-                  className="flex items-center text-[#2F4F4F] text-lg"
-                >
+                  className="flex items-center text-[#2F4F4F] text-lg">
                   <a
                     onClick={() => {
                       setSelectedServices(service);
                       console.log(selectedServices);
                     }}
-                    className="w-full hover:bg-[#4ca771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                  >
+                    className="w-full hover:bg-[#4ca771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                     {service.ServiceName}
                   </a>
                 </li>
@@ -139,8 +134,7 @@ const ListVoucher = () => {
           </div>
           <Link
             to="/Admin/Createvoucher"
-            className="font-semibold bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg"
-          >
+            className="font-semibold bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg">
             Create Voucher
           </Link>
         </div>
@@ -154,8 +148,7 @@ const ListVoucher = () => {
                   return (
                     <div
                       key={voucher._id}
-                      className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]"
-                    >
+                      className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]">
                       <h2 className="text-2xl font-bold mb-3">
                         {voucher.Name}
                       </h2>
@@ -184,8 +177,7 @@ const ListVoucher = () => {
                         <div className="col-span-4 grid grid-rows-2 gap-2">
                           <Link
                             to={`/Admin/Detailvoucher/${voucher._id}`}
-                            className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
-                          >
+                            className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center">
                             <FontAwesomeIcon
                               className="mr-2"
                               icon={faCircleInfo}
@@ -194,8 +186,7 @@ const ListVoucher = () => {
                           </Link>
                           <button
                             onClick={() => handleDeleteVoucher(voucher._id)}
-                            className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
-                          >
+                            className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center">
                             <FontAwesomeIcon icon={faTrash} className="mr-2" />
                             Delete
                           </button>
@@ -215,8 +206,7 @@ const ListVoucher = () => {
                   ) != undefined ? (
                     <div
                       key={voucher._id}
-                      className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]"
-                    >
+                      className=" w-full rounded-lg p-4 bg-[#c0e6b3] text-[#2F4F4F]">
                       <h2 className="text-2xl font-bold mb-3">
                         {voucher.Name}
                       </h2>
@@ -245,8 +235,7 @@ const ListVoucher = () => {
                         <div className="col-span-4 grid grid-rows-2 gap-2">
                           <Link
                             to={`/Admin/DetailVoucher/${voucher._id}`}
-                            className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center"
-                          >
+                            className="bg-[#4ca771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] px-4 py-2 rounded-lg flex items-center">
                             <FontAwesomeIcon
                               className="mr-2"
                               icon={faCircleInfo}
@@ -255,8 +244,7 @@ const ListVoucher = () => {
                           </Link>
                           <button
                             onClick={() => handleDeleteVoucher(voucher._id)}
-                            className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
-                          >
+                            className="bg-[#2F4F4F] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center">
                             <FontAwesomeIcon icon={faTrash} className="mr-2" />
                             Delete
                           </button>
@@ -275,11 +263,18 @@ const ListVoucher = () => {
               return (
                 <p
                   key={page}
-                  className="rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#2F4F4F] bg-[#fff] hover:bg-[#2F4F4F] text-[#2F4F4F] hover:text-[#fff] cursor-pointer"
+                  className="paging rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#2F4F4F] bg-[#fff] hover:bg-[#2F4F4F] text-[#2F4F4F] hover:text-[#fff] cursor-pointer"
                   onClick={() => {
                     setSelectedPage(page);
-                  }}
-                >
+                    let paging = document.querySelectorAll(".paging");
+                    paging.forEach((element) => {
+                      element.innerHTML == page ? {} : 
+                      element.classList.remove("bg-[#2F4F4F]");
+                      element.classList.remove("text-[#fff]");
+                      element.classList.add("bg-[#fff]");
+                      element.classList.add("text-[#2F4F4F]");
+                    });
+                  }}>
                   {page}
                 </p>
               );
