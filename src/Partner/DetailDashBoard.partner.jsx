@@ -28,6 +28,8 @@ ChartJS.register(
 
 const DetailDashBoard = () => {
   const { id } = useParams();
+  const { month } = useParams();
+  const { year } = useParams();
   const [history, setHistory] = useState([]);
   const [voucher, setVoucher] = useState(null);
   const [totalUse, settotalUse] = useState(0);
@@ -37,13 +39,10 @@ const DetailDashBoard = () => {
   const [totalCus, settotalCus] = useState(0);
   const [customer, setCustomer] = useState([]);
   const [serviceNames, setServiceNames] = useState({});
-  
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
-
-
 
   const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -54,80 +53,44 @@ const DetailDashBoard = () => {
 
   const aggregateDataByDate = (data) => {
     const result = data.reduce((acc, item) => {
-      const { Date: dateString, CusID, TotalDiscount } = item;
-  
-      // Chuyển ngày thành định dạng "YYYY-MM-DD" để nhóm theo ngày
-      const date = new Date(dateString).toISOString().split('T')[0];
-      
-      // Kiểm tra xem ngày này đã có trong kết quả chưa
-      const existingEntry = acc.find(entry => entry.date === date);
-  
+      const { Date: dateString, TotalDiscount } = item;
+
+      const date = new Date(dateString).toISOString().split("T")[0];
+
+      const existingEntry = acc.find((entry) => entry.date === date);
+
       if (existingEntry) {
-        // Cộng dồn tổng giảm giá và số voucher
         existingEntry.totalDiscount += TotalDiscount;
-        existingEntry.totalVouchers += 1;
-        
-        // Cộng dồn số lượng người dùng (nếu CusID chưa tồn tại trong danh sách userIds)
-        if (!existingEntry.userIds.includes(CusID)) {
-          existingEntry.userIds.push(CusID);
-        }
       } else {
-        // Tạo mới mục nhập cho ngày này
         acc.push({
           date,
-          userIds: [CusID],
           totalDiscount: TotalDiscount,
-          totalVouchers: 1
         });
       }
-  
+
       return acc;
     }, []);
-  
-    // Chuyển đổi kết quả với tổng số người dùng từ `userIds`
-    return result.map(({ date, userIds, totalDiscount, totalVouchers }) => ({
+
+    return result.map(({ date, totalDiscount }) => ({
       date,
-      totalUsers: userIds.length,
       totalDiscount,
-      totalVouchers
     }));
   };
-  
+
   const aggregatedData = aggregateDataByDate(history);
-  
-  console.log(aggregatedData);
 
-
- const chartData =  {
-  
-    labels:aggregatedData.map(item => item.date),
-    datasets:[
+  const chartData = {
+    labels: aggregatedData.map((item) => item.date),
+    datasets: [
       {
-        label:'Total Discount',
-        data:aggregatedData.map(item => item.totalDiscount),
-        fill:false,
-        borderColor:'#4E73DF',
-        tension:0.4
+        label: "Total Discount",
+        data: aggregatedData.map((item) => item.totalDiscount),
+        fill: false,
+        borderColor: "#0040ff",
+        tension: 0.4,
       },
-      {
-        label:'Total Use',
-        data:aggregatedData.map(item => item.totalVouchers),
-        fill:false,
-        borderColor:'#1CC88A',
-        tension:0.4
-      },
-      {
-        label:'Total Customer',
-        data:aggregatedData.map(item => item.totalUsers),
-        fill:false,
-        borderColor:'#36B9CC',
-        tension:0.4
-      },
-
-    ]
-  
- }
-
+    ],
+  };
 
   const date = (a) => {
     return new Date(a).toLocaleDateString("en-GB", {
@@ -139,7 +102,9 @@ const DetailDashBoard = () => {
 
   const fetchDetailHistory = async () => {
     try {
-      const response = await fetch(`${URL}/Statistical_ID/${id}`);
+      const response = await fetch(
+        `${URL}/Statistical_ID/${id}/${month}/${year}`
+      );
       const data = await response.json();
       setHistory(data.history);
       setVoucher(data.voucher);
@@ -211,11 +176,12 @@ const DetailDashBoard = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
+        font: { size: "20px" },
         display: true,
-        text: 'Multi-Line Chart Example',
+        text: "Biểu đồ thống kê số tiền giảm giá theo tháng",
       },
     },
     scales: {
@@ -384,11 +350,48 @@ const DetailDashBoard = () => {
                 </div>
               ))}
             </div>
-            <div>
-              <Line data={chartData} options={options}></Line>
-            </div>
           </div>
         </div>
+      </div>
+      <div className="my-4">
+        <div className="relative h-[300px] overflow-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
+            <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
+              <tr className="text-lg">
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                  STT
+                </th>
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                  Total Discount
+                </th>
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                  Customer
+                </th>
+                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                  Date
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((item, index) => (
+                <tr
+                  key={(item._id, index)}
+                  className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
+                >
+                  <td className="px-6 py-4">{index + 1}</td>
+                  <td className="px-6 py-4">
+                    {formattedPrice(item.TotalDiscount)}
+                  </td>
+                  <td className="px-6 py-4">{item.CusID}</td>
+                  <td className="px-6 py-4">{date(item.Date)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <Line data={chartData} options={options}></Line>
       </div>
     </div>
   );

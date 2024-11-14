@@ -116,7 +116,7 @@ const router = createBrowserRouter([
             element: <DashBoardPartner />,
           },
           {
-            path: "DetailDashBoard/:id",
+            path: "DetailDashBoard/:id/:month/:year",
             element: <DetailDashBoard />,
           },
         ],
