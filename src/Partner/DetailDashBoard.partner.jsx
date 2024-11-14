@@ -37,10 +37,13 @@ const DetailDashBoard = () => {
   const [totalCus, settotalCus] = useState(0);
   const [customer, setCustomer] = useState([]);
   const [serviceNames, setServiceNames] = useState({});
+  
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
+
+
 
   const formattedPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -49,39 +52,73 @@ const DetailDashBoard = () => {
     }).format(price);
   };
 
- const listDate = (firstdate,lastdate) => {
-  const dates = [];
-  const date1 = new Date(firstdate);
-  const date2 = new Date(lastdate);
-  while (date1 <= date2) {
-    dates.push(new Date(date1));
-    date1.setDate(date1.getDate() + 1); // Tăng ngày lên 1
-  }
+  const aggregateDataByDate = (data) => {
+    const result = data.reduce((acc, item) => {
+      const { Date: dateString, CusID, TotalDiscount } = item;
+  
+      // Chuyển ngày thành định dạng "YYYY-MM-DD" để nhóm theo ngày
+      const date = new Date(dateString).toISOString().split('T')[0];
+      
+      // Kiểm tra xem ngày này đã có trong kết quả chưa
+      const existingEntry = acc.find(entry => entry.date === date);
+  
+      if (existingEntry) {
+        // Cộng dồn tổng giảm giá và số voucher
+        existingEntry.totalDiscount += TotalDiscount;
+        existingEntry.totalVouchers += 1;
+        
+        // Cộng dồn số lượng người dùng (nếu CusID chưa tồn tại trong danh sách userIds)
+        if (!existingEntry.userIds.includes(CusID)) {
+          existingEntry.userIds.push(CusID);
+        }
+      } else {
+        // Tạo mới mục nhập cho ngày này
+        acc.push({
+          date,
+          userIds: [CusID],
+          totalDiscount: TotalDiscount,
+          totalVouchers: 1
+        });
+      }
+  
+      return acc;
+    }, []);
+  
+    // Chuyển đổi kết quả với tổng số người dùng từ `userIds`
+    return result.map(({ date, userIds, totalDiscount, totalVouchers }) => ({
+      date,
+      totalUsers: userIds.length,
+      totalDiscount,
+      totalVouchers
+    }));
+  };
+  
+  const aggregatedData = aggregateDataByDate(history);
+  
+  console.log(aggregatedData);
 
-  return dates.map(date => date.toISOString().split('T')[0]);
- }
 
  const chartData =  {
   
-    labels:listDate(firstdate,lastdate),
+    labels:aggregatedData.map(item => item.date),
     datasets:[
       {
         label:'Total Discount',
-        data:totalDiscount,
+        data:aggregatedData.map(item => item.totalDiscount),
         fill:false,
         borderColor:'#4E73DF',
         tension:0.4
       },
       {
         label:'Total Use',
-        data:totalUse,
+        data:aggregatedData.map(item => item.totalVouchers),
         fill:false,
         borderColor:'#1CC88A',
         tension:0.4
       },
       {
         label:'Total Customer',
-        data:totalCus,
+        data:aggregatedData.map(item => item.totalUsers),
         fill:false,
         borderColor:'#36B9CC',
         tension:0.4
