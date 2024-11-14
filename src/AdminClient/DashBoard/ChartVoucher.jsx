@@ -60,58 +60,7 @@ const ChartVoucher = () => {
     }).format(price);
   };
 
-  // const Popup = () => {
-  //   const [currentPage, setCurrentPage] = useState(1);
-  //   const itemsPerPage = 10;
-  //   const indexOfLastItem = currentPage * itemsPerPage;
-  //   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  //   const currentItems = filterDetail.slice(indexOfFirstItem, indexOfLastItem);
-  //   const totalPages = Math.ceil(filterDetail.length / itemsPerPage);
-
-  //   return (
-  //     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-  //       <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
-  //         {/* Nút đóng */}
-  //         <button
-  //           className="absolute top-4 right-4 text-xl font-bold text-gray-700"
-  //           onClick={() => setShowPopup(false)} // Đóng popup khi nhấn nút
-  //         >
-  //           &times; {/* Biểu tượng đóng (X) */}
-  //         </button>
-
-  //         <h3>{voucherName ? voucherName : "Voucher Detail"}</h3>
-  //         <table className="w-full table-auto">
-  //           <thead>
-  //             <tr>
-  //               <th className="px-4 py-2 text-left border-b">Voucher ID</th>
-  //               <th className="px-4 py-2 text-left border-b">Partner ID</th>
-  //               <th className="px-4 py-2 text-left border-b">Service ID</th>
-  //               <th className="px-4 py-2 text-left border-b">Discount</th>
-  //               <th className="px-4 py-2 text-left border-b">Date</th>
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             {filterDetail.map((voucher) => (
-  //               <tr key={voucher.Voucher_ID}>
-  //                 <td className="px-4 py-2 border-b">{voucher.Voucher_ID}</td>
-  //                 <td className="px-4 py-2 border-b">{voucher.Partner_ID}</td>
-  //                 <td className="px-4 py-2 border-b">
-  //                   {voucher.haveVouchers.map((v) => v.Service_ID).join(", ")}
-  //                 </td>
-  //                 <td className="px-4 py-2 border-b">
-  //                   {voucher.TotalDiscount}
-  //                 </td>
-  //                 <td className="px-4 py-2 border-b">
-  //                   {new Date(voucher.Date).toLocaleDateString()}
-  //                 </td>
-  //               </tr>
-  //             ))}
-  //           </tbody>
-  //         </table>
-  //       </div>
-  //     </div>
-  //   );
-  // };
+  
 
   const generateRandomColor = () => {
     const r = Math.floor(Math.random() * 128 + 127);
@@ -293,6 +242,48 @@ const ChartVoucher = () => {
     setVoucherStatistics(voucherStats);
   };
 
+
+  const aggregateDataByDate = (data) => {
+    const result = data.reduce((acc, item) => {
+      const { Date: dateString, TotalDiscount, Voucher_ID } = item;
+  
+      // Chuyển đổi ngày về dạng 'YYYY-MM-DD'
+      const date = new Date(dateString).toISOString().split("T")[0];
+  
+      // Kiểm tra xem đã có entry nào cho ngày này chưa
+      const existingEntry = acc.find((entry) => entry.date === date);
+  
+      if (existingEntry) {
+        // Cộng dồn giá trị TotalDiscount
+        existingEntry.totalDiscount += TotalDiscount;
+  
+        // Thêm Voucher_ID mới nếu chưa có trong mảng voucherIDs
+        if (!existingEntry.voucherIDs.includes(Voucher_ID)) {
+          existingEntry.voucherIDs.push(Voucher_ID);
+        }
+      } else {
+        // Thêm entry mới nếu chưa có entry nào cho ngày này
+        acc.push({
+          date,
+          totalDiscount: TotalDiscount,
+          voucherIDs: [Voucher_ID], // Khởi tạo mảng voucherIDs với Voucher_ID ban đầu
+        });
+      }
+  
+      return acc;
+    }, []);
+  
+    // Trả về mảng đã map với voucherIDs
+    return result.map(({ date, totalDiscount, voucherIDs }) => ({
+      date,
+      totalDiscount,
+      voucherIDs,
+    }));
+  };
+
+  const aggregateData = aggregateDataByDate(filteredData);
+  
+
   const pieData = {
     labels: Object.keys(voucherStatistics),
     datasets: [
@@ -310,23 +301,29 @@ const ChartVoucher = () => {
     ],
   };
 
-  const lineData = {
-    labels: Object.keys(voucherStatistics),
+  
+
+ const datasetForLine = (data) =>{
+  const label = data.map((item) => item.voucherIDs);
+  const data1 = data.map((item) => item.totalDiscount);
+
+  return {
+    labels:aggregateData.map((item) => item.date),
     datasets: [
       {
-        label: "Total Discount",
-        data: Object.values(voucherStatistics).map(
-          (voucher) => voucher.totalDiscount
-        ),
+        label: label,
+        data: data1,
         fill: false,
-        borderColor: Object.keys(voucherStatistics).map(() =>
+        backgroundColor: Object.keys(voucherStatistics).map(() =>
           generateRandomColor()
-        ), // Viền màu ngẫu nhiên
-        tension: 0.1,
+        ),
+        borderColor: Object.keys(voucherStatistics).map(() =>   generateRandomColor()),
       },
     ],
-  };
-
+  }
+ }
+ const lineData = datasetForLine(aggregateData);
+  
   const options = {
     scales: {
       x: {
@@ -517,40 +514,7 @@ const ChartVoucher = () => {
                   <div className="col-span-1 text-center">Detail</div>
                 </div>
                 {Object.keys(voucherStatistics).map((voucherId) => (
-                  // <tr
-                  //   key={voucherId}
-                  //   className="odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8] border-b dark:border-[#DAEAD8]">
-                  //   <th
-                  //     scope="row"
-                  //     className="px-6 py-4 font-medium text-[#2F4F4F] whitespace-nowrap">
-                  //     {voucherId}
-                  //   </th>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {serviceNames[
-                  //       voucherStatistics[voucherId]?.serviceIDs
-                  //     ] || "Unknown Service"}
-                  //   </td>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {voucherStatistics[voucherId].totalUsed}
-                  //   </td>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {formattedPrice(
-                  //       voucherStatistics[voucherId].totalDiscount
-                  //     )}
-                  //   </td>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {voucherStatistics[voucherId].date}
-                  //   </td>
-                  //   <td className="px-6 py-4 whitespace-nowrap text-right text-lg font-medium">
-                  //     <Link to="#" className="font-medium text-[#2F4F4F]">
-                  //       <FontAwesomeIcon
-                  //         className="mr-2 mt-2"
-                  //         icon={faCircleInfo}
-                  //         onClick={() => filterDetailData(voucherId)}
-                  //       />
-                  //     </Link>
-                  //   </td>
-                  // </tr>
+                  
                   <div
                     key={voucherId}
                     className="w-full grid grid-cols-12 py-3 px-2 odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8]"
