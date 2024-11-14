@@ -7,7 +7,8 @@ const Service = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // const Url = "http://localhost:3000/api";
-  const Url = "https://server-voucher.vercel.app/api";
+  // const Url = "https://server-voucher.vercel.app/api";
+  const Url = "https://sso.htilssu.id.vn/v1";
 
   const fetchService = async () => {
     try {
