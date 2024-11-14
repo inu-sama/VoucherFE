@@ -76,7 +76,7 @@ const DashBoardPartner = () => {
 
     if (voucher.length > 0) {
       setFilterDetail(voucher);
-      setVoucherName(voucher.vouchers.Name); // Lưu tên voucher vào state
+      // setVoucherName(voucher.vouchers.Name); // Lưu tên voucher vào state
     }
 
     setNoDataFound(voucher.length === 0);
