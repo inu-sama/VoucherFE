@@ -504,40 +504,6 @@ const ChartVoucher = () => {
                   <div className="col-span-1 text-center">Detail</div>
                 </div>
                 {Object.keys(voucherStatistics).map((voucherId) => (
-                  // <tr
-                  //   key={voucherId}
-                  //   className="odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8] border-b dark:border-[#DAEAD8]">
-                  //   <th
-                  //     scope="row"
-                  //     className="px-6 py-4 font-medium text-[#2F4F4F] whitespace-nowrap">
-                  //     {voucherId}
-                  //   </th>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {serviceNames[
-                  //       voucherStatistics[voucherId]?.serviceIDs
-                  //     ] || "Unknown Service"}
-                  //   </td>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {voucherStatistics[voucherId].totalUsed}
-                  //   </td>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {formattedPrice(
-                  //       voucherStatistics[voucherId].totalDiscount
-                  //     )}
-                  //   </td>
-                  //   <td className="px-6 py-4 text-[#2F4F4F]">
-                  //     {voucherStatistics[voucherId].date}
-                  //   </td>
-                  //   <td className="px-6 py-4 whitespace-nowrap text-right text-lg font-medium">
-                  //     <Link to="#" className="font-medium text-[#2F4F4F]">
-                  //       <FontAwesomeIcon
-                  //         className="mr-2 mt-2"
-                  //         icon={faCircleInfo}
-                  //         onClick={() => filterDetailData(voucherId)}
-                  //       />
-                  //     </Link>
-                  //   </td>
-                  // </tr>
                   <div
                     key={voucherId}
                     className="w-full grid grid-cols-12 py-3 px-2 odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8]">
