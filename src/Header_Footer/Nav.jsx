@@ -14,31 +14,28 @@ const Nav = () => {
         DANH MỤC QUẢN LÝ
       </h1>
       <div className="p-4">
-        <ul className="flex lg:block items-center">
-          <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
-            <Link
-              to="ChartVoucher"
-              className="route text-lg lg:text-xl font-extrabold"
-            >
+        <ul className="flex lg:block items-center justify-between">
+          <Link
+            to="ChartVoucher"
+            className="w-full route text-lg lg:text-xl font-extrabold">
+            <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
               <FontAwesomeIcon icon={faChartLine} /> DashBoard
-            </Link>
-          </li>
-          <li className="pageLink w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
-            <Link
-              to="Listvoucher"
-              className="route text-lg lg:text-xl font-extrabold"
-            >
+            </li>
+          </Link>
+          <Link
+            to="Listvoucher"
+            className="w-full route text-lg lg:text-xl font-extrabold">
+            <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
               <FontAwesomeIcon icon={faTicket} /> Voucher
-            </Link>
-          </li>
-          <li className="pageLink w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
-            <Link
-              to="ServicePartner"
-              className="route text-lg lg:text-xl font-extrabold"
-            >
+            </li>
+          </Link>
+          <Link
+            to="ServicePartner"
+            className="w-full route text-lg lg:text-xl font-extrabold">
+            <li className="w-full lg:hover:px-5 py-2 hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
               <FontAwesomeIcon icon={faUser} /> Service_Partner
-            </Link>
-          </li>
+            </li>
+          </Link>
         </ul>
       </div>
     </div>
