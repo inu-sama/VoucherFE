@@ -378,26 +378,30 @@ const ChartVoucher = () => {
             onClick={() => setShowServiceDropdown(!showServiceDropdown)}
             tabIndex={0}
             role="button"
-            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
             Select Service
           </div>
           {showServiceDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#4BA771] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#4BA771] mt-2"
+            >
               <li className="flex items-center w-full text-[#2E4F4F] text-lg">
                 <a
                   onClick={() => {
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
-                  className="w-[275px] hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                  className="w-[275px] hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                >
                   All services
                 </a>
               </li>
               {service.map((service) => (
                 <li
                   key={service.id}
-                  className="flex items-center text-[#2E4F4F] text-lg">
+                  className="flex items-center text-[#2E4F4F] text-lg"
+                >
                   <a
                     onClick={() => {
                       document.getElementById("service").innerText =
@@ -405,7 +409,8 @@ const ChartVoucher = () => {
                       setSelectedService(service.id),
                         setShowServiceDropdown(false);
                     }}
-                    className="w-full line-clamp-1 hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full line-clamp-1 hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {service.name}
                   </a>
                 </li>
@@ -417,24 +422,28 @@ const ChartVoucher = () => {
           <div
             id="month"
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
             Tháng {selectedMonth}
           </div>
           {showMonthDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2"
+            >
               {months.map((month) => (
                 <li
                   key={month}
-                  className="flex items-center text-[#2E4F4F] text-lg">
+                  className="flex items-center text-[#2E4F4F] text-lg"
+                >
                   <a
                     onClick={() => {
                       // document.getElementById("month").innerText = month;
                       setSelectedMonth(month.toString()),
                         setShowMonthDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {month}
                   </a>
                 </li>
@@ -446,24 +455,28 @@ const ChartVoucher = () => {
           <div
             id="year"
             onClick={() => setShowYearDropdown(!showYearDropdown)}
-            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
             Năm {selectedYear}
           </div>
           {showYearDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2"
+            >
               {year.map((yr) => (
                 <li
                   key={yr}
-                  className="flex items-center text-[#4BA771] text-lg">
+                  className="flex items-center text-[#4BA771] text-lg"
+                >
                   <a
                     onClick={() => {
                       // document.getElementById("year").innerText = yr;
                       setSelectedYear(yr.toString()),
                         setShowYearDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {yr}
                   </a>
                 </li>
@@ -540,7 +553,8 @@ const ChartVoucher = () => {
                   // </tr>
                   <div
                     key={voucherId}
-                    className="w-full grid grid-cols-12 py-3 px-2 odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8]">
+                    className="w-full grid grid-cols-12 py-3 px-2 odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8]"
+                  >
                     <div className="col-span-2 font-semibold flex items-center justify-center">
                       {voucherId}
                     </div>
@@ -568,7 +582,10 @@ const ChartVoucher = () => {
                       {voucherStatistics[voucherId].date}
                     </div>
                     <div className="col-span-1 flex items-center justify-center">
-                      <Link to="#" className="font-medium text-[#2F4F4F]">
+                      <Link
+                        to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${year}`}
+                        className="font-medium text-[#2F4F4F]"
+                      >
                         <FontAwesomeIcon
                           className=""
                           icon={faCircleInfo}

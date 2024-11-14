@@ -21,7 +21,7 @@ import CollectPoint from "../Customer/CollectPoint/CollectPoint.jsx";
 import ChartVoucher from "../AdminClient/DashBoard/ChartVoucher.jsx";
 import DashBoardPartner from "../Partner/DashBoard.partner.jsx";
 import DetailDashBoard from "../Partner/DetailDashBoard.partner.jsx";
-
+import DetailDashBoardAD from "../AdminClient/DashBoard/DetailDashBoard.jsx";
 const AuthLayout = () => {
   return (
     <AuthProvider>
@@ -70,6 +70,10 @@ const router = createBrowserRouter([
           {
             path: "ChartVoucher",
             element: <ChartVoucher />,
+          },
+          {
+            path: "DetailDashBoard/:id/:month/:year",
+            element: <DetailDashBoardAD />,
           },
         ],
       },
