@@ -476,7 +476,7 @@ const DashBoardPartner = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-lg font-medium">
                           <Link
-                            to="#"
+                            to={`/Partner/DetailDashBoard/${voucherId}`}
                             className="font-medium text-black dark:text-black "
                           >
                             <FontAwesomeIcon

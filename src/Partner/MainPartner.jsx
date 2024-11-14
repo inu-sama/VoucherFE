@@ -11,7 +11,7 @@ const MainParter = () => {
         <div className="col-span-12 lg:col-span-3">
           <Nav />
         </div>
-        <div className="col-span-12 h-full pb-16 bg-gradient-to-bl to-[#75bde0] from-[#ffffff] lg:col-span-9">
+        <div className="col-span-12 h-full mb-16 bg-gradient-to-bl to-[#75bde0] from-[#ffffff] lg:col-span-9">
           <Outlet />
         </div>
       </div>

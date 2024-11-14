@@ -2,6 +2,29 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { Pie, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+} from "chart.js";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title
+);
 
 const DetailDashBoard = () => {
   const { id } = useParams();
@@ -25,6 +48,49 @@ const DetailDashBoard = () => {
       currency: "VND",
     }).format(price);
   };
+
+ const listDate = (firstdate,lastdate) => {
+  const dates = [];
+  const date1 = new Date(firstdate);
+  const date2 = new Date(lastdate);
+  while (date1 <= date2) {
+    dates.push(new Date(date1));
+    date1.setDate(date1.getDate() + 1); // Tăng ngày lên 1
+  }
+
+  return dates.map(date => date.toISOString().split('T')[0]);
+ }
+
+ const chartData =  {
+  
+    labels:listDate(firstdate,lastdate),
+    datasets:[
+      {
+        label:'Total Discount',
+        data:totalDiscount,
+        fill:false,
+        borderColor:'#4E73DF',
+        tension:0.4
+      },
+      {
+        label:'Total Use',
+        data:totalUse,
+        fill:false,
+        borderColor:'#1CC88A',
+        tension:0.4
+      },
+      {
+        label:'Total Customer',
+        data:totalCus,
+        fill:false,
+        borderColor:'#36B9CC',
+        tension:0.4
+      },
+
+    ]
+  
+ }
+
 
   const date = (a) => {
     return new Date(a).toLocaleDateString("en-GB", {
@@ -104,6 +170,24 @@ const DetailDashBoard = () => {
     }
   }, [voucher]);
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Multi-Line Chart Example',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   if (loading) {
     return (
       <div className="bg-gradient-to-bl to-[#75bde0] from-[#eeeeee] h-full flex items-center justify-center">
@@ -156,12 +240,12 @@ const DetailDashBoard = () => {
             </h1>
           </div>
         </div>
-        <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#36B9CC] flex items-center justify-between px-3 cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
+        <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#36B9CC] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
           <div>
             <h2 className="text-[#1cc88a] text-[11px] leading-[17px] font-bold">
               NGÀY BẮT ĐẦU-NGÀY KẾT THÚC
             </h2>
-            <h1 className="text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
+            <h1 className="text-[17px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
               {date(firstdate)} - {date(lastdate)}
             </h1>
           </div>
@@ -262,6 +346,9 @@ const DetailDashBoard = () => {
                   </p>
                 </div>
               ))}
+            </div>
+            <div>
+              <Line data={chartData} options={options}></Line>
             </div>
           </div>
         </div>
