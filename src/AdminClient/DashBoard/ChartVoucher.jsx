@@ -298,7 +298,10 @@ const ChartVoucher = () => {
   };
 
   const datasetForLine = (data) => {
-    const label = data.map((item) => item.voucherIDs);
+    const label = data.map((item) => {
+      item.voucherIDs;
+      console.log("item: " + item.voucherIDs);
+    });
     const data1 = data.map((item) => item.totalDiscount);
 
     return {
@@ -455,6 +458,7 @@ const ChartVoucher = () => {
                       // document.getElementById("year").innerText = yr;
                       setSelectedYear(yr.toString()),
                         setShowYearDropdown(false);
+                      console.log("year: " + yr);
                     }}
                     className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                     {yr}
@@ -528,7 +532,7 @@ const ChartVoucher = () => {
                     </div>
                     <div className="col-span-1 flex items-center justify-center">
                       <Link
-                        to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${year}`}
+                        to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
                         className="font-medium text-[#2F4F4F]">
                         <FontAwesomeIcon
                           className=""

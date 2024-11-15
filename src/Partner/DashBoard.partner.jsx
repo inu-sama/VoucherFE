@@ -462,7 +462,7 @@ const DashBoardPartner = () => {
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
                         <Link
-                          to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${year}`}
+                          to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
                           className="font-medium text-[#fff]">
                           <FontAwesomeIcon
                             className=""
