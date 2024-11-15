@@ -297,9 +297,10 @@ const ChartVoucher = () => {
   };
 
   const datasetForLine = (data) => {
+    const labelArray = [];
     const label = data.map((item) => {
       item.voucherIDs;
-      console.log("item: " + item.voucherIDs);
+      console.log("itemID: " + item.voucherIDs);
     });
     const data1 = data.map((item) => item.totalDiscount);
 
@@ -307,7 +308,7 @@ const ChartVoucher = () => {
       labels: aggregateData.map((item) => item.date),
       datasets: [
         {
-          label: label,
+          label: labelArray[0],
           data: data1,
           fill: false,
           backgroundColor: Object.keys(voucherStatistics).map(() =>

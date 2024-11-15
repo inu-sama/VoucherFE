@@ -128,6 +128,9 @@ const ListVoucher = () => {
   }
 
   const pages = [];
+  // for (let i = 0; i < 50; i++) {
+  //   pages.push(i + 1);
+  // }
   for (let i = 0; i < Math.ceil(vouchers.length / 6); i++) {
     pages.push(i + 1);
   }
@@ -254,20 +257,22 @@ const ListVoucher = () => {
           <div className="w-full flex justify-center mt-4">
             <div className="w-1/3 flex justify-between">
               {pages.map((page) => {
-                return (
-                  <p
-                    key={page}
-                    className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
-                      selectedPage === page
-                        ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
-                        : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
-                    } `}
-                    onClick={() => {
-                      setSelectedPage(page);
-                    }}>
-                    {page}
-                  </p>
-                );
+                while (selectedPage >= page - 2 && selectedPage <= page + 2) {
+                  return (
+                    <p
+                      key={page}
+                      className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                        selectedPage === page
+                          ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                          : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                      } `}
+                      onClick={() => {
+                        setSelectedPage(page);
+                      }}>
+                      {page}
+                    </p>
+                  );
+                }
               })}
             </div>
           </div>
