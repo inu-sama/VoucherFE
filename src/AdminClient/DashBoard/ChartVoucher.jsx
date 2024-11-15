@@ -82,7 +82,7 @@ const ChartVoucher = () => {
 
     if (voucher.length > 0) {
       setFilterDetail(voucher);
-      setVoucherName(voucher.vouchers.Name);
+      // setVoucherName(voucher.vouchers.Name);
     }
 
     setNoDataFound(voucher.length === 0);
@@ -283,7 +283,7 @@ const ChartVoucher = () => {
 
   const aggregateData = aggregateDataByDate(filteredData);
   
-
+  
   const pieData = {
     labels: Object.keys(voucherStatistics),
     datasets: [
@@ -592,8 +592,8 @@ const ChartVoucher = () => {
       </div>
 
       {filteredData.length > 0 && !noDataFound && !noFilterData && (
-        <div className="w-full p-8">
-          <div className="w-full">
+        <div className="w-full p-8 h-full">
+          <div className="w-full h-full   ">
             <Line data={lineData} options={options} />
           </div>
         </div>
