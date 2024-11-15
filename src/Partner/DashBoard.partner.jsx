@@ -299,10 +299,11 @@ const DashBoardPartner = () => {
       <div className="w-full grid grid-cols-3 p-6 gap-6">
         <div className="col-span-1">
           <div
+            id="service"
             onClick={() => setShowServiceDropdown(!showServiceDropdown)}
             tabIndex={0}
             role="button"
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
             Select Service
           </div>
           {showServiceDropdown && (
@@ -318,13 +319,15 @@ const DashBoardPartner = () => {
                   All services
                 </a>
               </li>
-              {console.log("sv: " + service)}
+              {/* {console.log("sv: " + service)} */}
               {service.map((service) => (
                 <li
                   key={service}
                   className="flex items-center text-[#3775A2] text-lg">
                   <a
                     onClick={() => {
+                      document.getElementById("service").innerText =
+                        serviceNames[service];
                       setSelectedService(service),
                         setShowServiceDropdown(false);
                     }}
@@ -338,9 +341,10 @@ const DashBoardPartner = () => {
         </div>
         <div className="col-span-1">
           <div
+            id="month"
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
-            Select Month
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            Tháng {selectedMonth}
           </div>
           {showMonthDropdown && (
             <ul
@@ -365,9 +369,10 @@ const DashBoardPartner = () => {
         </div>
         <div className="col-span-1">
           <div
+            id="year"
             onClick={() => setShowYearDropdown(!showYearDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
-            Select Year
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            Năm {selectedYear}
           </div>
           {showYearDropdown && (
             <ul
@@ -403,9 +408,9 @@ const DashBoardPartner = () => {
       <div className="grid grid-cols-12">
         <div className="col-span-4 w-full">
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
-            <div className="w-full h-full">
-              <div className="w-full">
-                <Pie data={pieData} />
+            <div className="w-full h-[400px]">
+              <div className="w-full h-full flex items-center justify-center">
+                <Pie className="w-full h-full" data={pieData} />
               </div>
             </div>
           )}
@@ -413,72 +418,62 @@ const DashBoardPartner = () => {
         <div className="col-span-8">
           <div className="p-6">
             {filteredData.length > 0 && (
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-center rtl:text-center text-lg text-white dark:text-black">
-                  <thead className="text-sm text-gray-700 uppercase  dark:bg-[#3775A2] dark:text-white">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                        Voucher ID
-                      </th>
-                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                        Service IDs
-                      </th>
-                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                        Total Used
-                      </th>
-                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                        Total Discount
-                      </th>
-                      <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                        Date
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 whitespace-nowrap"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.keys(voucherStatistics).map((voucherId) => (
-                      <tr
-                        key={voucherId}
-                        className="odd:bg-[#73B9EA] odd:dark:bg-[#73B9EA] even:bg-gray-50 even:dark:bg-[#5C97C5] border-b dark:border-[#67a1cd]">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                          {voucherId}
-                        </th>
-                        <td className="px-6 py-4">
-                          {serviceNames[
-                            voucherStatistics[voucherId]?.serviceIDs
-                          ] || "Unknown Service"}
-                        </td>
-                        <td className="px-6 py-4">
-                          {voucherStatistics[voucherId].totalUsed}
-                        </td>
-                        <td className="px-6 py-4">
-                          {formattedPrice(
-                            voucherStatistics[voucherId].totalDiscount
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          {voucherStatistics[voucherId].date}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-lg font-medium">
-                          <Link
-                            to={`/Partner/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
-                            className="font-medium text-black dark:text-black ">
-                            <FontAwesomeIcon
-                              className="mr-2 mt-2"
-                              icon={faCircleInfo}
-                              onClick={() => filterDetailData(voucherId)}
-                            />
-                            Detail
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="relative p-4 rounded-2xl text-lg text-[#4c83a7] shadow-xl">
+                <div className="rounded-xl overflow-hidden shadow-xl shadow-[#fff]">
+                  <div className="w-full grid grid-cols-12 font-bold py-3 px-2 text-[#4c83a7]">
+                    <div className="col-span-2 text-center">Voucher ID</div>
+                    <div className="col-span-3 text-center">Services</div>
+                    <div className="col-span-1 text-center">Used</div>
+                    <div className="col-span-3 text-center">Total Discount</div>
+                    <div className="col-span-2 text-center">Date</div>
+                    <div className="col-span-1 text-center">Detail</div>
+                  </div>
+                  {Object.keys(voucherStatistics).map((voucherId) => (
+                    <div
+                      key={voucherId}
+                      className="w-full grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]">
+                      <div className="col-span-2 font-bold flex items-center justify-center">
+                        {voucherId}
+                      </div>
+                      <div className="col-span-3 text-center">
+                        {(Array.isArray(
+                          voucherStatistics[voucherId]?.serviceIDs
+                        )
+                          ? voucherStatistics[voucherId].serviceIDs
+                          : voucherStatistics[voucherId]?.serviceIDs?.split(",")
+                        )
+                          ?.map(
+                            (id) => serviceNames[id.trim()] || "Unknown Service"
+                          )
+                          .join(", ")}
+                        {/* {serviceNames[voucherStatistics[voucherId].serviceIDs] ||
+                        "Unknown Service"} */}
+                      </div>
+                      <div className="col-span-1 flex items-center justify-center">
+                        {voucherStatistics[voucherId].totalUsed}
+                      </div>
+                      <div className="col-span-3 flex items-center justify-center">
+                        {formattedPrice(
+                          voucherStatistics[voucherId].totalDiscount
+                        )}
+                      </div>
+                      <div className="col-span-2 flex items-center justify-center">
+                        {voucherStatistics[voucherId].date}
+                      </div>
+                      <div className="col-span-1 flex items-center justify-center">
+                        <Link
+                          to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${year}`}
+                          className="font-medium text-[#fff]">
+                          <FontAwesomeIcon
+                            className=""
+                            icon={faCircleInfo}
+                            onClick={() => filterDetailData(voucherId)}
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
