@@ -32,8 +32,12 @@ const DashBoardPartner = () => {
   const [service, setService] = useState([]);
   const [year, setYear] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(
+    (new Date().getMonth() + 1).toString()
+  );
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString()
+  );
   const [selectedService, setSelectedService] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [noDataFound, setNoDataFound] = useState(false);
@@ -298,38 +302,34 @@ const DashBoardPartner = () => {
             onClick={() => setShowServiceDropdown(!showServiceDropdown)}
             tabIndex={0}
             role="button"
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
-          >
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
             Select Service
           </div>
           {showServiceDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#3775A2] mt-2"
-            >
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#3775A2] mt-2">
               <li className="flex items-center w-full text-[#3775A2] text-lg">
                 <a
                   onClick={() => {
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
-                  className="w-[275px] hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                >
+                  className="w-[275px] hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                   All services
                 </a>
               </li>
+              {console.log("sv: " + service)}
               {service.map((service) => (
                 <li
                   key={service}
-                  className="flex items-center text-[#3775A2] text-lg"
-                >
+                  className="flex items-center text-[#3775A2] text-lg">
                   <a
                     onClick={() => {
                       setSelectedService(service),
                         setShowServiceDropdown(false);
                     }}
-                    className="w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                  >
-                    {service}
+                    className="w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    {serviceNames[service]}
                   </a>
                 </li>
               ))}
@@ -339,27 +339,23 @@ const DashBoardPartner = () => {
         <div className="col-span-1">
           <div
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
-          >
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
             Select Month
           </div>
           {showMonthDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
-            >
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2">
               {months.map((month) => (
                 <li
                   key={month}
-                  className="flex items-center text-[#3775A2] text-lg"
-                >
+                  className="flex items-center text-[#3775A2] text-lg">
                   <a
                     onClick={() => {
                       setSelectedMonth(month.toString()),
                         setShowMonthDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                  >
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                     {month}
                   </a>
                 </li>
@@ -370,27 +366,23 @@ const DashBoardPartner = () => {
         <div className="col-span-1">
           <div
             onClick={() => setShowYearDropdown(!showYearDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg"
-          >
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
             Select Year
           </div>
           {showYearDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
-            >
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2">
               {year.map((yr) => (
                 <li
                   key={yr}
-                  className="flex items-center text-[#3775A2] text-lg"
-                >
+                  className="flex items-center text-[#3775A2] text-lg">
                   <a
                     onClick={() => {
                       setSelectedYear(yr.toString()),
                         setShowYearDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                  >
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                     {yr}
                   </a>
                 </li>
@@ -442,20 +434,17 @@ const DashBoardPartner = () => {
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 whitespace-nowrap"
-                      ></th>
+                        className="px-6 py-3 whitespace-nowrap"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {Object.keys(voucherStatistics).map((voucherId) => (
                       <tr
                         key={voucherId}
-                        className="odd:bg-[#73B9EA] odd:dark:bg-[#73B9EA] even:bg-gray-50 even:dark:bg-[#5C97C5] border-b dark:border-[#67a1cd]"
-                      >
+                        className="odd:bg-[#73B9EA] odd:dark:bg-[#73B9EA] even:bg-gray-50 even:dark:bg-[#5C97C5] border-b dark:border-[#67a1cd]">
                         <th
                           scope="row"
-                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
-                        >
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
                           {voucherId}
                         </th>
                         <td className="px-6 py-4">
@@ -477,8 +466,7 @@ const DashBoardPartner = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-lg font-medium">
                           <Link
                             to={`/Partner/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
-                            className="font-medium text-black dark:text-black "
-                          >
+                            className="font-medium text-black dark:text-black ">
                             <FontAwesomeIcon
                               className="mr-2 mt-2"
                               icon={faCircleInfo}
