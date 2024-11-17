@@ -355,7 +355,7 @@ const DetailDashBoard = () => {
       </div>
       <div className="my-4">
         <div className="relative h-[300px] overflow-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
+          {/* <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
             <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
               <tr className="text-lg">
                 <th scope="col" className="px-6 py-3 whitespace-nowrap">
@@ -387,7 +387,37 @@ const DetailDashBoard = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
+          <div className="relative h-[300px] overflow-auto shadow-md sm:rounded-lg">
+            <div className="relative p-4 shadow-md rounded-lg text-lg text-[#2F4F4F]">
+              <div className="w-full grid grid-cols-12 font-bold py-3 px-2 bg-[#8AC5E2] rounded-t-md text-[#fff]">
+                <div className="col-span-3 text-center">STT</div>
+                <div className="col-span-3 text-center">Total Discount</div>
+                <div className="col-span-3 text-center">Customer</div>
+                <div className="col-span-3 text-center">Date</div>
+              </div>
+              {history.map((item, index) => (
+                <div
+                  key={(item._id, index)}
+                  className="w-full grid grid-cols-12  py-3 px-2 odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9]"
+                >
+                  <div className="px-6 py-4 text-center col-span-3">
+                    {index + 1}
+                  </div>
+
+                  <div className="col-span-3 text-center">
+                    {formattedPrice(item.TotalDiscount)}
+                  </div>
+                  <div className="col-span-3 flex items-center justify-center">
+                    {item.CusID}
+                  </div>
+                  <div className="col-span-3 flex items-center justify-center">
+                    {date(item.Date)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
       <div>

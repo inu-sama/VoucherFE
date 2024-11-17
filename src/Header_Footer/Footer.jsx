@@ -2,8 +2,8 @@ import logo from "../assets/logo-2da.png";
 
 const Footer = () => {
   return (
-    <div className="w-full bg-[#75bde0]  grid grid-cols-12  shadow-inner shadow-[#ffffff] py-10 px-20 text-[#16233b] text-xl">
-      <div className="col-span-4 w-full">
+    <div className="w-full bg-[#75bde0]  grid lg:grid-cols-12 grid-cols-6  shadow-inner shadow-[#ffffff] py-10 px-20 text-[#16233b] text-xl">
+      <div className="lg:col-span-4 col-span-6 w-full">
         <div className="flex items-center">
           <img src={logo} alt="logo" className="w-28 h-28 rounded-full" />
           <span className="ml-2 text-6xl font-bold">Voucher4u</span>
@@ -36,8 +36,8 @@ const Footer = () => {
       <div className="col-span-2 grid grid-rows-5">
         <p className="font-bold">Đối tác</p>
         <p>Đăng ký voucher</p>
-        <p>Đăng ký GPS 5G</p>
-        <p>Đăng ký cho thuê xe dài hạn</p>
+        <p>Đăng ký Service</p>
+        <p>Đăng ký Ví</p>
       </div>
     </div>
   );

@@ -303,19 +303,22 @@ const DashBoardPartner = () => {
             onClick={() => setShowServiceDropdown(!showServiceDropdown)}
             tabIndex={0}
             role="button"
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
             Select Service
           </div>
           {showServiceDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#3775A2] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#3775A2] mt-2"
+            >
               <li className="flex items-center w-full text-[#3775A2] text-lg">
                 <a
                   onClick={() => {
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
-                  className="w-[275px] hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                  className="w-[275px] hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                >
                   All services
                 </a>
               </li>
@@ -323,7 +326,8 @@ const DashBoardPartner = () => {
               {service.map((service) => (
                 <li
                   key={service}
-                  className="flex items-center text-[#3775A2] text-lg">
+                  className="flex items-center text-[#3775A2] text-lg"
+                >
                   <a
                     onClick={() => {
                       document.getElementById("service").innerText =
@@ -331,7 +335,8 @@ const DashBoardPartner = () => {
                       setSelectedService(service),
                         setShowServiceDropdown(false);
                     }}
-                    className="w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {serviceNames[service]}
                   </a>
                 </li>
@@ -343,23 +348,27 @@ const DashBoardPartner = () => {
           <div
             id="month"
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
             Tháng {selectedMonth}
           </div>
           {showMonthDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
+            >
               {months.map((month) => (
                 <li
                   key={month}
-                  className="flex items-center text-[#3775A2] text-lg">
+                  className="flex items-center text-[#3775A2] text-lg"
+                >
                   <a
                     onClick={() => {
                       setSelectedMonth(month.toString()),
                         setShowMonthDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {month}
                   </a>
                 </li>
@@ -371,23 +380,27 @@ const DashBoardPartner = () => {
           <div
             id="year"
             onClick={() => setShowYearDropdown(!showYearDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
             Năm {selectedYear}
           </div>
           {showYearDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
+            >
               {year.map((yr) => (
                 <li
                   key={yr}
-                  className="flex items-center text-[#3775A2] text-lg">
+                  className="flex items-center text-[#3775A2] text-lg"
+                >
                   <a
                     onClick={() => {
                       setSelectedYear(yr.toString()),
                         setShowYearDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {yr}
                   </a>
                 </li>
@@ -431,7 +444,8 @@ const DashBoardPartner = () => {
                   {Object.keys(voucherStatistics).map((voucherId) => (
                     <div
                       key={voucherId}
-                      className="w-full grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]">
+                      className="w-full grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]"
+                    >
                       <div className="col-span-2 font-bold flex items-center justify-center">
                         {voucherId}
                       </div>
@@ -462,8 +476,9 @@ const DashBoardPartner = () => {
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
                         <Link
-                          to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
-                          className="font-medium text-[#fff]">
+                          to={`/Partner/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
+                          className="font-medium text-[#fff]"
+                        >
                           <FontAwesomeIcon
                             className=""
                             icon={faCircleInfo}
