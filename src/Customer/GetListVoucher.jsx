@@ -23,13 +23,7 @@ const GetListVoucher = () => {
 
   const OrderID = localStorage.getItem("OrderID");
   if (!OrderID) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="font-extrabold text-4xl text-center ">
-          This is page of customer you make have OrderID to access this page
-        </p>
-      </div>
-    );
+    navigate("/Login");
   }
   const Token = localStorage.getItem("Token");
 
