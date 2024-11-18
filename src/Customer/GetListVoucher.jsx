@@ -24,7 +24,7 @@ const GetListVoucher = () => {
   };
 
   const OrderID = localStorage.getItem("OrderID");
-  if (!OrderID) {
+  if (!OrderID || OrderID === "" || OrderID === null) {
     setError("YOU DON'T HAVE ANY ORDER");
 
     let countdown = 5;
