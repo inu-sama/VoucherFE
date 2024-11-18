@@ -566,14 +566,14 @@ const CreateVoucher = () => {
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center">
+          <div className="mt-10 flex gap-10 w-full justify-center">
             {/* <div className="col-span-1"></div> */}
-            <div className="col-span-6">
+            <div className="w-1/2">
               <button className="bg-[#3B7097] hover:bg-[#e7eef9] font-bold text-lg text-[#e7eef9] hover:text-[#3B7097] border-2 border-[#3B7097] p-2 rounded-lg flex items-center justify-center w-full">
                 Create
               </button>
             </div>
-            <div className="col-span-6">
+            <div className="w-1/2">
               <Link
                 to="/Partner/ListVoucherPN"
                 className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
