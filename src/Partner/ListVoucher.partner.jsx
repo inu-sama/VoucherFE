@@ -224,11 +224,12 @@ const ListVoucher = () => {
                   className=" w-full rounded-lg p-4 bg-[#a8d9e4] text-[#16233B]"
                 >
                   <div className="flex w-full">
-                    <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-[65%]">
-                      {voucher.Name}
-                    </h2>
+                    <div className="w-3/4">
+                      <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-[65%]">
+                        {voucher.Name}
+                      </h2>
+                    </div>
                     <div className="w-1/4 ">
-                      {" "}
                       <span
                         className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
                           voucher.States === "Enable"
