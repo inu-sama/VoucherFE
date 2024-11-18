@@ -24,21 +24,26 @@ const GetListVoucher = () => {
   };
 
   const OrderID = localStorage.getItem("OrderID");
-  if (!OrderID || OrderID === "" || OrderID === null) {
-    setError("YOU DON'T HAVE ANY ORDER");
+  useEffect(() => {
+    if (!OrderID || OrderID.trim() === "") {
+      setError("YOU DON'T HAVE ANY ORDER");
 
-    let countdown = 5;
-    const timer = setInterval(() => {
-      setError(`YOU DON'T HAVE ANY ORDER. Redirecting in ${countdown}...`);
-      countdown--;
+      let countdown = 5;
+      const timer = setInterval(() => {
+        setError(`YOU DON'T HAVE ANY ORDER. Redirecting in ${countdown}...`);
+        countdown--;
 
-      if (countdown < 0) {
-        clearInterval(timer);
-        window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
-        logout();
-      }
-    }, 1000);
-  }
+        if (countdown < 0) {
+          clearInterval(timer);
+          logout();
+          navigate("/login");
+        }
+      }, 1000);
+
+      return () => clearInterval(timer); // Dọn dẹp khi component unmount
+    }
+  }, []);
+
   const Token = localStorage.getItem("Token");
 
   const FetchNote = async () => {
