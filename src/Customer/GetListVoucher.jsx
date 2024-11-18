@@ -25,7 +25,19 @@ const GetListVoucher = () => {
 
   const OrderID = localStorage.getItem("OrderID");
   if (!OrderID) {
-    navigate("/Login");
+    setError("YOU DON'T HAVE ANY ORDER");
+
+    let countdown = 5;
+    const timer = setInterval(() => {
+      setError(`YOU DON'T HAVE ANY ORDER. Redirecting in ${countdown}...`);
+      countdown--;
+
+      if (countdown < 0) {
+        clearInterval(timer);
+        window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
+        logout();
+      }
+    }, 1000);
   }
   const Token = localStorage.getItem("Token");
 
@@ -177,11 +189,11 @@ const GetListVoucher = () => {
         logout();
       } else {
         if (response.status === 400) {
-          setError("Failed to apply voucher");
+          setError("FAIL TO APPLY VOUCHER");
 
           let countdown = 5;
           const timer = setInterval(() => {
-            setError(`Failed to apply voucher. Redirecting in ${countdown}...`);
+            setError(`FAIL TO APPLY VOUCHER. Redirecting in ${countdown}...`);
             countdown--;
 
             if (countdown < 0) {
