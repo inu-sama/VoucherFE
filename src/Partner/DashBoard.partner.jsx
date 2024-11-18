@@ -310,14 +310,14 @@ const DashBoardPartner = () => {
           {showServiceDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px]  shadow-inner shadow-[#3775A2] mt-2"
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-[300px] w-[200px]  shadow-inner shadow-[#3775A2] mt-2"
             >
               <li className="flex items-center w-full text-[#3775A2] text-lg">
                 <p
                   onClick={() => {
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
-                  className="w-[275px] hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  className="w-[180px] lg:w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                 >
                   All services
                 </p>
@@ -335,7 +335,7 @@ const DashBoardPartner = () => {
                       setSelectedService(service),
                         setShowServiceDropdown(false);
                     }}
-                    className="w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                    className="w-[180px] lg:w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                   >
                     {serviceNames[service]}
                   </p>
@@ -355,7 +355,7 @@ const DashBoardPartner = () => {
           {showMonthDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-52 w-[120px]  p-2 shadow-inner shadow-[#3775A2] mt-2"
             >
               {months.map((month) => (
                 <li
@@ -382,12 +382,12 @@ const DashBoardPartner = () => {
             onClick={() => setShowYearDropdown(!showYearDropdown)}
             className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer"
           >
-            Năm:{selectedYear}
+            Năm: {selectedYear}
           </div>
           {showYearDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2"
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-52 w-[120px]  p-2 shadow-inner shadow-[#3775A2] mt-2"
             >
               {year.map((yr) => (
                 <li

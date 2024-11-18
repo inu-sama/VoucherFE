@@ -35,28 +35,28 @@ const Service = () => {
   }
 
   return (
-    <div className="w-full p-10">
+    <div className="w-full lg:p-10 p-2">
       <div className="grid grid-cols-12 text-xl font-bold text-[#2F4F4F]">
-        <div className="col-span-2 bg-[#c0e6ba] p-4 text-center rounded-tl-2xl">
+        <div className="lg:col-span-2 col-span-6 bg-[#c0e6ba] p-4 text-center rounded-tl-2xl">
           STT
         </div>
-        <div className="col-span-5 bg-[#c0e6ba] p-4 text-center ">
+        <div className="col-span-5 bg-[#c0e6ba] p-4 text-center lg:block hidden">
           Service ID
         </div>
-        <div className="col-span-5 bg-[#c0e6ba] p-4 text-center rounded-tr-2xl">
+        <div className="lg:col-span-5 col-span-6 bg-[#c0e6ba] p-4 text-center rounded-tr-2xl">
           Service Name
         </div>
       </div>
       <div className="rounded-b-2xl text-[#2F4F4F] text-xl  border-4 border-[#c0e6ba] bg-[#c0e6ba] overflow-hidden">
         {service.map((item, index) => (
           <div className="w-full grid grid-cols-12" key={item.id}>
-            <div className="col-span-2 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-xl">
+            <div className="lg:col-span-2 col-span-6 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-xl">
               {index + 1}
             </div>
-            <div className="col-span-5 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-xl">
+            <div className="col-span-5 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-xl lg:block hidden">
               {item.id}
             </div>
-            <div className="col-span-5 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-xl">
+            <div className="lg:col-span-5 col-span-6 border-4 border-[#c0e6ba] bg-[#eaf9e7] p-4 text-center rounded-xl">
               {item.name}
             </div>
           </div>

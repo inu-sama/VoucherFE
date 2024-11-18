@@ -136,7 +136,7 @@ const ListVoucher = () => {
   }
 
   return (
-    <div className="lg:bg-[#EAF8E6] h-full bg-[#EAF8E6]">
+    <div className="lg:bg-[#EAF8E6] h-full  bg-[#EAF8E6]">
       <div className="w-full  to-[#d8ffce] from-30% h-full from-[#ffffff]  p-4">
         <h1 className="text-4xl text-[#16233B] mb-4 w-full text-center font-bold">
           Danh sách voucher
@@ -157,7 +157,7 @@ const ListVoucher = () => {
                 className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2"
               >
                 <li className="flex items-center text-[#16233B] text-lg">
-                  <a
+                  <p
                     onClick={() => {
                       setSelectedServices(null),
                         setShow(false),
@@ -166,21 +166,21 @@ const ListVoucher = () => {
                     className="w-full hover:bg-[#2E4F4F] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                   >
                     All services
-                  </a>
+                  </p>
                 </li>
                 {services.map((service) => (
                   <li
                     key={service.id}
                     className="flex items-center text-[#16233B] text-lg"
                   >
-                    <a
+                    <p
                       onClick={() => {
                         setSelectedServices(service.id), setShow(false);
                       }}
                       className="w-full hover:bg-[#2E4F4F] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                     >
                       {service.name}
-                    </a>
+                    </p>
                   </li>
                 ))}
               </ul>
@@ -202,16 +202,18 @@ const ListVoucher = () => {
                   className=" w-full rounded-lg p-4 bg-[#BFE6B3] text-[#16233B]"
                 >
                   <div className="flex w-full">
-                    <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-3/4">
-                      {voucher.Name}
-                    </h2>
+                    <div className="w-3/4">
+                      <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-[73%]">
+                        {voucher.Name}
+                      </h2>
+                    </div>
                     <div className="w-1/4 ">
                       {" "}
                       <span
-                        className={`font-bold text-[#e4e4e4] float-right w-fit px-4 py-2 rounded-lg flex items-center ${
+                        className={`font-bold text-[#e4e4e4] float-right w-fit py-2 rounded-lg flex items-center ${
                           voucher.States === "Enable"
-                            ? "bg-[#4ca771]"
-                            : "bg-[#cf3a3a]"
+                            ? "bg-[#4ca771] px-4"
+                            : "bg-[#cf3a3a] px-[0.9rem]"
                         } `}
                       >
                         {voucher.States}
@@ -220,7 +222,7 @@ const ListVoucher = () => {
                   </div>
 
                   <div className="grid grid-cols-12">
-                    <div className="col-span-8">
+                    <div className="col-span-8 ">
                       <p className="line-clamp-1">{voucher.Description}</p>
                       <p>
                         <span className="font-bold text-[#4BA771]">
@@ -231,27 +233,27 @@ const ListVoucher = () => {
                       <p>
                         <span className="font-bold text-[#4BA771]">
                           Thời gian bắt đầu:
-                        </span>{" "}
+                        </span>
                         {date(voucher.ReleaseTime)}
                       </p>
                       <p>
                         <span className="font-bold text-[#4BA771]">
                           Thời gian hết hạn:
-                        </span>{" "}
+                        </span>
                         {date(voucher.ExpiredTime)}
                       </p>
                     </div>
                     <div className="col-span-4 grid  gap-2">
                       <Link
                         to={`/Admin/DetailVoucher/${voucher._id}`}
-                        className="bg-[#4BA771] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] px-4 py-2 rounded-lg flex items-center"
+                        className="bg-[#4BA771] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] lg:px-4 px-2 lg:ml-0 ml-[1.6rem] lg:w-full w-fit py-2 rounded-lg flex items-center"
                       >
                         <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
                         Detail
                       </Link>
                       <button
                         // onClick={() => handleDeleteVoucher(voucher._id)}
-                        className="bg-[#2f414f] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] px-4 py-2 rounded-lg flex items-center"
+                        className="bg-[#2f414f] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] lg:px-4 px-2 lg:ml-0 ml-[1.6rem] lg:w-full w-fit py-2 rounded-lg flex items-center"
                       >
                         <FontAwesomeIcon icon={faTrash} className="mr-2" />
                         Delete

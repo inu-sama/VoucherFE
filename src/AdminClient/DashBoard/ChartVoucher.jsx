@@ -362,8 +362,8 @@ const ChartVoucher = () => {
 
   return (
     <div className="lg:bg-[#EAF8E6]  h-full bg-[#EAF8E6]">
-      <div className="w-full grid grid-cols-3 p-6 gap-6">
-        <div className="col-span-1">
+      <div className="ww-full grid grid-cols-3 p-2 lg:p-6 lg:gap-6 gap-2">
+        <div className="col-span-1 w-full line-clamp-1">
           <div
             id="service"
             onClick={() => setShowServiceDropdown(!showServiceDropdown)}
@@ -371,45 +371,45 @@ const ChartVoucher = () => {
             role="button"
             className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer"
           >
-            Select Service
+            All services
           </div>
           {showServiceDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#4BA771] mt-2"
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-[300px] w-[200px] p-2 shadow-inner shadow-[#4BA771] mt-2"
             >
               <li className="flex items-center w-full text-[#2E4F4F] text-lg">
-                <a
+                <p
                   onClick={() => {
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
-                  className="w-[275px] hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  className="w-[180px] lg:w-full hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                 >
                   All services
-                </a>
+                </p>
               </li>
               {listService.map((service) => (
                 <li
                   key={service.id}
                   className="flex items-center text-[#2E4F4F] text-lg"
                 >
-                  <a
+                  <p
                     onClick={() => {
                       document.getElementById("service").innerText =
                         service.name;
                       setSelectedService(service.id),
                         setShowServiceDropdown(false);
                     }}
-                    className="w-full line-clamp-1 hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                    className="w-[180px] lg:w-full line-clamp-1 hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                   >
                     {service.name}
-                  </a>
+                  </p>
                 </li>
               ))}
             </ul>
           )}
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 w-full line-clamp-1">
           <div
             id="month"
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
@@ -420,29 +420,29 @@ const ChartVoucher = () => {
           {showMonthDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2"
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-52 w-[130px]  p-2 shadow-inner shadow-[#4BA771] mt-2"
             >
               {months.map((month) => (
                 <li
                   key={month}
                   className="flex items-center text-[#2E4F4F] text-lg"
                 >
-                  <a
+                  <p
                     onClick={() => {
                       // document.getElementById("month").innerText = month;
                       setSelectedMonth(month.toString()),
                         setShowMonthDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                    className="text-center w-full hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
                   >
                     {month}
-                  </a>
+                  </p>
                 </li>
               ))}
             </ul>
           )}
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 w-full line-clamp-1">
           <div
             id="year"
             onClick={() => setShowYearDropdown(!showYearDropdown)}
@@ -453,7 +453,7 @@ const ChartVoucher = () => {
           {showYearDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2"
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-52 w-[120px] p-2 shadow-inner shadow-[#4BA771] mt-2"
             >
               {year.map((yr) => (
                 <li
@@ -485,9 +485,61 @@ const ChartVoucher = () => {
           </p>
         </div>
       )}
-
+      <div className="p-6 mt-4 w-screen overflow-x-auto lg:hidden block">
+        {filteredData.length > 0 && (
+          <div className="relative p-4 w-[1232px] shadow-md rounded-lg text-lg text-[#2F4F4F]">
+            <div className="w-full grid grid-cols-12 font-bold py-3 px-2 bg-[#4ca771] rounded-t-md text-[#fff]">
+              <div className="col-span-2 text-center">Voucher ID</div>
+              <div className="col-span-3 text-center">Services</div>
+              <div className="col-span-1 text-center">Used</div>
+              <div className="col-span-3 text-center">Total Discount</div>
+              <div className="col-span-2 text-center">Date</div>
+              <div className="col-span-1 text-center">Detail</div>
+            </div>
+            {Object.keys(voucherStatistics).map((voucherId) => (
+              <div
+                key={voucherId}
+                className="w-full grid grid-cols-12  py-3 px-2 odd:bg-[#C9E9CC] odd:dark:bg-[#a5e0ab] even:bg-gray-50 even:dark:bg-[#DAEAD8]"
+              >
+                <div className="col-span-2 font-semibold flex items-center justify-center">
+                  {voucherId}
+                </div>
+                <div className="col-span-3 text-center">
+                  {(Array.isArray(voucherStatistics[voucherId]?.serviceIDs)
+                    ? voucherStatistics[voucherId].serviceIDs
+                    : voucherStatistics[voucherId]?.serviceIDs?.split(",")
+                  )
+                    ?.map((id) => serviceNames[id.trim()] || "Unknown Service")
+                    .join(", ")}
+                </div>
+                <div className="col-span-1 flex items-center justify-center">
+                  {voucherStatistics[voucherId].totalUsed}
+                </div>
+                <div className="col-span-3 flex items-center justify-center">
+                  {formattedPrice(voucherStatistics[voucherId].totalDiscount)}
+                </div>
+                <div className="col-span-2 flex items-center justify-center">
+                  {voucherStatistics[voucherId].date}
+                </div>
+                <div className="col-span-1 flex items-center justify-center">
+                  <Link
+                    to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
+                    className="font-medium text-[#2F4F4F]"
+                  >
+                    <FontAwesomeIcon
+                      className=""
+                      icon={faCircleInfo}
+                      onClick={() => filterDetailData(voucherId)}
+                    />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <div className="grid grid-cols-12">
-        <div id="pie" className="col-span-4 w-full">
+        <div id="pie" className="lg:col-span-4 col-span-12 w-full">
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
             <div className="w-full h-[400px]">
               <div className="w-full h-full flex items-center justify-center">
@@ -496,7 +548,7 @@ const ChartVoucher = () => {
             </div>
           )}
         </div>
-        <div className="col-span-8">
+        <div className="col-span-8 lg:block hidden">
           <div className="p-6">
             {filteredData.length > 0 && (
               <div className="relative p-4 shadow-md rounded-lg text-lg text-[#2F4F4F]">

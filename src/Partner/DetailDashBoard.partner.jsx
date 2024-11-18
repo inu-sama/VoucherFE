@@ -221,7 +221,9 @@ const DetailDashBoard = () => {
           </button>
         </Link>
       </div>
-      <p className="text-3xl text-[#517f95] font-bold text-center">{id}</p>
+      <p className="text-3xl text-[#517f95] lg:ml-0 ml-12 font-bold text-center">
+        {id}
+      </p>
       <div className="grid lg:grid-cols-4 grid-cols-2 gap-[30px] mt-[25px] pb-[15px]">
         <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#4E73DF] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
           <div>
@@ -357,27 +359,27 @@ const DetailDashBoard = () => {
       </div>
       <div className="my-4">
         <div className="relative h-[300px] overflow-auto shadow-md sm:rounded-lg">
-          <div className="relative h-[300px] overflow-auto shadow-md sm:rounded-lg">
+          <div className="relative lg:w-full w-[700px] shadow-md sm:rounded-lg">
             <div className="relative p-4 shadow-md rounded-lg text-lg text-[#2F4F4F]">
-              <div className="lg:w-full w-[700px]  grid grid-cols-12 font-bold py-3 px-2 bg-[#8AC5E2] rounded-t-md text-[#fff]">
-                <div className="col-span-3 text-center">STT</div>
-                <div className="col-span-3 text-center">Total Discount</div>
-                <div className="col-span-3 text-center">Customer</div>
+              <div className="lg:w-full grid grid-cols-12 font-bold py-3 px-2 bg-[#8AC5E2] rounded-t-md text-[#fff]">
+                <div className="col-span-1 text-center">STT</div>
+                <div className="col-span-4 text-center">Total Discount</div>
+                <div className="col-span-4 text-center">Customer</div>
                 <div className="col-span-3 text-center">Date</div>
               </div>
               {history.map((item, index) => (
                 <div
                   key={(item._id, index)}
-                  className="lg:w-full w-[700px] grid grid-cols-12  py-3 px-2 odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9]"
+                  className="lg:w-full grid grid-cols-12  py-3 px-2 odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9]"
                 >
-                  <div className="px-6 py-4 text-center col-span-3">
+                  <div className="px-6 py-4 text-center col-span-1">
                     {index + 1}
                   </div>
 
-                  <div className="col-span-3 py-4 text-center">
+                  <div className="col-span-4 py-4 text-center">
                     {formattedPrice(item.TotalDiscount)}
                   </div>
-                  <div className="col-span-3 flex items-center justify-center">
+                  <div className="col-span-4 flex items-center justify-center">
                     {item.CusID}
                   </div>
                   <div className="col-span-3 flex items-center justify-center">
