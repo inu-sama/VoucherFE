@@ -23,7 +23,7 @@ const Header = () => {
 
   return (
     <div className="w-full bg-white">
-      <header className="fixed h-20 items-center top-0 p-4 flex left-0 z-50 w-full bg-gradient-to-bl to-[#3775a2] from-10% from-[#ffffff] text-[#eaf9e7] py-2">
+      <header className="fixed h-fit items-center top-0 p-4 flex  z-50 w-screen bg-gradient-to-bl to-[#3775a2] from-10% from-[#ffffff] text-[#eaf9e7] py-4">
         <img src={logo} alt="logo" className="w-14 h-14 rounded-full" />
         <span className="ml-2 text-3xl font-bold">VOUCHER4U</span>
         <div className="flex items-center ml-auto">
@@ -31,8 +31,8 @@ const Header = () => {
             className="bg-[#3775a2] hover:bg-[#e7f2f9] font-bold text-lg text-[#e7f2f9] hover:text-[#3775a2] border-2 border-[#3775a2] p-2 rounded-lg w-fit h-fit flex items-center justify-center"
             onClick={handleLogout}
           >
-            <FontAwesomeIcon className="mr-2" icon={faRightFromBracket} /> Đăng
-            xuất
+            <FontAwesomeIcon className="mr-2" icon={faRightFromBracket} />{" "}
+            <span className="lg:block hidden ">Đăng xuất</span>
           </button>
         </div>
       </header>

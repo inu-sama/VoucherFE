@@ -11,7 +11,7 @@ const GetListVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [ServiceID, setServiceID] = useState(null);
-  const URL = "http://localhost:3001/api";
+  const URL = "https://server-voucher.vercel.app/api";
   const navigate = useNavigate();
 
   const formattedPrice = (price) => {
@@ -207,10 +207,10 @@ const GetListVoucher = () => {
   return (
     <div>
       <Header />
-      <div className="w-full bg-[#213a57] min-h-screen p-10">
+      <div className="w-full bg-[#213a57] min-h-screen lg:p-10 p-4">
         <div className="w-full p-1 rounded-xl bg-gradient-to-r from-[#80ed99] to-[#0ad1c8]">
-          <div className="w-full grid lg:grid-cols-3 gap-6 bg-[#fff] rounded-lg p-6">
-            <div className="lg:col-span-2 bg-[#fff] rounded-xl p-6">
+          <div className="w-full grid lg:grid-cols-3 gap-6 bg-[#fff] rounded-lg lg:p-6 p-0">
+            <div className="lg:col-span-2 bg-[#fff] rounded-xl lg:p-6 p-2">
               <p className="w-full font-bold text-3xl text-[#213a57] my-4">
                 DANH SÁCH VOUCHER
               </p>
@@ -290,7 +290,7 @@ const GetListVoucher = () => {
                 Deselect voucher
               </p>
             </div>
-            <div className="col-span-1 bg-[#213a57] rounded-xl p-6">
+            <div className="col-span-1 bg-[#213a57] rounded-xl lg:p-6 p-2">
               <p className="w-full font-bold text-3xl text-transparent bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] bg-clip-text my-4">
                 THÔNG TIN ĐƠN HÀNG
               </p>
