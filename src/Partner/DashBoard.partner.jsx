@@ -417,7 +417,7 @@ const DashBoardPartner = () => {
           </p>
         </div>
       )}
-      <div className="p-6 w-screen overflow-x-auto lg:hidden block">
+      <div className="p-6 mt-4 w-screen overflow-x-auto lg:hidden block">
         {filteredData.length > 0 && (
           <div className="relative p-4 w-[1232px] rounded-2xl text-lg text-[#4c83a7] shadow-xl">
             <div className="rounded-xl shadow-xl shadow-[#fff]">
