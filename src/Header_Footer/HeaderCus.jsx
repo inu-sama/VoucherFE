@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext } from "react";
 import logo from "../assets/logo-2da.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleArrowLeft } from "@fortawesome/free-solid-svg-icons";
