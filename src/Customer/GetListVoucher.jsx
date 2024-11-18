@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import Header from "../Header_Footer/HeaderCus";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Router/ProtectedRoute";
 
 const GetListVoucher = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
@@ -12,6 +13,7 @@ const GetListVoucher = () => {
   const [error, setError] = useState(null);
   const [ServiceID, setServiceID] = useState(null);
   const URL = "https://server-voucher.vercel.app/api";
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const formattedPrice = (price) => {
@@ -169,12 +171,26 @@ const GetListVoucher = () => {
           OrderID: OrderID,
         }),
       });
-      const data = await response.json();
       if (response.status === 200) {
         alert("Áp dụng voucher thành công");
         window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
+        logout();
       } else {
-        alert("Error: " + (data.message || "Failed to apply voucher"));
+        if (response.status === 400) {
+          setError("Failed to apply voucher");
+
+          let countdown = 5;
+          const timer = setInterval(() => {
+            setError(`Failed to apply voucher. Redirecting in ${countdown}...`);
+            countdown--;
+
+            if (countdown < 0) {
+              clearInterval(timer);
+              window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
+              logout();
+            }
+          }, 1000);
+        }
       }
     } catch (error) {
       setError(error);
@@ -195,8 +211,10 @@ const GetListVoucher = () => {
 
   if (error) {
     return (
-      <div className="text-center w-full text-4xl translate-y-1/2 h-full font-extrabold">
-        {error}
+      <div className="bg-gradient-to-bl to-[#77e075] from-[#eeeeee] h-screen flex items-center justify-center">
+        <span className="font-extrabold text-black text-4xl text-center">
+          {error}
+        </span>
       </div>
     );
   }
