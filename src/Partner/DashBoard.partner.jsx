@@ -296,70 +296,79 @@ const DashBoardPartner = () => {
 
   return (
     <div className="text-[#2F4F4F] w-full h-full bg-gradient-to-bl to-[#75bde0] from-30%  from-[#eeeeee]">
-      <div className="w-full grid grid-cols-3 p-6 gap-6">
-        <div className="col-span-1">
+      <div className="w-full grid grid-cols-3 p-2 lg:p-6 lg:gap-6 gap-2">
+        <div className="col-span-1 w-full line-clamp-1">
           <div
             id="service"
             onClick={() => setShowServiceDropdown(!showServiceDropdown)}
             tabIndex={0}
             role="button"
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
-            Select Service
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-2 lg:px-4 py-2 rounded-lg cursor-pointer"
+          >
+            All services
           </div>
           {showServiceDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-[300px] p-2 shadow-inner shadow-[#3775A2] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-[300px] w-[200px]  shadow-inner shadow-[#3775A2] mt-2"
+            >
               <li className="flex items-center w-full text-[#3775A2] text-lg">
-                <a
+                <p
                   onClick={() => {
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
-                  className="w-[275px] hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                  className="w-[180px] lg:w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                >
                   All services
-                </a>
+                </p>
               </li>
               {/* {console.log("sv: " + service)} */}
               {service.map((service) => (
                 <li
                   key={service}
-                  className="flex items-center text-[#3775A2] text-lg">
-                  <a
+                  className="flex items-center text-[#3775A2] text-lg"
+                >
+                  <p
                     onClick={() => {
                       document.getElementById("service").innerText =
                         serviceNames[service];
                       setSelectedService(service),
                         setShowServiceDropdown(false);
                     }}
-                    className="w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-[180px] lg:w-full line-clamp-1 hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {serviceNames[service]}
-                  </a>
+                  </p>
                 </li>
               ))}
             </ul>
           )}
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 w-full line-clamp-1">
           <div
             id="month"
             onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
-            Tháng {selectedMonth}
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
+            Tháng: {selectedMonth}
           </div>
           {showMonthDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-52 w-[120px]  p-2 shadow-inner shadow-[#3775A2] mt-2"
+            >
               {months.map((month) => (
                 <li
                   key={month}
-                  className="flex items-center text-[#3775A2] text-lg">
+                  className="flex items-center text-[#3775A2] text-lg"
+                >
                   <a
                     onClick={() => {
                       setSelectedMonth(month.toString()),
                         setShowMonthDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {month}
                   </a>
                 </li>
@@ -367,27 +376,31 @@ const DashBoardPartner = () => {
             </ul>
           )}
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 w-full line-clamp-1">
           <div
             id="year"
             onClick={() => setShowYearDropdown(!showYearDropdown)}
-            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer">
-            Năm {selectedYear}
+            className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#3775A2] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg cursor-pointer"
+          >
+            Năm: {selectedYear}
           </div>
           {showYearDropdown && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#3775A2] mt-2">
+              className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] lg:w-52 w-[120px]  p-2 shadow-inner shadow-[#3775A2] mt-2"
+            >
               {year.map((yr) => (
                 <li
                   key={yr}
-                  className="flex items-center text-[#3775A2] text-lg">
+                  className="flex items-center text-[#3775A2] text-lg"
+                >
                   <a
                     onClick={() => {
                       setSelectedYear(yr.toString()),
                         setShowYearDropdown(false);
                     }}
-                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
+                    className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
+                  >
                     {yr}
                   </a>
                 </li>
@@ -404,9 +417,65 @@ const DashBoardPartner = () => {
           </p>
         </div>
       )}
-
+      <div className="p-6 mt-4 w-screen overflow-x-auto lg:hidden block">
+        {filteredData.length > 0 && (
+          <div className="relative p-4 w-[1232px] rounded-2xl text-lg text-[#4c83a7] shadow-xl">
+            <div className="rounded-xl shadow-xl shadow-[#fff]">
+              <div className="w-[1200px] grid grid-cols-12 font-bold py-3 px-2 text-[#4c83a7]">
+                <div className="col-span-2 text-center">Voucher ID</div>
+                <div className="col-span-3 text-center">Services</div>
+                <div className="col-span-1 text-center">Used</div>
+                <div className="col-span-3 text-center">Total Discount</div>
+                <div className="col-span-2 text-center">Date</div>
+                <div className="col-span-1 text-center">Detail</div>
+              </div>
+              {Object.keys(voucherStatistics).map((voucherId) => (
+                <div
+                  key={voucherId}
+                  className="w-[1200px] grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]"
+                >
+                  <div className="col-span-2 font-bold flex items-center justify-center">
+                    {voucherId}
+                  </div>
+                  <div className="col-span-3 text-center">
+                    {(Array.isArray(voucherStatistics[voucherId]?.serviceIDs)
+                      ? voucherStatistics[voucherId].serviceIDs
+                      : voucherStatistics[voucherId]?.serviceIDs?.split(",")
+                    )
+                      ?.map(
+                        (id) => serviceNames[id.trim()] || "Unknown Service"
+                      )
+                      .join(", ")}
+                  </div>
+                  <div className="col-span-1 flex items-center justify-center">
+                    {voucherStatistics[voucherId].totalUsed}
+                  </div>
+                  <div className="col-span-3 flex items-center justify-center">
+                    {formattedPrice(voucherStatistics[voucherId].totalDiscount)}
+                  </div>
+                  <div className="col-span-2 flex items-center justify-center">
+                    {voucherStatistics[voucherId].date}
+                  </div>
+                  <div className="col-span-1 flex items-center justify-center">
+                    <Link
+                      to={`/Partner/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
+                      className="font-medium text-[#fff]"
+                    >
+                      <FontAwesomeIcon
+                        className=""
+                        icon={faCircleInfo}
+                        onClick={() => filterDetailData(voucherId)}
+                      />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       <div className="grid grid-cols-12">
-        <div className="col-span-4 w-full">
+        <div className="lg:col-span-4 col-span-12  w-full">
           {filteredData.length > 0 && !noDataFound && !noFilterData && (
             <div className="w-full h-[400px]">
               <div className="w-full h-full flex items-center justify-center">
@@ -416,7 +485,7 @@ const DashBoardPartner = () => {
           )}
         </div>
         <div className="col-span-8">
-          <div className="p-6">
+          <div className="p-6 lg:block hidden">
             {filteredData.length > 0 && (
               <div className="relative p-4 rounded-2xl text-lg text-[#4c83a7] shadow-xl">
                 <div className="rounded-xl overflow-hidden shadow-xl shadow-[#fff]">
@@ -431,7 +500,8 @@ const DashBoardPartner = () => {
                   {Object.keys(voucherStatistics).map((voucherId) => (
                     <div
                       key={voucherId}
-                      className="w-full grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]">
+                      className="w-full grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]"
+                    >
                       <div className="col-span-2 font-bold flex items-center justify-center">
                         {voucherId}
                       </div>
@@ -462,8 +532,9 @@ const DashBoardPartner = () => {
                       </div>
                       <div className="col-span-1 flex items-center justify-center">
                         <Link
-                          to={`/Admin/DetailDashBoard/${voucherId}/${selectedMonth}/${year}`}
-                          className="font-medium text-[#fff]">
+                          to={`/Partner/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
+                          className="font-medium text-[#fff]"
+                        >
                           <FontAwesomeIcon
                             className=""
                             icon={faCircleInfo}
@@ -479,9 +550,8 @@ const DashBoardPartner = () => {
           </div>
         </div>
       </div>
-
       {filteredData.length > 0 && !noDataFound && !noFilterData && (
-        <div className="w-full p-8">
+        <div className="w-full h-full p-8">
           <div className="w-full">
             <Line data={lineData} options={options} />
           </div>

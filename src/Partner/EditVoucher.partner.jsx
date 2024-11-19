@@ -366,7 +366,7 @@ const EditVoucherPN = () => {
               </div>
             </form>
           </div>
-          <div className="p-10 mt-20 lg:col-span-4">
+          <div className="p-10 mt-20 lg:col-span-4 lg:block hidden">
             <img
               className="w-auto rounded-xl h-auto object-cover"
               src={data.Image}
@@ -459,8 +459,8 @@ const EditVoucherPN = () => {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-12 gap-10 w-full justify-center px-4">
-          <div className="col-span-6">
+        <div className="mt-10 flex gap-10 w-full justify-center px-4">
+          <div className="w-1/2">
             <button
               onClick={handleSubmit}
               className="bg-[#4c84a7] hover:bg-[#e7ebf9] font-bold text-lg text-[#eaf9e7] hover:text-[#3F5F89] border-2 border-[#4c86a7] p-2 rounded-lg flex items-center justify-center w-full"
@@ -468,7 +468,7 @@ const EditVoucherPN = () => {
               <FontAwesomeIcon icon={faEdit} /> Sửa
             </button>
           </div>
-          <div className="col-span-6">
+          <div className="w-1/2">
             <Link
               to={`/Partner/DetailvoucherPN/${id}`}
               className="bg-[#2f464f] hover:bg-[#e7f4f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
@@ -476,7 +476,6 @@ const EditVoucherPN = () => {
               <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
             </Link>
           </div>
-          ∂{" "}
         </div>
       </div>
     </div>

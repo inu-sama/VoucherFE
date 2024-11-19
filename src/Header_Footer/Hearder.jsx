@@ -24,8 +24,8 @@ const Hearder = () => {
             className="bg-[#4ca771] hover:bg-[#eaf9e7] font-bold text-lg text-[#eaf9e7] hover:text-[#4ca771] border-2 border-[#4ca771] p-2 rounded-lg w-fit h-fit flex items-center justify-center"
             onClick={handleLogout}
           >
-            <FontAwesomeIcon className="mr-2" icon={faRightFromBracket} /> Đăng
-            xuất
+            <FontAwesomeIcon className="mr-2" icon={faRightFromBracket} />{" "}
+            <span className="lg:block hidden ">Đăng xuất</span>
           </button>
         </div>
       </header>
