@@ -375,7 +375,7 @@ const ChartVoucher = () => {
             tabIndex={0}
             role="button"
             className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg cursor-pointer">
-            Select Service
+            All Service
           </div>
           {showServiceDropdown && (
             <ul
@@ -384,6 +384,8 @@ const ChartVoucher = () => {
               <li className="flex items-center w-full text-[#2E4F4F] text-lg">
                 <a
                   onClick={() => {
+                    document.getElementById("service").innerText =
+                      "All services";
                     setSelectedService(null), setShowServiceDropdown(false);
                   }}
                   className="w-[275px] hover:bg-[#4BA771] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
