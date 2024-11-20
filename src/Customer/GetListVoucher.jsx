@@ -40,7 +40,7 @@ const GetListVoucher = () => {
         }
       }, 1000);
 
-      return () => clearInterval(timer); // Dọn dẹp khi component unmount
+      return () => clearInterval(timer);
     }
   }, []);
 
@@ -292,29 +292,45 @@ const GetListVoucher = () => {
                   }
                 })}
               </div>
-              {pages.length >= 2 && (
-                <div className="w-full flex justify-center mt-4">
-                  <div className="w-1/3 flex justify-between">
-                    {pages.map((page) => {
-                      return (
-                        <p
-                          key={page}
-                          className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
-                            selectedPage === page
-                              ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
-                              : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
-                          } `}
-                          onClick={() => {
-                            setSelectedPage(page);
-                          }}
-                        >
-                          {page}
-                        </p>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+              {pages.map((page) => {
+                if (selectedPage === 1 || selectedPage === pages.length) {
+                  while (selectedPage >= page - 2 && selectedPage <= page + 2) {
+                    return (
+                      <p
+                        key={page}
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        } `}
+                        onClick={() => {
+                          setSelectedPage(page);
+                        }}
+                      >
+                        {page}
+                      </p>
+                    );
+                  }
+                } else {
+                  while (selectedPage >= page - 1 && selectedPage <= page + 1) {
+                    return (
+                      <p
+                        key={page}
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        } `}
+                        onClick={() => {
+                          setSelectedPage(page);
+                        }}
+                      >
+                        {page}
+                      </p>
+                    );
+                  }
+                }
+              })}
               <p
                 className="mb-4 mt-10 w-full text-center font-bold text-xl hover:text-[#213a57] text-[#fff] hover:bg-[#fff] bg-[#213a57] border-4 border-[#213a57] p-3 rounded-xl cursor-pointer"
                 onClick={() => {

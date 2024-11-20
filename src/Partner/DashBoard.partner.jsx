@@ -419,25 +419,37 @@ const DashBoardPartner = () => {
       )}
       <div className="p-6 mt-4 w-screen overflow-x-auto lg:hidden block">
         {filteredData.length > 0 && (
-          <div className="relative p-4 w-[1232px] rounded-2xl text-lg text-[#4c83a7] shadow-xl">
-            <div className="rounded-xl shadow-xl shadow-[#fff]">
-              <div className="w-[1200px] grid grid-cols-12 font-bold py-3 px-2 text-[#4c83a7]">
-                <div className="col-span-2 text-center">Voucher ID</div>
-                <div className="col-span-3 text-center">Services</div>
-                <div className="col-span-1 text-center">Used</div>
-                <div className="col-span-3 text-center">Total Discount</div>
-                <div className="col-span-2 text-center">Date</div>
-                <div className="col-span-1 text-center">Detail</div>
+          <div className="relative p-4 rounded-2xl text-lg text-[#4c83a7] shadow-xl">
+            <div className="lg:w-full  w-[330px] rounded-xl shadow-xl shadow-[#fff]">
+              <div className="lg:w-full w-[330px] grid grid-cols-12 font-bold py-3 px-2 text-[#4c83a7]">
+                <div className="lg:col-span-2 col-span-4 text-center">
+                  Voucher ID
+                </div>
+                <div className="col-span-3 text-center lg:block hidden">
+                  Services
+                </div>
+                <div className="col-span-1 text-center lg:block hidden">
+                  Used
+                </div>
+                <div className="col-span-3 text-center lg:block hidden">
+                  Total Discount
+                </div>
+                <div className="lg:col-span-2 col-span-6  text-center">
+                  Date
+                </div>
+                <div className="lg:col-span-1 col-span-2 text-right">
+                  Detail
+                </div>
               </div>
               {Object.keys(voucherStatistics).map((voucherId) => (
                 <div
                   key={voucherId}
-                  className="w-[1200px] grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]"
+                  className="lg:w-full w-[330px] grid grid-cols-12 py-3 px-2 bg-[#73B9EA] text-[#fff] border border-[#fff]"
                 >
-                  <div className="col-span-2 font-bold flex items-center justify-center">
+                  <div className="lg:col-span-2 col-span-4 font-bold flex items-center justify-center">
                     {voucherId}
                   </div>
-                  <div className="col-span-3 text-center">
+                  <div className="col-span-3 text-center lg:block hidden">
                     {(Array.isArray(voucherStatistics[voucherId]?.serviceIDs)
                       ? voucherStatistics[voucherId].serviceIDs
                       : voucherStatistics[voucherId]?.serviceIDs?.split(",")
@@ -447,16 +459,16 @@ const DashBoardPartner = () => {
                       )
                       .join(", ")}
                   </div>
-                  <div className="col-span-1 flex items-center justify-center">
+                  <div className="col-span-1 items-center justify-center lg:flex hidden">
                     {voucherStatistics[voucherId].totalUsed}
                   </div>
-                  <div className="col-span-3 flex items-center justify-center">
+                  <div className="col-span-3 items-center justify-center lg:flex hidden">
                     {formattedPrice(voucherStatistics[voucherId].totalDiscount)}
                   </div>
-                  <div className="col-span-2 flex items-center justify-center">
+                  <div className="lg:col-span-2 col-span-6 flex items-center justify-center">
                     {voucherStatistics[voucherId].date}
                   </div>
-                  <div className="col-span-1 flex items-center justify-center">
+                  <div className="lg:col-span-1 col-span-2 flex items-center justify-center">
                     <Link
                       to={`/Partner/DetailDashBoard/${voucherId}/${selectedMonth}/${selectedYear}`}
                       className="font-medium text-[#fff]"

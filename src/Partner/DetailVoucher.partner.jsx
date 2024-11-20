@@ -221,7 +221,10 @@ const DetailVoucher = () => {
                   <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
                     <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
                       <tr className="text-lg">
-                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 whitespace-nowrap lg:block hidden"
+                        >
                           STT
                         </th>
                         <th scope="col" className="px-6 py-3 whitespace-nowrap">
@@ -241,7 +244,9 @@ const DetailVoucher = () => {
                               key={(condition._id, index)}
                               className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
                             >
-                              <td className="px-6 py-4">{index + 1}</td>
+                              <td className="px-6 py-4 lg:block hidden">
+                                {index + 1}
+                              </td>
                               <td className="px-6 py-4">
                                 {formattedPrice(condition.MinValue)}
                               </td>

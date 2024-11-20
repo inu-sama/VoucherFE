@@ -362,7 +362,9 @@ const DetailDashBoard = () => {
           <div className="relative lg:w-full w-[700px] shadow-md sm:rounded-lg">
             <div className="relative p-4 shadow-md rounded-lg text-lg text-[#2F4F4F]">
               <div className="lg:w-full grid grid-cols-12 font-bold py-3 px-2 bg-[#8AC5E2] rounded-t-md text-[#fff]">
-                <div className="col-span-1 text-center">STT</div>
+                <div className="col-span-1 text-center lg:block hidden">
+                  STT
+                </div>
                 <div className="col-span-4 text-center">Total Discount</div>
                 <div className="col-span-4 text-center">Customer</div>
                 <div className="col-span-3 text-center">Date</div>
@@ -372,7 +374,7 @@ const DetailDashBoard = () => {
                   key={(item._id, index)}
                   className="lg:w-full grid grid-cols-12  py-3 px-2 odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9]"
                 >
-                  <div className="px-6 py-4 text-center col-span-1">
+                  <div className="px-6 py-4 text-center col-span-1 lg:block hidden">
                     {index + 1}
                   </div>
 

@@ -223,7 +223,7 @@ const ListVoucher = () => {
 
                   <div className="grid grid-cols-12">
                     <div className="col-span-8 ">
-                      <p className="line-clamp-1">{voucher.Description}</p>
+                      <p className="line-clamp-1 pr-2">{voucher.Description}</p>
                       <p>
                         <span className="font-bold text-[#4BA771]">
                           Số lượng còn lại:
@@ -267,24 +267,44 @@ const ListVoucher = () => {
         </div>
         {pages.length >= 2 && (
           <div className="w-full flex justify-center mt-4">
-            <div className="w-1/3 flex justify-between">
+            <div className="lg:w-1/3 w-[60%] flex justify-between">
               {pages.map((page) => {
-                while (selectedPage >= page - 2 && selectedPage <= page + 2) {
-                  return (
-                    <p
-                      key={page}
-                      className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
-                        selectedPage === page
-                          ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
-                          : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
-                      } `}
-                      onClick={() => {
-                        setSelectedPage(page);
-                      }}
-                    >
-                      {page}
-                    </p>
-                  );
+                if (selectedPage === 1 || selectedPage === pages.length) {
+                  while (selectedPage >= page - 2 && selectedPage <= page + 2) {
+                    return (
+                      <p
+                        key={page}
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        } `}
+                        onClick={() => {
+                          setSelectedPage(page);
+                        }}
+                      >
+                        {page}
+                      </p>
+                    );
+                  }
+                } else {
+                  while (selectedPage >= page - 1 && selectedPage <= page + 1) {
+                    return (
+                      <p
+                        key={page}
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        } `}
+                        onClick={() => {
+                          setSelectedPage(page);
+                        }}
+                      >
+                        {page}
+                      </p>
+                    );
+                  }
                 }
               })}
             </div>
