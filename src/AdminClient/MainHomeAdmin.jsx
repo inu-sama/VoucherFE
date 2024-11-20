@@ -4,7 +4,7 @@ import Header from "../Header_Footer/Hearder.jsx";
 
 const MainHomeAdmin = () => {
   return (
-    <div className="mx-auto items-center">
+    <div className="mx-auto lg:pb-0 pb-16 items-center">
       <Header className="w-full" />
       <div className="grid grid-cols-12 gap-0 w-full pt-20 bg-[#eaf9e7] min-h-screen">
         <div className="col-span-12 lg:col-span-3">

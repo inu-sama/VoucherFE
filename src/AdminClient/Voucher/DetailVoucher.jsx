@@ -168,8 +168,10 @@ const DetailVoucher = () => {
               }}
             />
             <p className="text-xl my-2 flex justify-between">
-              <span className="font-bold text-[#4BA771]">Hạn sử dụng:</span>
-              <span className="text-[#4BA771]">
+              <span className="font-bold text-[#4BA771] lg:block hidden">
+                Hạn sử dụng:
+              </span>
+              <span className="text-[#4BA771] lg:text-left text-center lg:w-fit w-full">
                 {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
                 <span> - </span>
                 {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
@@ -283,9 +285,8 @@ const DetailVoucher = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-10 w-full justify-center mt-10">
-          <div className="col-span-1"></div>
-          <div className="col-span-3">
+        <div className="flex gap-4 w-full justify-center mt-10">
+          <div className="col-span-3 w-[28%]">
             <Link
               to={`/Admin/EditVoucher/${id}`}
               className="bg-[#339d33] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#339d33] p-5 rounded-lg flex items-center justify-center w-full"
@@ -294,7 +295,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Edit</span>
             </Link>
           </div>
-          <div className="col-span-3 gap-10">
+          <div className="col-span-3 w-[42%]">
             <button
               className="bg-[#1a402f] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#1a402f] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}
@@ -303,7 +304,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Delete</span>
             </button>
           </div>
-          <div className="col-span-3 gap-10">
+          <div className="col-span-3 w-[28%]">
             <button
               className="bg-[#3bb0b0] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handlestate(id)}
@@ -312,7 +313,6 @@ const DetailVoucher = () => {
               <span className="ml-2"> State</span>
             </button>
           </div>
-          <div className="col-span-1"></div>
         </div>
       </div>
     </div>

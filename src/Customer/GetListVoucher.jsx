@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import Header from "../Header_Footer/HeaderCus";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../Router/ProtectedRoute";
 
 const GetListVoucher = () => {
   const [selectedVoucher, setSelectedVoucher] = useState(null);
@@ -11,7 +12,8 @@ const GetListVoucher = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [ServiceID, setServiceID] = useState(null);
-  const URL = "http://localhost:3001/api";
+  const URL = "https://server-voucher.vercel.app/api";
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const formattedPrice = (price) => {
@@ -22,15 +24,26 @@ const GetListVoucher = () => {
   };
 
   const OrderID = localStorage.getItem("OrderID");
-  if (!OrderID) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <p className="font-extrabold text-4xl text-center ">
-          This is page of customer you make have OrderID to access this page
-        </p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!OrderID || OrderID.trim() === "") {
+      setError("YOU DON'T HAVE ANY ORDER");
+
+      let countdown = 5;
+      const timer = setInterval(() => {
+        setError(`YOU DON'T HAVE ANY ORDER. Redirecting in ${countdown}...`);
+        countdown--;
+
+        if (countdown < 0) {
+          clearInterval(timer);
+          logout();
+          navigate("/login");
+        }
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, []);
+
   const Token = localStorage.getItem("Token");
 
   const FetchNote = async () => {
@@ -175,12 +188,26 @@ const GetListVoucher = () => {
           OrderID: OrderID,
         }),
       });
-      const data = await response.json();
       if (response.status === 200) {
         alert("Áp dụng voucher thành công");
         window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
+        logout();
       } else {
-        alert("Error: " + (data.message || "Failed to apply voucher"));
+        if (response.status === 400) {
+          setError("FAIL TO APPLY VOUCHER");
+
+          let countdown = 5;
+          const timer = setInterval(() => {
+            setError(`FAIL TO APPLY VOUCHER. Redirecting in ${countdown}...`);
+            countdown--;
+
+            if (countdown < 0) {
+              clearInterval(timer);
+              window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
+              logout();
+            }
+          }, 1000);
+        }
       }
     } catch (error) {
       setError(error);
@@ -201,8 +228,10 @@ const GetListVoucher = () => {
 
   if (error) {
     return (
-      <div className="text-center w-full text-4xl translate-y-1/2 h-full font-extrabold">
-        {error}
+      <div className="bg-gradient-to-bl to-[#77e075] from-[#eeeeee] h-screen flex items-center justify-center">
+        <span className="font-extrabold text-black text-4xl text-center">
+          {error}
+        </span>
       </div>
     );
   }
@@ -213,10 +242,10 @@ const GetListVoucher = () => {
   return (
     <div>
       <Header />
-      <div className="w-full bg-[#213a57] min-h-screen p-10">
+      <div className="w-full bg-[#213a57] min-h-screen lg:p-10 p-4">
         <div className="w-full p-1 rounded-xl bg-gradient-to-r from-[#80ed99] to-[#0ad1c8]">
-          <div className="w-full grid lg:grid-cols-3 gap-6 bg-[#fff] rounded-lg p-6">
-            <div className="lg:col-span-2 bg-[#fff] rounded-xl p-6">
+          <div className="w-full grid lg:grid-cols-3 gap-6 bg-[#fff] rounded-lg lg:p-6 p-0">
+            <div className="lg:col-span-2 bg-[#fff] rounded-xl lg:p-6 p-2">
               <p className="w-full font-bold text-3xl text-[#213a57] my-4">
                 DANH SÁCH VOUCHER
               </p>
@@ -263,29 +292,45 @@ const GetListVoucher = () => {
                   }
                 })}
               </div>
-              {pages.length >= 2 && (
-                <div className="w-full flex justify-center mt-4">
-                  <div className="w-1/3 flex justify-between">
-                    {pages.map((page) => {
-                      return (
-                        <p
-                          key={page}
-                          className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
-                            selectedPage === page
-                              ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
-                              : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
-                          } `}
-                          onClick={() => {
-                            setSelectedPage(page);
-                          }}
-                        >
-                          {page}
-                        </p>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+              {pages.map((page) => {
+                if (selectedPage === 1 || selectedPage === pages.length) {
+                  while (selectedPage >= page - 2 && selectedPage <= page + 2) {
+                    return (
+                      <p
+                        key={page}
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        } `}
+                        onClick={() => {
+                          setSelectedPage(page);
+                        }}
+                      >
+                        {page}
+                      </p>
+                    );
+                  }
+                } else {
+                  while (selectedPage >= page - 1 && selectedPage <= page + 1) {
+                    return (
+                      <p
+                        key={page}
+                        className={`rounded-full w-10 h-10 text-xl font-semibold flex justify-center items-center border-4 border-[#213a57] cursor-pointer ${
+                          selectedPage === page
+                            ? "bg-[#213a57] hover:bg-[#213a57] text-[#fff] hover:text-[#fff] cursor-pointer"
+                            : "bg-[#fff] hover:bg-[#213a57] text-[#213a57] hover:text-[#fff] cursor-pointer"
+                        } `}
+                        onClick={() => {
+                          setSelectedPage(page);
+                        }}
+                      >
+                        {page}
+                      </p>
+                    );
+                  }
+                }
+              })}
               <p
                 className="mb-4 mt-10 w-full text-center font-bold text-xl hover:text-[#213a57] text-[#fff] hover:bg-[#fff] bg-[#213a57] border-4 border-[#213a57] p-3 rounded-xl cursor-pointer"
                 onClick={() => {
@@ -296,7 +341,7 @@ const GetListVoucher = () => {
                 Deselect voucher
               </p>
             </div>
-            <div className="col-span-1 bg-[#213a57] rounded-xl p-6">
+            <div className="col-span-1 bg-[#213a57] rounded-xl lg:p-6 p-2">
               <p className="w-full font-bold text-3xl text-transparent bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] bg-clip-text my-4">
                 THÔNG TIN ĐƠN HÀNG
               </p>

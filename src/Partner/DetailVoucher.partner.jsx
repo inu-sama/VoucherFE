@@ -143,11 +143,11 @@ const DetailVoucher = () => {
       <div className="w-full bg-gradient-to-bl to-[#75bde0] h-full from-30% from-[#eeeeee] p-4 ">
         <div className="grid grid-cols-12 text-[#3f5f89]">
           <div className="col-span-11 flex items-center">
-            <h1 className="text-4xl mt-4 mb-10 w-full text-left font-bold px-10">
+            <h1 className="text-4xl mt-10 mb-10 w-full text-left font-bold lg:px-10 px-0">
               Chi tiết voucher
             </h1>
           </div>
-          <div className="col-span-1 flex items-center ">
+          <div className="col-span-1 pr-2 flex items-center ">
             <Link to={`/Partner/ListvoucherPN`}>
               <button className="bg-[#eaf9e7] hover:bg-[#5591bc] w-10 h-10 border-4 border-[#5591bc] hover:text-[#eaf9e7] font-bold rounded-full">
                 <FontAwesomeIcon icon={faXmark} />
@@ -168,8 +168,10 @@ const DetailVoucher = () => {
               }}
             />
             <p className="text-xl my-2 flex justify-between">
-              <span className="font-bold text-[#3f5f89]">Hạn sử dụng:</span>
-              <span className="text-[#3f5f89]">
+              <span className="font-bold text-[#3f5f89] lg:block hidden ">
+                Hạn sử dụng:
+              </span>
+              <span className="text-[#3f5f89] lg:text-left text-center lg:w-fit w-full">
                 {voucher.ReleaseTime ? date(voucher.ReleaseTime) : "N/A"}
                 <span> - </span>
                 {voucher.ExpiredTime ? date(voucher.ExpiredTime) : "N/A"}
@@ -219,7 +221,10 @@ const DetailVoucher = () => {
                   <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
                     <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
                       <tr className="text-lg">
-                        <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 whitespace-nowrap lg:block hidden"
+                        >
                           STT
                         </th>
                         <th scope="col" className="px-6 py-3 whitespace-nowrap">
@@ -239,7 +244,9 @@ const DetailVoucher = () => {
                               key={(condition._id, index)}
                               className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
                             >
-                              <td className="px-6 py-4">{index + 1}</td>
+                              <td className="px-6 py-4 lg:block hidden">
+                                {index + 1}
+                              </td>
                               <td className="px-6 py-4">
                                 {formattedPrice(condition.MinValue)}
                               </td>
@@ -283,9 +290,8 @@ const DetailVoucher = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-10 w-full justify-center mt-10">
-          <div className="col-span-1"></div>
-          <div className="col-span-3">
+        <div className="flex lg:gap-10 gap-4  w-full justify-center mt-10">
+          <div className="w-[26%]">
             <Link
               to={`/Partner/EditVoucherPN/${id}`}
               className="bg-[#3f5f89] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
@@ -294,7 +300,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Edit</span>
             </Link>
           </div>
-          <div className="col-span-3 gap-10">
+          <div className="lg:w-[26%] ">
             <button
               className="bg-[#2f434f] hover:bg-[#e7f2f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}
@@ -303,7 +309,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Delete</span>
             </button>
           </div>
-          <div className="col-span-3 gap-10">
+          <div className="w-[26%]">
             <button
               className="bg-[#3bb0b0] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handlestate(id)}
@@ -312,7 +318,6 @@ const DetailVoucher = () => {
               <span className="ml-2"> State</span>
             </button>
           </div>
-          <div className="col-span-1"></div>
         </div>
       </div>
     </div>

@@ -221,8 +221,10 @@ const DetailDashBoard = () => {
           </button>
         </Link>
       </div>
-      <p className="text-3xl text-[#517f95] font-bold text-center">{id}</p>
-      <div className="grid grid-cols-4 gap-[30px] mt-[25px] pb-[15px]">
+      <p className="text-3xl text-[#517f95] lg:ml-0 ml-12 font-bold text-center">
+        {id}
+      </p>
+      <div className="grid lg:grid-cols-4 grid-cols-2 gap-[30px] mt-[25px] pb-[15px]">
         <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#4E73DF] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
           <div>
             <h2 className="text-[#B589DF] text-[11px] leading-[17px] font-bold">
@@ -244,12 +246,14 @@ const DetailDashBoard = () => {
           </div>
         </div>
         <div className="h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#36B9CC] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out">
-          <div>
-            <h2 className="text-[#1cc88a] text-[11px] leading-[17px] font-bold">
+          <div className="w-full">
+            <h2 className="text-[#1cc88a] lg:block hidden text-[11px] leading-[17px] font-bold">
               NGÀY BẮT ĐẦU-NGÀY KẾT THÚC
             </h2>
             <h1 className="text-[17px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]">
-              {date(firstdate)} - {date(lastdate)}
+              <span>{date(firstdate)}</span>
+              <span className="text-[10px] pb-10 px-2">-</span>
+              <span>{date(lastdate)}</span>
             </h1>
           </div>
         </div>
@@ -355,39 +359,38 @@ const DetailDashBoard = () => {
       </div>
       <div className="my-4">
         <div className="relative h-[300px] overflow-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a5879]">
-            <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8AC5E2] dark:text-[#2a5879]">
-              <tr className="text-lg">
-                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+          <div className="relative lg:w-full w-[700px] shadow-md sm:rounded-lg">
+            <div className="relative p-4 shadow-md rounded-lg text-lg text-[#2F4F4F]">
+              <div className="lg:w-full grid grid-cols-12 font-bold py-3 px-2 bg-[#8AC5E2] rounded-t-md text-[#fff]">
+                <div className="col-span-1 text-center lg:block hidden">
                   STT
-                </th>
-                <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                  Total Discount
-                </th>
-                <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                  Customer
-                </th>
-                <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+                </div>
+                <div className="col-span-4 text-center">Total Discount</div>
+                <div className="col-span-4 text-center">Customer</div>
+                <div className="col-span-3 text-center">Date</div>
+              </div>
               {history.map((item, index) => (
-                <tr
+                <div
                   key={(item._id, index)}
-                  className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
+                  className="lg:w-full grid grid-cols-12  py-3 px-2 odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9]"
                 >
-                  <td className="px-6 py-4">{index + 1}</td>
-                  <td className="px-6 py-4">
+                  <div className="px-6 py-4 text-center col-span-1 lg:block hidden">
+                    {index + 1}
+                  </div>
+
+                  <div className="col-span-4 py-4 text-center">
                     {formattedPrice(item.TotalDiscount)}
-                  </td>
-                  <td className="px-6 py-4">{item.CusID}</td>
-                  <td className="px-6 py-4">{date(item.Date)}</td>
-                </tr>
+                  </div>
+                  <div className="col-span-4 flex items-center justify-center">
+                    {item.CusID}
+                  </div>
+                  <div className="col-span-3 flex items-center justify-center">
+                    {date(item.Date)}
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
         </div>
       </div>
       <div>
