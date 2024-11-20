@@ -64,7 +64,7 @@ const ListVoucher = () => {
 
   const fetchVouchers = async () => {
     try {
-      const res = await fetch(`${URL}/  `);
+      const res = await fetch(`${URL}/getVoucherByAdmin`);
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }

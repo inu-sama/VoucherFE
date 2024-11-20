@@ -237,34 +237,39 @@ const ChartVoucher = () => {
 
   const aggregateDataByDate = (data) => {
     return data.reduce((acc, item) => {
-        const { Date: dateString, TotalDiscount, Voucher_ID } = item;
+      const { Date: dateString, TotalDiscount, Voucher_ID } = item;
 
-        // Chuyển đổi ngày về dạng 'YYYY-MM-DD'
-        const date = new Date(dateString).toISOString().split("T")[0];
+      // Chuyển đổi ngày về dạng 'YYYY-MM-DD'
+      const date = new Date(dateString).toISOString().split("T")[0];
 
-        // Tìm xem đã có một entry với mã voucher này trong `acc` chưa
-        let voucherEntry = acc.find((entry) => entry.voucherIDs === Voucher_ID);
-        
-        if (!voucherEntry) {
-            // Nếu chưa có, tạo mới `voucherEntry` và thêm vào `acc`
-            voucherEntry = { voucherIDs: Voucher_ID, dataByDate: [] };
-            acc.push(voucherEntry);
-        }
+      // Tìm xem đã có một entry với mã voucher này trong `acc` chưa
+      let voucherEntry = acc.find((entry) => entry.voucherIDs === Voucher_ID);
 
-        // Tìm xem trong `voucherEntry.dataByDate` đã có entry cho ngày này chưa
-        let dateEntry = voucherEntry.dataByDate.find((entry) => entry.date === date);
-        
-        if (dateEntry) {
-            // Nếu đã có entry cho ngày, cộng thêm `TotalDiscount`
-            dateEntry.totalDiscount += TotalDiscount;
-        } else {
-            // Nếu chưa có, thêm mới một entry cho ngày với `TotalDiscount`
-            voucherEntry.dataByDate.push({ date: date, totalDiscount: TotalDiscount });
-        }
+      if (!voucherEntry) {
+        // Nếu chưa có, tạo mới `voucherEntry` và thêm vào `acc`
+        voucherEntry = { voucherIDs: Voucher_ID, dataByDate: [] };
+        acc.push(voucherEntry);
+      }
 
-        return acc;
+      // Tìm xem trong `voucherEntry.dataByDate` đã có entry cho ngày này chưa
+      let dateEntry = voucherEntry.dataByDate.find(
+        (entry) => entry.date === date
+      );
+
+      if (dateEntry) {
+        // Nếu đã có entry cho ngày, cộng thêm `TotalDiscount`
+        dateEntry.totalDiscount += TotalDiscount;
+      } else {
+        // Nếu chưa có, thêm mới một entry cho ngày với `TotalDiscount`
+        voucherEntry.dataByDate.push({
+          date: date,
+          totalDiscount: TotalDiscount,
+        });
+      }
+
+      return acc;
     }, []);
-};
+  };
 
   const pieData = {
     labels: Object.keys(voucherStatistics),
@@ -283,26 +288,29 @@ const ChartVoucher = () => {
     ],
   };
 
-<<<<<<< HEAD
-  const createDataset =({data}) => {
+  const createDataset = ({ data }) => {
     const aggregatedData = aggregateDataByDate(data);
-    const labels = [...new Set(aggregatedData.flatMap(entry => entry.dataByDate.map(item => item.date)))];
+    const labels = [
+      ...new Set(
+        aggregatedData.flatMap((entry) =>
+          entry.dataByDate.map((item) => item.date)
+        )
+      ),
+    ];
 
     // Tạo datasets cho từng voucher ID
-    const datasets = aggregatedData.map(entry => ({
-        label: entry.voucherIDs,
-        data: labels.map(date => {
-            const dateEntry = entry.dataByDate.find(item => item.date === date);
-            return dateEntry ? dateEntry.totalDiscount : 0;
-        }),
-        borderColor: '#' + Math.floor(Math.random()*16777215).toString(16), // Màu ngẫu nhiên cho mỗi chuỗi
-        fill: false,
+    const datasets = aggregatedData.map((entry) => ({
+      label: entry.voucherIDs,
+      data: labels.map((date) => {
+        const dateEntry = entry.dataByDate.find((item) => item.date === date);
+        return dateEntry ? dateEntry.totalDiscount : 0;
+      }),
+      borderColor: "#" + Math.floor(Math.random() * 16777215).toString(16), // Màu ngẫu nhiên cho mỗi chuỗi
+      fill: false,
     }));
-  }
+  };
 
-  const dataset = createDataset({data: filteredData});
-
-  
+  const dataset = createDataset({ data: filteredData });
 
   const lineData = {
     labels: Object.keys(voucherStatistics),
@@ -317,34 +325,7 @@ const ChartVoucher = () => {
         tension: 0.1,
       },
     ],
-=======
-  const datasetForLine = (data) => {
-    const labelArray = [];
-    const label = data.map((item) => {
-      item.voucherIDs;
-      console.log("itemID: " + item.voucherIDs);
-    });
-    const data1 = data.map((item) => item.totalDiscount);
-
-    return {
-      labels: aggregateData.map((item) => item.date),
-      datasets: [
-        {
-          label: labelArray[0],
-          data: data1,
-          fill: false,
-          backgroundColor: Object.keys(voucherStatistics).map(() =>
-            generateRandomColor()
-          ),
-          borderColor: Object.keys(voucherStatistics).map(() =>
-            generateRandomColor()
-          ),
-        },
-      ],
-    };
->>>>>>> c69707f5c69a47c5e253186106bcfbe619d82873
   };
- 
 
   const options = {
     scales: {
