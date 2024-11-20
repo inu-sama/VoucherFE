@@ -429,7 +429,7 @@ const CreateVoucher = () => {
             <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-4">
                 <label className="font-bold w-full text-[#3f885e] line-clamp-1">
-                  Số tiền tối thiểu
+                  Giá trị đơn hàng tối thiểu
                 </label>
               </div>
               <div className="col-span-12">
@@ -447,7 +447,7 @@ const CreateVoucher = () => {
             <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
               <div className="col-span-4">
                 <label className="font-bold text-[#3f885e] line-clamp-1">
-                  Số tiền tối đa giảm
+                  Số tiền tối đa được giảm
                 </label>
               </div>
               <div className="col-span-12">
