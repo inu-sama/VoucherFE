@@ -291,29 +291,7 @@ const ChartVoucher = () => {
     ],
   };
 
-  const createDataset = ({ data }) => {
-    const aggregatedData = aggregateDataByDate(data);
-    const labels = [
-      ...new Set(
-        aggregatedData.flatMap((entry) =>
-          entry.dataByDate.map((item) => item.date)
-        )
-      ),
-    ];
-
-    // Tạo datasets cho từng voucher ID
-    const datasets = aggregatedData.map((entry) => ({
-      label: entry.voucherIDs,
-      data: labels.map((date) => {
-        const dateEntry = entry.dataByDate.find((item) => item.date === date);
-        return dateEntry ? dateEntry.totalDiscount : 0;
-      }),
-      borderColor: "#" + Math.floor(Math.random() * 16777215).toString(16), // Màu ngẫu nhiên cho mỗi chuỗi
-      fill: false,
-    }));
-  };
-
-  const dataset = createDataset({ data: filteredData });
+  
 
   const lineData = {
     labels: Object.keys(voucherStatistics),
@@ -325,7 +303,7 @@ const ChartVoucher = () => {
         ),
         fill: false,
         borderColor: "rgba(75, 192, 192, 1)",
-        tension: 0.1,
+        tension: 1,
       },
     ],
   };
