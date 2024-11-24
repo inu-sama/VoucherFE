@@ -80,7 +80,7 @@ const ChartVoucher = () => {
     setNoDataFound(voucher.length === 0);
     // setShowPopup(true);
   };
-
+  
   const fetchHistory = async () => {
     try {
       const res = await fetch(`${URL}/Statistical_VoucherAdmin`, {
@@ -119,6 +119,7 @@ const ChartVoucher = () => {
   useEffect(() => {
     fetchHistory();
   }, []);
+
 
   const fetchServiceID = async (serviceId) => {
     try {
@@ -235,6 +236,8 @@ const ChartVoucher = () => {
     setVoucherStatistics(voucherStats);
   };
 
+  console.log("voucherStatistics", voucherStatistics);
+
   const aggregateDataByDate = (data) => {
     return data.reduce((acc, item) => {
       const { Date: dateString, TotalDiscount, Voucher_ID } = item;
@@ -330,11 +333,13 @@ const ChartVoucher = () => {
   const options = {
     scales: {
       x: {
+        beginAtZero: true,
         ticks: {
           color: "#000000",
         },
       },
       y: {
+        beginAtZero: true,
         ticks: {
           color: "#000000",
         },
