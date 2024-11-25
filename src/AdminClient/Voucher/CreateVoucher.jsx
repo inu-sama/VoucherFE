@@ -273,8 +273,7 @@ const CreateVoucher = () => {
               </div>
               <div
                 className="col-span-12 w-full"
-                onClick={toggleReleaseCalendar}
-              >
+                onClick={toggleReleaseCalendar}>
                 <span className="block border-2 border-[#eaf9e7] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                   {ReleaseTime ? (
                     <span>{formatDate(ReleaseTime)}</span>
@@ -284,8 +283,7 @@ const CreateVoucher = () => {
                   {showReleaseCalendar && (
                     <div
                       className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#98b894] p-4 w-fit"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                      onClick={(e) => e.stopPropagation()}>
                       <Calendar
                         onChange={handleReleaseDateChange}
                         value={ReleaseTime}
@@ -302,8 +300,7 @@ const CreateVoucher = () => {
               </div>
               <div
                 className="col-span-12 w-full"
-                onClick={toggleExpiredCalendar}
-              >
+                onClick={toggleExpiredCalendar}>
                 <span className="block border-2 border-[#eaf9e7] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                   {ExpiredTime ? (
                     <span>
@@ -317,8 +314,7 @@ const CreateVoucher = () => {
                   {showExpiredCalendar && (
                     <div
                       className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#98b894] p-4"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                      onClick={(e) => e.stopPropagation()}>
                       <Calendar
                         onChange={handExpiredDateChange}
                         value={ExpiredTime}
@@ -476,8 +472,7 @@ const CreateVoucher = () => {
                   <button
                     type="button"
                     className="lg:col-span-2 border-2 border-[#4BA771] bg-[#4BA771] hover:bg-[#e7f9e9] text-[#e7f1f9] hover:text-[#2E4F4F] px-4 py-2 rounded-bl-lg"
-                    onClick={addCondition}
-                  >
+                    onClick={addCondition}>
                     Add Condition
                   </button>
                 </div>
@@ -491,8 +486,7 @@ const CreateVoucher = () => {
                   {Voucher.Conditions.map((cond, index) => (
                     <li
                       key={index}
-                      className="mb-2 text-xl text-[#2E4F4F] font-semibold"
-                    >
+                      className="mb-2 text-xl text-[#2E4F4F] font-semibold">
                       <span className="text-[#2F4F4F] font-bold text-xl">
                         •{" "}
                       </span>
@@ -500,8 +494,7 @@ const CreateVoucher = () => {
                       {formattedPrice(cond.MinValue)}
                       <button
                         className="float-right"
-                        onClick={() => deleteCondition(index)}
-                      >
+                        onClick={() => deleteCondition(index)}>
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </li>
@@ -520,8 +513,7 @@ const CreateVoucher = () => {
                     {services.map((service) => (
                       <div
                         key={service.id}
-                        className="flex items-center text-[#2F4F4F]"
-                      >
+                        className="flex items-center text-[#2F4F4F]">
                         <input
                           type="checkbox"
                           id={service.id}
@@ -550,8 +542,7 @@ const CreateVoucher = () => {
             <div className="w-[45%]">
               <Link
                 to="/Admin/ListVoucher"
-                className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2E4F4F] border-2 border-[#2E4F4F] p-2 rounded-lg flex items-center justify-center w-full"
-              >
+                className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2E4F4F] border-2 border-[#2E4F4F] p-2 rounded-lg flex items-center justify-center w-full">
                 Back
               </Link>
             </div>

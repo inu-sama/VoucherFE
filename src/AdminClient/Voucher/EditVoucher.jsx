@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
@@ -18,12 +18,17 @@ const EditVoucher = () => {
   const [showReleaseCalendar, setShowReleaseCalendar] = useState(false);
   const [updatedConditions, setUpdatedConditions] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const thisPage = location.state.page;
+  const currentPage = { page: thisPage };
 
   const OnChangeMinValue = (idCondition, e) => {
     let { value } = e.target;
+    console.log("checkMin: ", value);
     value =
       value && !isNaN(value) && value >= 0
-        ? parseInt(value)
+        ? parseInt(value.replaceAll(".", ""))
         : data.conditions.find((item) => item.idCondition === idCondition)
             ?.MinValue;
 
@@ -36,10 +41,10 @@ const EditVoucher = () => {
 
   const OnChangeMaxValue = (e, idCondition) => {
     let { value } = e.target;
-    console.log("checkmax", value);
+    console.log("checkMax: ", value);
     value =
       value && !isNaN(value) && value >= 0
-        ? parseInt(value)
+        ? parseInt(value.replaceAll(".", ""))
         : data.conditions.find((item) => item.idCondition === idCondition)
             ?.MaxValue;
 
@@ -178,7 +183,7 @@ const EditVoucher = () => {
         alert("Error: " + (result.message || "Failed to update voucher"));
       } else {
         alert("Cập nhật voucher thành công");
-        navigate(`/Admin/DetailVoucher/${id}`);
+        navigate(`/Admin/DetailVoucher/${id}`, { state: currentPage });
       }
     } catch (err) {
       alert("Error: " + (err.message || "Failed to update voucher"));
@@ -225,8 +230,7 @@ const EditVoucher = () => {
                 <span
                   className={`font-normal ${
                     data.States === "Enable" ? "text-green-500" : "text-red-500"
-                  }`}
-                >
+                  }`}>
                   {data.States}
                 </span>
               </span>
@@ -259,8 +263,7 @@ const EditVoucher = () => {
                   </div>
                   <div
                     className="col-span-12 w-full"
-                    onClick={toggleReleaseCalendar}
-                  >
+                    onClick={toggleReleaseCalendar}>
                     <span className="block border-2 border-[#75e07c] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                       {ReleaseTime ? (
                         <span>{formatDate(ReleaseTime)}</span>
@@ -270,8 +273,7 @@ const EditVoucher = () => {
                       {showReleaseCalendar && (
                         <div
                           className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75e07c] p-4 w-fit"
-                          onClick={(e) => e.stopPropagation()}
-                        >
+                          onClick={(e) => e.stopPropagation()}>
                           <Calendar
                             onChange={handleReleaseDateChange}
                             value={ReleaseTime}
@@ -290,8 +292,7 @@ const EditVoucher = () => {
                   </div>
                   <div
                     className="col-span-12 w-full"
-                    onClick={toggleExpiredCalendar}
-                  >
+                    onClick={toggleExpiredCalendar}>
                     <span className="block border-2 border-[#75e07c] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                       {ExpiredTime ? (
                         <span>{formatDate(ExpiredTime)}</span>
@@ -301,8 +302,7 @@ const EditVoucher = () => {
                       {showExpiredCalendar && (
                         <div
                           className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75e07c] p-4"
-                          onClick={(e) => e.stopPropagation()}
-                        >
+                          onClick={(e) => e.stopPropagation()}>
                           <Calendar
                             onChange={handExpiredDateChange}
                             value={ExpiredTime}
@@ -395,6 +395,7 @@ const EditVoucher = () => {
               <tbody>
                 {data.conditions && data.conditions.length > 0 ? (
                   data.conditions
+                    .sort((a, b) => a.MinValue - b.MinValue)
                     .slice(0, data.conditions.length)
                     .map((condition) => {
                       const updatedCondition = updatedConditions.find(
@@ -403,8 +404,7 @@ const EditVoucher = () => {
                       return (
                         <tr
                           key={condition._id}
-                          className="odd:bg-[#DAEAD8] odd:dark:bg-[#DAEAD8] even:bg-gray-50 even:dark:bg-[#C9E9CC] border-b dark:border-[#C9E9CC] text-md"
-                        >
+                          className="odd:bg-[#DAEAD8] odd:dark:bg-[#DAEAD8] even:bg-gray-50 even:dark:bg-[#C9E9CC] border-b dark:border-[#C9E9CC] text-md">
                           <td className="px-6 py-4">
                             {formattedPrice(condition.MinValue)}
                           </td>
@@ -415,14 +415,27 @@ const EditVoucher = () => {
                             <input
                               type="number"
                               placeholder={condition.MinValue}
+                              maxLength={8}
+                              min={0}
                               onChange={(e) => {
-                                if (
-                                  e.target.value < 0 ||
-                                  isNaN(e.target.value) ||
-                                  e.target.value.length > 8
-                                )
-                                  e.target.value = 0;
+                                if (isNaN(e.target.value)) e.target.value = 0;
                                 OnChangeMinValue(condition._id, e);
+                                e.target.name = e.target.value.replaceAll(
+                                  ".",
+                                  ""
+                                );
+                                if (
+                                  e.target.value == "" ||
+                                  e.target.value == undefined ||
+                                  isNaN(parseInt(e.target.name)) == true
+                                ) {
+                                  e.target.value = 0;
+                                  e.target.name = "0";
+                                } else {
+                                  e.target.value = parseInt(
+                                    e.target.name
+                                  ).toLocaleString();
+                                }
                               }}
                               className="border-2 bg-white border-[#4ca757] outline-none text-[#4BA771] px-4 rounded-lg"
                             />
@@ -431,14 +444,28 @@ const EditVoucher = () => {
                             <input
                               type="number"
                               placeholder={condition.MaxValue}
+                              id="maxValueInput"
+                              maxLength={8}
+                              min={0}
                               onChange={(e) => {
-                                if (
-                                  e.target.value < 0 ||
-                                  isNaN(e.target.value) ||
-                                  e.target.value.length > 8
-                                )
-                                  e.target.value = 0;
+                                if (isNaN(e.target.value)) e.target.value = 0;
                                 OnChangeMaxValue(e, condition._id);
+                                e.target.name = e.target.value.replaceAll(
+                                  ".",
+                                  ""
+                                );
+                                if (
+                                  e.target.value == "" ||
+                                  e.target.value == undefined ||
+                                  isNaN(parseInt(e.target.name)) == true
+                                ) {
+                                  e.target.value = 0;
+                                  e.target.name = "0";
+                                } else {
+                                  e.target.value = parseInt(
+                                    e.target.name
+                                  ).toLocaleString();
+                                }
                               }}
                               className="border-2 bg-white border-[#4ca757] outline-none text-[#4BA771] px-4 rounded-lg"
                             />
@@ -462,16 +489,15 @@ const EditVoucher = () => {
           <div className="w-[45%]">
             <button
               onClick={handleSubmit}
-              className="bg-[#4ca754] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#58a74c] p-2 rounded-lg flex items-center justify-center w-full"
-            >
+              className="bg-[#4ca754] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#58a74c] p-2 rounded-lg flex items-center justify-center w-full">
               <FontAwesomeIcon icon={faEdit} /> Sửa
             </button>
           </div>
           <div className="w-[45%]">
             <Link
               to={`/Admin/DetailVoucher/${id}`}
-              className="bg-[#1d4721] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#1d4721] p-2 rounded-lg flex items-center justify-center w-full"
-            >
+              state={currentPage}
+              className="bg-[#1d4721] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#1d4721] p-2 rounded-lg flex items-center justify-center w-full">
               <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
             </Link>
           </div>

@@ -6,7 +6,7 @@ import {
   faXmark,
   faWrench,
 } from "@fortawesome/free-solid-svg-icons";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 
 const DetailVoucher = () => {
   const { id } = useParams();
@@ -16,6 +16,10 @@ const DetailVoucher = () => {
   const [serviceNames, setServiceNames] = useState({});
   const navigate = useNavigate();
   const URL = "https://server-voucher.vercel.app/api";
+  const location = useLocation();
+
+  const page = location.state.page;
+  const currentPage = { thisPage: page };
 
   const handlestate = async (id) => {
     try {
@@ -148,13 +152,14 @@ const DetailVoucher = () => {
             </h1>
           </div>
           <div className="col-span-1 flex items-center ">
-            <Link to={`/Admin/ListVoucher`}>
+            <Link to={"/Admin/Listvoucher"} state={currentPage}>
               <button className="bg-[#eaf9e7] hover:bg-[#4BA771] w-10 h-10 border-4 border-[#4BA771] hover:text-[#eaf9e7] font-bold rounded-full">
                 <FontAwesomeIcon icon={faXmark} />
               </button>
             </Link>
           </div>
         </div>
+        {console.log("page: ", page)}
         <div className="grid lg:grid-cols-2 grid-cols-1">
           <div className="p-10">
             <img
@@ -189,8 +194,7 @@ const DetailVoucher = () => {
                     voucher.States === "Enable"
                       ? "text-green-500"
                       : "text-red-500"
-                  }`}
-                >
+                  }`}>
                   {voucher.States}
                 </span>
               </span>
@@ -205,13 +209,13 @@ const DetailVoucher = () => {
                 </span>
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#16233B]">Mức giảm: </span>
+                <span className="font-bold text-[#2F4F4F]">Mức giảm: </span>
                 <span className=" text-[#4BA771]">
                   {voucher.PercentDiscount || "N/A"}%
                 </span>
               </p>
               <p className="text-xl my-2 flex justify-between pr-10">
-                <span className="font-bold text-[#16233B]">Mô tả: </span>
+                <span className="font-bold text-[#2F4F4F]">Mô tả: </span>
                 <span className=" text-[#4BA771]">
                   {voucher.Description || "N/A"}
                 </span>
@@ -219,7 +223,7 @@ const DetailVoucher = () => {
               <div className="my-4">
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                   <table className="w-full text-center rtl:text-center text-lg text-white dark:text-[#2a793a]">
-                    <thead className="text-sm text-gray-700 uppercase  dark:bg-[#8ae293] dark:text-[#2a793a]">
+                    <thead className="text-sm text-[#2F4F4F] uppercase  dark:bg-[#8ae293] dark:text-[#2a793a]">
                       <tr className="text-lg">
                         <th scope="col" className="px-6 py-3 whitespace-nowrap">
                           STT
@@ -228,19 +232,19 @@ const DetailVoucher = () => {
                           Giá trị tối thiểu
                         </th>
                         <th scope="col" className="px-6 py-3 whitespace-nowrap">
-                          Giá trị tối đa
+                          Giảm tối đa
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {voucher.conditions && voucher.conditions.length > 0 ? (
                         voucher.conditions
+                          .sort((a, b) => a.MinValue - b.MinValue)
                           .slice(0, voucher.conditions.length)
                           .map((condition, index) => (
                             <tr
                               key={(condition._id, index)}
-                              className="odd:bg-[#d9ebda] odd:dark:bg-[#daebd9] even:bg-gray-50 even:dark:bg-[#c9e9cc] border-b dark:border-[#bad6bc] text-md"
-                            >
+                              className="text-[#2F4F4F] odd:bg-[#d9ebda] odd:dark:bg-[#daebd9] even:bg-gray-50 even:dark:bg-[#c9e9cc] border-b dark:border-[#bad6bc] text-md">
                               <td className="px-6 py-4">{index + 1}</td>
                               <td className="px-6 py-4">
                                 {formattedPrice(condition.MinValue)}
@@ -289,8 +293,8 @@ const DetailVoucher = () => {
           <div className="col-span-3 w-[28%]">
             <Link
               to={`/Admin/EditVoucher/${id}`}
-              className="bg-[#339d33] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#339d33] p-5 rounded-lg flex items-center justify-center w-full"
-            >
+              state={currentPage}
+              className="bg-[#339d33] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#339d33] p-5 rounded-lg flex items-center justify-center w-full">
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
             </Link>
@@ -298,8 +302,7 @@ const DetailVoucher = () => {
           <div className="col-span-3 w-[42%]">
             <button
               className="bg-[#1a402f] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#1a402f] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={() => handleDeleteVoucher(id)}
-            >
+              onClick={() => handleDeleteVoucher(id)}>
               <FontAwesomeIcon icon={faTrash} />
               <span className="ml-2">Delete</span>
             </button>
@@ -307,8 +310,7 @@ const DetailVoucher = () => {
           <div className="col-span-3 w-[28%]">
             <button
               className="bg-[#3bb0b0] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={() => handlestate(id)}
-            >
+              onClick={() => handlestate(id)}>
               <FontAwesomeIcon icon={faWrench} />
               <span className="ml-2"> State</span>
             </button>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const ListVoucher = () => {
   const [services, setServices] = useState([]);
@@ -12,6 +12,10 @@ const ListVoucher = () => {
   const [show, setShow] = useState(false);
   const [selectedPage, setSelectedPage] = useState(1);
   const URL = "https://server-voucher.vercel.app/api";
+  const location = useLocation();
+
+  const thisPage = location.state?.thisPage || 1;
+  // setSelectedPage(thisPage);
 
   const fetchServices = async () => {
     try {
@@ -108,6 +112,7 @@ const ListVoucher = () => {
 
   useEffect(() => {
     fetchVouchers();
+    setSelectedPage(thisPage);
   }, []);
 
   if (loading) {
@@ -135,8 +140,11 @@ const ListVoucher = () => {
     pages.push(i + 1);
   }
 
+  const currentPage = { page: selectedPage };
+
   return (
     <div className="lg:bg-[#EAF8E6] h-full  bg-[#EAF8E6]">
+      {/* {console.log("this page: " + thisPage)} */}
       <div className="w-full  to-[#d8ffce] from-30% h-full from-[#ffffff]  p-4">
         <h1 className="text-4xl text-[#16233B] mb-4 w-full text-center font-bold">
           Danh sách voucher
@@ -147,38 +155,35 @@ const ListVoucher = () => {
               onClick={toggleshow}
               tabIndex={0}
               role="button"
-              className="font-semibold bg-[#4BA771] hover:bg-[#e8f9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg"
-            >
+              className="font-semibold bg-[#4BA771] hover:bg-[#e8f9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#4BA771] outline-none px-4 py-2 rounded-lg">
               Sort by Service
             </div>
             {show && (
               <ul
                 tabIndex={0}
-                className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2"
-              >
+                className="dropdown-content menu absolute bg-[#eaf9e7] rounded-box z-[1] w-52 p-2 shadow-inner shadow-[#4BA771] mt-2">
                 <li className="flex items-center text-[#16233B] text-lg">
                   <p
                     onClick={() => {
                       setSelectedServices(null),
                         setShow(false),
                         fetchVouchers();
+                      console.log(vouchers);
                     }}
-                    className="w-full hover:bg-[#2E4F4F] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                  >
+                    className="w-full hover:bg-[#2E4F4F] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                     All services
                   </p>
                 </li>
                 {services.map((service) => (
                   <li
                     key={service.id}
-                    className="flex items-center text-[#16233B] text-lg"
-                  >
+                    className="flex items-center text-[#16233B] text-lg">
                     <p
                       onClick={() => {
                         setSelectedServices(service.id), setShow(false);
+                        console.log(service.id);
                       }}
-                      className="w-full hover:bg-[#2E4F4F] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]"
-                    >
+                      className="w-full hover:bg-[#2E4F4F] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                       {service.name}
                     </p>
                   </li>
@@ -188,8 +193,7 @@ const ListVoucher = () => {
           </div>
           <Link
             to="/Admin/CreateVoucher"
-            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#4BA771] px-4 py-2 rounded-lg"
-          >
+            className="font-semibold bg-[#4BA771] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#4BA771] px-4 py-2 rounded-lg">
             Create Voucher
           </Link>
         </div>
@@ -199,8 +203,7 @@ const ListVoucher = () => {
               return (
                 <div
                   key={voucher._id}
-                  className=" w-full rounded-lg p-4 bg-[#BFE6B3] text-[#16233B]"
-                >
+                  className=" w-full rounded-lg p-4 bg-[#BFE6B3] text-[#16233B]">
                   <div className="flex w-full">
                     <div className="w-3/4">
                       <h2 className="text-2xl font-bold mb-3 line-clamp-1 w-[73%]">
@@ -214,8 +217,7 @@ const ListVoucher = () => {
                           voucher.States === "Enable"
                             ? "bg-[#4ca771] px-4"
                             : "bg-[#cf3a3a] px-[0.9rem]"
-                        } `}
-                      >
+                        } `}>
                         {voucher.States}
                       </span>
                     </div>
@@ -246,15 +248,14 @@ const ListVoucher = () => {
                     <div className="col-span-4 grid  gap-2">
                       <Link
                         to={`/Admin/DetailVoucher/${voucher._id}`}
-                        className="bg-[#4BA771] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] lg:px-4 px-2 lg:ml-0 ml-[1.6rem] lg:w-full w-fit py-2 rounded-lg flex items-center"
-                      >
+                        state={currentPage}
+                        className="bg-[#4BA771] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#4BA771] lg:px-4 px-2 lg:ml-0 ml-[1.6rem] lg:w-full w-fit py-2 rounded-lg flex items-center">
                         <FontAwesomeIcon className="mr-2" icon={faCircleInfo} />
                         Detail
                       </Link>
                       <button
                         // onClick={() => handleDeleteVoucher(voucher._id)}
-                        className="bg-[#2f414f] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] lg:px-4 px-2 lg:ml-0 ml-[1.6rem] lg:w-full w-fit py-2 rounded-lg flex items-center"
-                      >
+                        className="bg-[#2f414f] hover:bg-[#BFE6B3] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#2F4F4F] lg:px-4 px-2 lg:ml-0 ml-[1.6rem] lg:w-full w-fit py-2 rounded-lg flex items-center">
                         <FontAwesomeIcon icon={faTrash} className="mr-2" />
                         Delete
                       </button>
@@ -281,8 +282,7 @@ const ListVoucher = () => {
                         } `}
                         onClick={() => {
                           setSelectedPage(page);
-                        }}
-                      >
+                        }}>
                         {page}
                       </p>
                     );
@@ -299,8 +299,7 @@ const ListVoucher = () => {
                         } `}
                         onClick={() => {
                           setSelectedPage(page);
-                        }}
-                      >
+                        }}>
                         {page}
                       </p>
                     );
