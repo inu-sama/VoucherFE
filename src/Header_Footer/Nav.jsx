@@ -39,6 +39,15 @@ const Nav = () => {
               <FontAwesomeIcon icon={faUser} /> Service-Partner
             </li>
           </Link>
+          <Link
+            to="ListReport"
+            className="w-full route text-lg lg:text-xl font-extrabold"
+          >
+            <li className="w-full lg:hover:px-5 line-clamp-1  py-[0.4rem] hover:bg-[#eaf9e7] hover:text-[#4ca771] text-center lg:text-left rounded-full mb-4">
+              <FontAwesomeIcon icon={faUser} /> List Report
+            </li>
+          </Link>
+          
         </ul>
       </div>
     </div>

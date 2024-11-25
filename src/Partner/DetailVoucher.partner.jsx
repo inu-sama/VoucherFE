@@ -16,6 +16,17 @@ const DetailVoucher = () => {
   const [serviceNames, setServiceNames] = useState({});
   const navigate = useNavigate();
   const URL = "https://server-voucher.vercel.app/api";
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const Token = localStorage.getItem("Token");
+
+  const toggleOverlay = () => {
+    setIsOverlayOpen(!isOverlayOpen);
+  };
+
+  const [report, setReport] = useState({
+    Content: "",
+    Voucher_ID: id,
+  });
 
   const handlestate = async (id) => {
     try {
@@ -78,6 +89,52 @@ const DetailVoucher = () => {
     } catch (error) {
       console.error("Error fetching service name:", error);
       return "Unknown Service"; // Default value in case of error
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setReport({
+      ...report,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        "https://server-voucher.vercel.app/api/createReport",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Token}`,
+          },
+          body: JSON.stringify(report), // Gửi dữ liệu dưới dạng JSON
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Không thể tạo báo cáo, vui lòng thử lại.");
+      }
+
+      const result = await response.json();
+
+      setReport({
+        _id: result._id,
+        Content: "",
+        Voucher_ID: "",
+        ReportedBy: "",
+      }); // Reset form nếu cần
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -290,8 +347,8 @@ const DetailVoucher = () => {
             </div>
           </div>
         </div>
-        <div className="flex lg:gap-10 gap-4  w-full justify-center mt-10">
-          <div className="w-[26%]">
+        <div className="grid lg:grid-cols-4 grid-cols-2  lg:gap-10 gap-4 w-full mt-10">
+          <div className="">
             <Link
               to={`/Partner/EditVoucherPN/${id}`}
               className="bg-[#3f5f89] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
@@ -300,7 +357,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Edit</span>
             </Link>
           </div>
-          <div className="lg:w-[26%] ">
+          <div className=" ">
             <button
               className="bg-[#2f434f] hover:bg-[#e7f2f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handleDeleteVoucher(id)}
@@ -309,7 +366,7 @@ const DetailVoucher = () => {
               <span className="ml-2">Delete</span>
             </button>
           </div>
-          <div className="w-[26%]">
+          <div className="">
             <button
               className="bg-[#3bb0b0] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
               onClick={() => handlestate(id)}
@@ -318,8 +375,68 @@ const DetailVoucher = () => {
               <span className="ml-2"> State</span>
             </button>
           </div>
+          <div className="">
+            <button
+              className="bg-[#75BDDF] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#ffffff] hover:text-[#2d8585] border-2 border-[#75BDDF] p-5 rounded-lg flex items-center justify-center w-full"
+              onClick={toggleOverlay}
+            >
+              <FontAwesomeIcon icon={faWrench} />
+              <span className="ml-2"> Report</span>
+            </button>
+          </div>
         </div>
       </div>
+      {isOverlayOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 w-full">
+          <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <button
+              onClick={toggleOverlay}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Nội dung form */}
+            <div className="form-group w-full">
+              <label
+                htmlFor="Content"
+                className="block font-medium text-gray-700 text-2xl my-2"
+              >
+                Nội dung:
+              </label>
+              <textarea
+                id="Content"
+                name="Content"
+                value={report.Content}
+                onChange={handleInputChange}
+                placeholder="Nhập nội dung báo cáo"
+                required
+                className="w-full bg-white max-h-80 min-h-40 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              className="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Báo cáo
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

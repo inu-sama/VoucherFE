@@ -349,7 +349,7 @@ const CreateVoucher = () => {
                       <Calendar
                         onChange={handExpiredDateChange}
                         value={ExpiredTime}
-                        minDate={nextDate(ReleaseTime)}
+                        minDate={nextDate(ReleaseTime || new Date())}
                       />
                     </div>
                   )}

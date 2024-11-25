@@ -22,6 +22,7 @@ import ChartVoucher from "../AdminClient/DashBoard/ChartVoucher.jsx";
 import DashBoardPartner from "../Partner/DashBoard.partner.jsx";
 import DetailDashBoard from "../Partner/DetailDashBoard.partner.jsx";
 import DetailDashBoardAD from "../AdminClient/DashBoard/DetailDashBoard.jsx";
+import ListReport from "../AdminClient/Report/ListReport.jsx";
 const AuthLayout = () => {
   return (
     <AuthProvider>
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
             path: "DetailDashBoard/:id/:month/:year",
             element: <DetailDashBoardAD />,
           },
+          {
+            path:"ListReport",
+            element:<ListReport/>
+          }
         ],
       },
       {
@@ -123,6 +128,7 @@ const router = createBrowserRouter([
             path: "DetailDashBoard/:id/:month/:year",
             element: <DetailDashBoard />,
           },
+          
         ],
       },
       {
