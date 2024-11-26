@@ -169,6 +169,17 @@ const EditVoucher = () => {
       RemainQuantity: Voucher.RemainQuantity || data.RemainQuantity,
     };
 
+    if (
+      updatedVoucher.PercentDiscount === data.PercentDiscount &&
+      updatedVoucher.Description === data.Description &&
+      updatedVoucher.ExpiredTime === data.ExpiredTime &&
+      updatedVoucher.ReleaseTime === data.ReleaseTime &&
+      updatedVoucher.RemainQuantity === data.RemainQuantity
+    ) {
+      alert("Không có gì thay đổi để cập nhật");
+      return;
+    }
+
     try {
       const res = await fetch(`${URL}/updateVoucher/${id}`, {
         method: "PUT",
@@ -230,7 +241,8 @@ const EditVoucher = () => {
                 <span
                   className={`font-normal ${
                     data.States === "Enable" ? "text-green-500" : "text-red-500"
-                  }`}>
+                  }`}
+                >
                   {data.States}
                 </span>
               </span>
@@ -263,7 +275,8 @@ const EditVoucher = () => {
                   </div>
                   <div
                     className="col-span-12 w-full"
-                    onClick={toggleReleaseCalendar}>
+                    onClick={toggleReleaseCalendar}
+                  >
                     <span className="block border-2 border-[#75e07c] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                       {ReleaseTime ? (
                         <span>{formatDate(ReleaseTime)}</span>
@@ -273,7 +286,8 @@ const EditVoucher = () => {
                       {showReleaseCalendar && (
                         <div
                           className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75e07c] p-4 w-fit"
-                          onClick={(e) => e.stopPropagation()}>
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Calendar
                             onChange={handleReleaseDateChange}
                             value={ReleaseTime}
@@ -292,7 +306,8 @@ const EditVoucher = () => {
                   </div>
                   <div
                     className="col-span-12 w-full"
-                    onClick={toggleExpiredCalendar}>
+                    onClick={toggleExpiredCalendar}
+                  >
                     <span className="block border-2 border-[#75e07c] outline-none text-[#3f885e] placeholder:text-[#698b64] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                       {ExpiredTime ? (
                         <span>{formatDate(ExpiredTime)}</span>
@@ -302,7 +317,8 @@ const EditVoucher = () => {
                       {showExpiredCalendar && (
                         <div
                           className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75e07c] p-4"
-                          onClick={(e) => e.stopPropagation()}>
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Calendar
                             onChange={handExpiredDateChange}
                             value={ExpiredTime}
@@ -404,7 +420,8 @@ const EditVoucher = () => {
                       return (
                         <tr
                           key={condition._id}
-                          className="odd:bg-[#DAEAD8] odd:dark:bg-[#DAEAD8] even:bg-gray-50 even:dark:bg-[#C9E9CC] border-b dark:border-[#C9E9CC] text-md">
+                          className="odd:bg-[#DAEAD8] odd:dark:bg-[#DAEAD8] even:bg-gray-50 even:dark:bg-[#C9E9CC] border-b dark:border-[#C9E9CC] text-md"
+                        >
                           <td className="px-6 py-4">
                             {formattedPrice(condition.MinValue)}
                           </td>
@@ -489,7 +506,8 @@ const EditVoucher = () => {
           <div className="w-[45%]">
             <button
               onClick={handleSubmit}
-              className="bg-[#4ca754] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#58a74c] p-2 rounded-lg flex items-center justify-center w-full">
+              className="bg-[#4ca754] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#58a74c] p-2 rounded-lg flex items-center justify-center w-full"
+            >
               <FontAwesomeIcon icon={faEdit} /> Sửa
             </button>
           </div>
@@ -497,7 +515,8 @@ const EditVoucher = () => {
             <Link
               to={`/Admin/DetailVoucher/${id}`}
               state={currentPage}
-              className="bg-[#1d4721] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#1d4721] p-2 rounded-lg flex items-center justify-center w-full">
+              className="bg-[#1d4721] hover:bg-[#e7f9e8] font-bold text-lg text-[#eaf9e7] hover:text-[#4BA771] border-2 border-[#1d4721] p-2 rounded-lg flex items-center justify-center w-full"
+            >
               <FontAwesomeIcon icon={faXmark} className="mr-2" /> Cancel Edit
             </Link>
           </div>
