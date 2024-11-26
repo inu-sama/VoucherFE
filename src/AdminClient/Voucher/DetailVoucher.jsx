@@ -18,9 +18,6 @@ const DetailVoucher = () => {
   const URL = "https://server-voucher.vercel.app/api";
   const location = useLocation();
 
-  const page = location.state.page;
-  const currentPage = { thisPage: page };
-
   const handlestate = async (id) => {
     try {
       const res = await fetch(`${URL}/updateState/${id}`, { method: "GET" });
@@ -152,7 +149,7 @@ const DetailVoucher = () => {
             </h1>
           </div>
           <div className="col-span-1 flex items-center ">
-            <Link to={"/Admin/Listvoucher"} state={currentPage}>
+            <Link to={"/Admin/Listvoucher"}>
               <button className="bg-[#eaf9e7] hover:bg-[#4BA771] w-10 h-10 border-4 border-[#4BA771] hover:text-[#eaf9e7] font-bold rounded-full">
                 <FontAwesomeIcon icon={faXmark} />
               </button>
@@ -293,7 +290,6 @@ const DetailVoucher = () => {
           <div className="col-span-3 w-[28%]">
             <Link
               to={`/Admin/EditVoucher/${id}`}
-              state={currentPage}
               className="bg-[#339d33] hover:bg-[#ddfeda] font-bold text-lg text-[#eaf9e7] hover:text-[#163b18] border-2 border-[#339d33] p-5 rounded-lg flex items-center justify-center w-full">
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
