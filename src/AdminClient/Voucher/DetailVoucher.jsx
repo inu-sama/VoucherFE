@@ -159,7 +159,7 @@ const DetailVoucher = () => {
             </Link>
           </div>
         </div>
-        {console.log("page: ", page)}
+        {/* {console.log("page: ", page)} */}
         <div className="grid lg:grid-cols-2 grid-cols-1">
           <div className="p-10">
             <img

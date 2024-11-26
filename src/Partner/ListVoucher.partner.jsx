@@ -35,7 +35,7 @@ const ListVoucher = () => {
   const fetchChooseService = async () => {
     try {
       const response = await fetch(
-        `${URL}/GetVoucherWithService/${selectedServices}`,
+        `${URL}/GetVoucherWithService/${selectedServices.id}`,
         {
           method: "GET",
           headers: {
@@ -164,13 +164,13 @@ const ListVoucher = () => {
           Danh sách voucher
         </h1>
         <div className="flex justify-between my-2 h-fit w-full p-2">
-          <div className="">
+          {/* <div className="">
             <div
               onClick={toggleshow}
               tabIndex={0}
               role="button"
               className="font-semibold bg-[#3775A2] hover:bg-[#e7f0f9] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#3775A2] outline-none px-4 py-2 rounded-lg">
-              Sort by Service
+              {selectedServices ? selectedServices.name : "All services"}
             </div>
             {show && (
               <ul
@@ -193,7 +193,7 @@ const ListVoucher = () => {
                     className="flex items-center text-[#16233B] text-lg">
                     <a
                       onClick={() => {
-                        setSelectedServices(service.id), setShow(false);
+                        setSelectedServices(service), setShow(false);
                       }}
                       className="w-full hover:bg-[#4c83a7] hover:text-[#eaf9e7] bg-[#eaf9e7] active:font-bold border-2 border-transparent active:border-[#4ca771]">
                       {service.name}
@@ -202,7 +202,7 @@ const ListVoucher = () => {
                 ))}
               </ul>
             )}
-          </div>
+          </div> */}
           <Link
             to="/Partner/CreatevoucherPN"
             className="font-semibold bg-[#3775A2] hover:bg-[#eaf9e7] text-[#eaf9e7] hover:text-[#16233B] border-2 border-[#3775A2] px-4 py-2 rounded-lg">
@@ -246,13 +246,13 @@ const ListVoucher = () => {
                       <p>
                         <span className="font-bold text-[#3f5f89]">
                           Thời gian bắt đầu:
-                        </span>
+                        </span>{" "}
                         {date(voucher.ReleaseTime)}
                       </p>
                       <p>
                         <span className="font-bold text-[#3f5f89]">
                           Thời gian hết hạn:
-                        </span>
+                        </span>{" "}
                         {date(voucher.ExpiredTime)}
                       </p>
                     </div>

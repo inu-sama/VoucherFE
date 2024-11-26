@@ -246,8 +246,7 @@ const DetailVoucher = () => {
                     voucher.States === "Enable"
                       ? "text-green-500"
                       : "text-red-500"
-                  }`}
-                >
+                  }`}>
                   {voucher.States}
                 </span>
               </span>
@@ -280,8 +279,7 @@ const DetailVoucher = () => {
                       <tr className="text-lg">
                         <th
                           scope="col"
-                          className="px-6 py-3 whitespace-nowrap lg:block hidden"
-                        >
+                          className="px-6 py-3 whitespace-nowrap lg:block hidden">
                           STT
                         </th>
                         <th scope="col" className="px-6 py-3 whitespace-nowrap">
@@ -295,12 +293,12 @@ const DetailVoucher = () => {
                     <tbody>
                       {voucher.conditions && voucher.conditions.length > 0 ? (
                         voucher.conditions
+                          .sort((a, b) => a.MinValue - b.MinValue)
                           .slice(0, voucher.conditions.length)
                           .map((condition, index) => (
                             <tr
                               key={(condition._id, index)}
-                              className="odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md"
-                            >
+                              className="text-[#3f5f89] odd:bg-[#D9E6EB] odd:dark:bg-[#D9E6EB] even:bg-gray-50 even:dark:bg-[#C9DEE9] border-b dark:border-[#baccd6] text-md">
                               <td className="px-6 py-4 lg:block hidden">
                                 {index + 1}
                               </td>
@@ -351,8 +349,7 @@ const DetailVoucher = () => {
           <div className="">
             <Link
               to={`/Partner/EditVoucherPN/${id}`}
-              className="bg-[#3f5f89] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full"
-            >
+              className="bg-[#3f5f89] hover:bg-[#daf9fe] font-bold text-lg text-[#eaf9e7] hover:text-[#3f5f89] border-2 border-[#326080] p-5 rounded-lg flex items-center justify-center w-full">
               <FontAwesomeIcon icon={faEdit} />
               <span className="ml-2">Edit</span>
             </Link>
@@ -360,8 +357,7 @@ const DetailVoucher = () => {
           <div className=" ">
             <button
               className="bg-[#2f434f] hover:bg-[#e7f2f9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={() => handleDeleteVoucher(id)}
-            >
+              onClick={() => handleDeleteVoucher(id)}>
               <FontAwesomeIcon icon={faTrash} />
               <span className="ml-2">Delete</span>
             </button>
@@ -369,8 +365,7 @@ const DetailVoucher = () => {
           <div className="">
             <button
               className="bg-[#3bb0b0] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#eaf9e7] hover:text-[#3bb0b0] border-2 border-[#3bb0b0] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={() => handlestate(id)}
-            >
+              onClick={() => handlestate(id)}>
               <FontAwesomeIcon icon={faWrench} />
               <span className="ml-2"> State</span>
             </button>
@@ -378,8 +373,7 @@ const DetailVoucher = () => {
           <div className="">
             <button
               className="bg-[#75BDDF] hover:bg-[#e7eff9] font-bol outline-none text-lg text-[#ffffff] hover:text-[#2d8585] border-2 border-[#75BDDF] p-5 rounded-lg flex items-center justify-center w-full"
-              onClick={toggleOverlay}
-            >
+              onClick={toggleOverlay}>
               <FontAwesomeIcon icon={faWrench} />
               <span className="ml-2"> Report</span>
             </button>
@@ -391,16 +385,14 @@ const DetailVoucher = () => {
           <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-sm w-full text-center">
             <button
               onClick={toggleOverlay}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 focus:outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-6 h-6"
-              >
+                className="w-6 h-6">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -413,8 +405,7 @@ const DetailVoucher = () => {
             <div className="form-group w-full">
               <label
                 htmlFor="Content"
-                className="block font-medium text-gray-700 text-2xl my-2"
-              >
+                className="block font-medium text-gray-700 text-2xl my-2">
                 Nội dung:
               </label>
               <textarea
@@ -430,8 +421,7 @@ const DetailVoucher = () => {
 
             <button
               onClick={handleSubmit}
-              className="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
+              className="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
               Báo cáo
             </button>
           </div>

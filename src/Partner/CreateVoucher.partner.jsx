@@ -125,11 +125,9 @@ const CreateVoucher = () => {
   };
 
   const formatPriceInput = (price) => {
-    const numericPrice = parseInt(price, 10) || 0; 
-    return numericPrice.toLocaleString("vi-VN"); 
+    const numericPrice = parseInt(price, 10) || 0;
+    return numericPrice.toLocaleString("vi-VN");
   };
-  
-  
 
   const handleConditionChange = (e) => {
     let { name, value } = e.target;
@@ -137,19 +135,18 @@ const CreateVoucher = () => {
 
     if (value === null || value < 0) {
       value = 0;
-    }
-    else if (parseInt(numericValue, 10) > 99999999) {
-      return;  
+    } else if (parseInt(numericValue, 10) > 99999999) {
+      return;
     }
     setCondition((prev) => ({ ...prev, [name]: numericValue }));
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-  
+
     setCondition((prev) => ({
       ...prev,
-      [name]: value.replace(/[^\d]/g, ""), 
+      [name]: value.replace(/[^\d]/g, ""),
     }));
   };
 
@@ -321,8 +318,7 @@ const CreateVoucher = () => {
               </div>
               <div
                 className="col-span-12 w-full"
-                onClick={toggleReleaseCalendar}
-              >
+                onClick={toggleReleaseCalendar}>
                 <span className="block border-2 border-[#75bde0] outline-none text-[#3b7097] placeholder:text-[#75bde0] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                   {ReleaseTime ? (
                     <span>{formatDate(ReleaseTime)}</span>
@@ -332,8 +328,7 @@ const CreateVoucher = () => {
                   {showReleaseCalendar && (
                     <div
                       className="absolute mt-6 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4 w-fit"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                      onClick={(e) => e.stopPropagation()}>
                       <Calendar
                         onChange={handleReleaseDateChange}
                         value={ReleaseTime}
@@ -350,8 +345,7 @@ const CreateVoucher = () => {
               </div>
               <div
                 className="col-span-12 w-full"
-                onClick={toggleExpiredCalendar}
-              >
+                onClick={toggleExpiredCalendar}>
                 <span className="block border-2 border-[#75bde0] outline-none text-[#3b7097] placeholder:text-[#75bde0] py-[0.65rem] px-2 h-full w-full rounded-lg bg-[#ffffff]">
                   {ExpiredTime ? (
                     <span>
@@ -365,8 +359,7 @@ const CreateVoucher = () => {
                   {showExpiredCalendar && (
                     <div
                       className="absolute mt-6 w-fit right-40 z-50 bg-[#ffffff] rounded-lg shadow-xl shadow-[#75bde0] p-4"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                      onClick={(e) => e.stopPropagation()}>
                       <Calendar
                         onChange={handExpiredDateChange}
                         value={ExpiredTime}
@@ -443,6 +436,9 @@ const CreateVoucher = () => {
                       });
                     }
                   }}
+                  onInput={(e) => {
+                    e.target.value = Math.round(e.target.value);
+                  }}
                 />
                 {!Voucher.RemainQuantity && (
                   <p className="text-red-500 text-sm font-bold">
@@ -485,11 +481,11 @@ const CreateVoucher = () => {
                   placeholder="Nhập giá trị đơn hàng tối thiểu để giám giá"
                   className="border-2 placeholder-[#5b91de] border-[#c6d6ff] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="text"
-  name="MinValue"
-  value={formatPriceInput(condition.MinValue)}  
-  onKeyPress={handleKeyPress}  
-  onChange={handleConditionChange}  
-  onBlur={handleBlur}
+                  name="MinValue"
+                  value={formatPriceInput(condition.MinValue)}
+                  onKeyPress={handleKeyPress}
+                  onChange={handleConditionChange}
+                  onBlur={handleBlur}
                 />
               </div>
             </div>
@@ -505,9 +501,9 @@ const CreateVoucher = () => {
                   className="border-2 placeholder-[#5b91de] border-[#c6d6ff] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
                   type="text"
                   name="MaxValue"
-                  value={formatPriceInput(condition.MaxValue)}  
-                  onKeyPress={handleKeyPress}  
-                  onChange={handleConditionChange}  
+                  value={formatPriceInput(condition.MaxValue)}
+                  onKeyPress={handleKeyPress}
+                  onChange={handleConditionChange}
                   onBlur={handleBlur}
                 />
               </div>
@@ -526,8 +522,7 @@ const CreateVoucher = () => {
                   <button
                     type="button"
                     className="lg:col-span-2 border-2 border-[#4c83a7] bg-[#4c84a7] hover:bg-[#e7f3f9] text-[#e7f1f9] hover:text-[#4c83a7] px-4 py-2 rounded-bl-lg"
-                    onClick={addCondition}
-                  >
+                    onClick={addCondition}>
                     Add Condition
                   </button>
                 </div>
@@ -541,8 +536,7 @@ const CreateVoucher = () => {
                   {Voucher.Conditions.map((cond, index) => (
                     <li
                       key={index}
-                      className="mb-2 text-xl text-[#4c84a7] font-semibold"
-                    >
+                      className="mb-2 text-xl text-[#4c84a7] font-semibold">
                       <span className="text-[#2F4F4F] font-bold text-xl">
                         •{" "}
                       </span>
@@ -550,8 +544,7 @@ const CreateVoucher = () => {
                       {formattedPrice(cond.MinValue)}
                       <button
                         className="float-right"
-                        onClick={() => deleteCondition(index)}
-                      >
+                        onClick={() => deleteCondition(index)}>
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </li>
@@ -578,8 +571,7 @@ const CreateVoucher = () => {
                       />
                       <label
                         htmlFor={services.id}
-                        className="ml-2 text-[#2e6bb1]"
-                      >
+                        className="ml-2 text-[#2e6bb1]">
                         {services.name}
                       </label>
                     </div>
@@ -599,8 +591,7 @@ const CreateVoucher = () => {
             <div className="w-1/2">
               <Link
                 to="/Partner/ListVoucherPN"
-                className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full"
-              >
+                className="bg-[#2f414f] hover:bg-[#e7eef9] font-bold text-lg text-[#eaf9e7] hover:text-[#2F4F4F] border-2 border-[#2F4F4F] p-2 rounded-lg flex items-center justify-center w-full">
                 Back
               </Link>
             </div>
