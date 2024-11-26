@@ -124,12 +124,33 @@ const CreateVoucher = () => {
     }));
   };
 
+  const formatPriceInput = (price) => {
+    const numericPrice = parseInt(price, 10) || 0; 
+    return numericPrice.toLocaleString("vi-VN"); 
+  };
+  
+  
+
   const handleConditionChange = (e) => {
     let { name, value } = e.target;
-    if (value === null || value < 0 || value > 99999999) {
+    const numericValue = value.replace(/[^\d]/g, "");
+
+    if (value === null || value < 0) {
       value = 0;
     }
-    setCondition((prev) => ({ ...prev, [name]: value }));
+    else if (parseInt(numericValue, 10) > 99999999) {
+      return;  
+    }
+    setCondition((prev) => ({ ...prev, [name]: numericValue }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+  
+    setCondition((prev) => ({
+      ...prev,
+      [name]: value.replace(/[^\d]/g, ""), 
+    }));
   };
 
   const handleKeyPress = (e) => {
@@ -463,11 +484,12 @@ const CreateVoucher = () => {
                 <input
                   placeholder="Nhập giá trị đơn hàng tối thiểu để giám giá"
                   className="border-2 placeholder-[#5b91de] border-[#c6d6ff] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                  type="number"
-                  name="MinValue"
-                  value={condition.MinValue}
-                  onKeyPress={handleKeyPress}
-                  onChange={handleConditionChange}
+                  type="text"
+  name="MinValue"
+  value={formatPriceInput(condition.MinValue)}  
+  onKeyPress={handleKeyPress}  
+  onChange={handleConditionChange}  
+  onBlur={handleBlur}
                 />
               </div>
             </div>
@@ -481,11 +503,12 @@ const CreateVoucher = () => {
                 <input
                   placeholder="Nhập giá trị tối đa được giảm"
                   className="border-2 placeholder-[#5b91de] border-[#c6d6ff] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-                  type="number"
+                  type="text"
                   name="MaxValue"
-                  value={condition.MaxValue}
-                  onKeyPress={handleKeyPress}
-                  onChange={handleConditionChange}
+                  value={formatPriceInput(condition.MaxValue)}  
+                  onKeyPress={handleKeyPress}  
+                  onChange={handleConditionChange}  
+                  onBlur={handleBlur}
                 />
               </div>
             </div>
