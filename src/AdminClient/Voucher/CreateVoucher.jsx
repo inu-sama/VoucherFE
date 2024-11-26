@@ -390,6 +390,10 @@ const CreateVoucher = () => {
                         RemainQuantity: Number(e.target.value),
                       });
                     }
+                    // e.target.value = Math.round(e.target.value);
+                  }}
+                  onInput={(e) => {
+                    e.target.value = Math.round(e.target.value);
                   }}
                 />
                 {!Voucher.RemainQuantity && (
