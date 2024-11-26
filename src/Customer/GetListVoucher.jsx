@@ -174,7 +174,7 @@ const GetListVoucher = () => {
     }
   };
 
-  const submitApplyVouhcer = async (voucherId) => {
+  const submitApplyVoucher = async (voucherId) => {
     try {
       const response = await fetch(`${URL}/ApplyVoucher/${voucherId}`, {
         method: "POST",
@@ -265,8 +265,7 @@ const GetListVoucher = () => {
                         onClick={() => {
                           setSelectedVoucher(voucher);
                           setDiscount(voucher._id);
-                        }}
-                      >
+                        }}>
                         <p className="text-2xl font-bold mb-4">
                           {voucher.Name}
                         </p>
@@ -311,8 +310,7 @@ const GetListVoucher = () => {
                               } `}
                               onClick={() => {
                                 setSelectedPage(page);
-                              }}
-                            >
+                              }}>
                               {page}
                             </p>
                           );
@@ -332,8 +330,7 @@ const GetListVoucher = () => {
                               } `}
                               onClick={() => {
                                 setSelectedPage(page);
-                              }}
-                            >
+                              }}>
                               {page}
                             </p>
                           );
@@ -348,8 +345,7 @@ const GetListVoucher = () => {
                 onClick={() => {
                   setSelectedVoucher(null);
                   setPriceDiscount(0);
-                }}
-              >
+                }}>
                 Deselect voucher
               </p>
             </div>
@@ -391,8 +387,7 @@ const GetListVoucher = () => {
               {selectedVoucher ? (
                 <div
                   key={selectedVoucher._id}
-                  className="w-full bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] rounded-xl p-1"
-                >
+                  className="w-full bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] rounded-xl p-1">
                   <div className="w-full bg-white p-4 rounded-lg">
                     <div className="w-full text-[#213a57]">
                       <p className="text-xl font-bold mb-4">
@@ -444,13 +439,14 @@ const GetListVoucher = () => {
                     id="applyBtn"
                     onClick={() => {
                       if (selectedVoucher) {
-                        submitApplyVouhcer(selectedVoucher._id);
+                        PriceDiscount == 0
+                          ? alert("Mức giảm đang bằng 0")
+                          : submitApplyVoucher(selectedVoucher._id);
                       } else {
                         alert("Chưa chọn voucher");
                       }
                     }}
-                    className="w-full text-center font-bold text-3xl bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] text-white hover:bg-clip-text hover:text-transparent p-4 rounded-lg"
-                  >
+                    className="w-full text-center font-bold text-3xl bg-gradient-to-r from-[#80ed99] to-[#0ad1c8] text-white hover:bg-clip-text hover:text-transparent p-4 rounded-lg">
                     APPLY
                   </button>
                 </div>
