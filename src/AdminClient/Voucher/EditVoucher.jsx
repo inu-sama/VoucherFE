@@ -414,7 +414,7 @@ const EditVoucher = () => {
                           <td className="px-6 py-4">
                             <input
                               type="number"
-                              placeholder={condition.MinValue}
+                              placeholder={formattedPrice(condition.MinValue)}
                               maxLength={8}
                               min={0}
                               onChange={(e) => {
@@ -443,7 +443,7 @@ const EditVoucher = () => {
                           <td className="px-6 py-4">
                             <input
                               type="number"
-                              placeholder={condition.MaxValue}
+                              placeholder={formattedPrice(condition.MaxValue)}
                               id="maxValueInput"
                               maxLength={8}
                               min={0}
