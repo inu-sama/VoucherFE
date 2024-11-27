@@ -193,21 +193,19 @@ const GetListVoucher = () => {
         window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
         logout();
       } else {
-        if (response.status === 400) {
-          setError("FAIL TO APPLY VOUCHER");
+        setError("FAIL TO APPLY VOUCHER");
 
-          let countdown = 5;
-          const timer = setInterval(() => {
-            setError(`FAIL TO APPLY VOUCHER. Redirecting in ${countdown}...`);
-            countdown--;
+        let countdown = 5;
+        const timer = setInterval(() => {
+          setError(`FAIL TO APPLY VOUCHER. Redirecting in ${countdown}...`);
+          countdown--;
 
-            if (countdown < 0) {
-              clearInterval(timer);
-              window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
-              logout();
-            }
-          }, 1000);
-        }
+          if (countdown < 0) {
+            clearInterval(timer);
+            window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
+            logout();
+          }
+        }, 1000);
       }
     } catch (error) {
       setError(error);
