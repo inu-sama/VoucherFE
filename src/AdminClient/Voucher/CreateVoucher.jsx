@@ -101,11 +101,9 @@ const CreateVoucher = () => {
   };
 
   const formatPriceInput = (price) => {
-    const numericPrice = parseInt(price, 10) || 0; 
-    return numericPrice.toLocaleString("vi-VN"); 
+    const numericPrice = parseInt(price, 10) || 0;
+    return numericPrice.toLocaleString("vi-VN");
   };
-  
-  
 
   const handleConditionChange = (e) => {
     let { name, value } = e.target;
@@ -113,23 +111,20 @@ const CreateVoucher = () => {
 
     if (value === null || value < 0) {
       value = 0;
-    }
-    else if (parseInt(numericValue, 10) > 99999999) {
-      return;  
+    } else if (parseInt(numericValue, 10) > 99999999) {
+      return;
     }
     setCondition((prev) => ({ ...prev, [name]: numericValue }));
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-  
+
     setCondition((prev) => ({
       ...prev,
-      [name]: value.replace(/[^\d]/g, ""), 
+      [name]: value.replace(/[^\d]/g, ""),
     }));
   };
-  
-  
 
   const handleKeyPress = (e) => {
     if (!/[0-9]/.test(e.key)) {
@@ -450,43 +445,41 @@ const CreateVoucher = () => {
           </div>
           <div className="mt-12 pt-5 grid grid-cols-1 lg:grid-cols-2 gap-10 item-center">
             <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
-              <div className="col-span-4">
+              <div className="col-span-12">
                 <label className="font-bold w-full text-[#3f885e] line-clamp-1">
                   Giá trị đơn hàng tối thiểu
                 </label>
               </div>
               <div className="col-span-12">
-              <input
-  placeholder="Nhập giá trị đơn hàng tối thiểu để giảm giá"
-  className="border-2 placeholder:text-[#698b64] border-[#BFE6BA] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-  type="text"
-  name="MinValue"
-  value={formatPriceInput(condition.MinValue)}  
-  onKeyPress={handleKeyPress}  
-  onChange={handleConditionChange}  
-  onBlur={handleBlur}  
-/>
-
+                <input
+                  placeholder="Nhập giá trị đơn hàng tối thiểu để giảm giá"
+                  className="border-2 placeholder:text-[#698b64] border-[#BFE6BA] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  type="text"
+                  name="MinValue"
+                  value={formatPriceInput(condition.MinValue)}
+                  onKeyPress={handleKeyPress}
+                  onChange={handleConditionChange}
+                  onBlur={handleBlur}
+                />
               </div>
             </div>
             <div className="grid grid-cols-12 items-center bg-[#BFE6BA] text-[#3f885e] py-1 pl-4 rounded-lg h-12">
-              <div className="col-span-4">
+              <div className="col-span-12">
                 <label className="font-bold text-[#3f885e] line-clamp-1">
                   Số tiền tối đa được giảm
                 </label>
               </div>
               <div className="col-span-12">
-              <input
-  placeholder="Nhập giá trị đơn hàng tối thiểu để giảm giá"
-  className="border-2 placeholder:text-[#698b64] border-[#BFE6BA] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
-  type="text"
-  name="MaxValue"
-  value={formatPriceInput(condition.MaxValue)}  
-  onKeyPress={handleKeyPress}  
-  onChange={handleConditionChange}  
-  onBlur={handleBlur}  
-/>
-
+                <input
+                  placeholder="Nhập giá trị đơn hàng tối thiểu để giảm giá"
+                  className="border-2 placeholder:text-[#698b64] border-[#BFE6BA] outline-none px-2 py-2 h-full w-full rounded-lg bg-white"
+                  type="text"
+                  name="MaxValue"
+                  value={formatPriceInput(condition.MaxValue)}
+                  onKeyPress={handleKeyPress}
+                  onChange={handleConditionChange}
+                  onBlur={handleBlur}
+                />
               </div>
             </div>
           </div>

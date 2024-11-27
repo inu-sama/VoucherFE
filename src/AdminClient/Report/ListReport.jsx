@@ -110,54 +110,61 @@ const ListReport = () => {
                     Mã báo cáo {report._id}
                   </div>
                   <div className="grid grid-cols-12">
-                    <div className="col-span-8 grid grid-cols-12">
-                      <span className="col-span-4 py-2 px-6 bg-[#4ca771] font-bold text-[#fff]">
+                    <div className="col-span-8 grid grid-cols-12 border-4 border-[#4ca771] rounded-xl rounded-tl-none">
+                      <span className="col-span-6 py-2 px-6 bg-[#4ca771] font-bold text-[#fff]">
                         Voucher ID:
                       </span>
-                      <span className="col-span-8 py-2 pr-20 text-right">
+                      <span className="col-span-6 py-2 pr-20 text-right border-2 border-[#4ca771] rounded-tr-lg">
                         {report.Voucher_ID}
                       </span>
 
-                      <span className="col-span-5 py-2 px-6 bg-[#4ca771] font-bold text-[#fff] rounded-tr-lg">
+                      <span className="col-span-6 py-2 px-6 bg-[#4ca771] font-bold text-[#fff]">
                         Người báo cáo:
                       </span>
-                      <span className="col-span-7 py-2 pr-20 text-right">
+                      <span className="col-span-6 py-2 pr-20 text-right border-2 border-[#4ca771]">
                         {report.ReportedBy}
                       </span>
 
-                      <span className="col-span-6 py-2 px-6 bg-[#4ca771] font-bold text-[#fff] rounded-tr-lg">
-                        Trạng thái:
-                      </span>
-                      <span className="col-span-6 py-2 pr-20 text-right">
-                        {report.StateReport}
-                      </span>
-
-                      <span className="col-span-7 py-2 px-6 bg-[#4ca771] font-bold text-[#fff] rounded-r-lg rounded-b-lg">
+                      <span className="col-span-6 py-2 px-6 bg-[#4ca771] font-bold text-[#fff]">
                         Ngày báo cáo:
                       </span>
-                      <span className="col-span-5 py-2 pr-20 text-right">
+                      <span className="col-span-6 py-2 pr-20 text-right border-2 border-[#4ca771] rounded-br-lg">
                         {new Date(report.DayReport).toLocaleDateString()}
                       </span>
                     </div>
-                    <div className="col-span-4 flex items-center justify-center text-2xl font-extrabold pl-10 py-4">
-                      {report.StateReport == "UnSolve" ? (
-                        <p
-                          onClick={() => {
-                            solveReport(report._id);
-                            location.reload();
-                          }}
-                          className="cursor-pointer w-full h-full border-8 border-[#4ca771] bg-[#4ca771] text-[#fff] hover:bg-[#fff] hover:text-[#4ca771] flex items-center justify-center rounded-lg">
-                          Solve
-                        </p>
-                      ) : (
-                        <p className="w-full h-full border-8 border-[#4ca771] bg-[#eaf9e7] text-[#4ca771] flex items-center justify-center rounded-lg">
-                          Already Solved
-                        </p>
-                      )}
+                    <div className="col-span-4">
+                      <p className="w-full px-10 py-3 text-xl">
+                        <span className="font-bold text-[#4ca771]">
+                          Trạng thái:{" "}
+                        </span>
+                        <span className="text-right">
+                          {report.StateReport == "Solve"
+                            ? "Solved"
+                            : "Unsolved"}
+                        </span>
+                      </p>
+                      <div className="flex items-center justify-center text-2xl font-extrabold pl-10 py-4">
+                        {report.StateReport == "UnSolve" ? (
+                          <p
+                            onClick={() => {
+                              solveReport(report._id);
+                              location.reload();
+                            }}
+                            className="cursor-pointer w-full h-full border-8 border-[#4ca771] bg-[#4ca771] text-[#fff] hover:bg-[#fff] hover:text-[#4ca771] flex items-center justify-center rounded-lg">
+                            Solve
+                          </p>
+                        ) : (
+                          <p className="w-full h-full border-8 border-[#4ca771] bg-[#eaf9e7] text-[#4ca771] flex items-center justify-center rounded-lg">
+                            Already Solved
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="mt-4">
-                    <span className="block font-bold px-6">Nội dung: </span>
+                    <span className="block font-bold px-6 text-[#4ca771]">
+                      Nội dung:{" "}
+                    </span>
                     <p className="text-gray-800 mt-1 line-clamp-2">
                       {report.Content}
                     </p>
