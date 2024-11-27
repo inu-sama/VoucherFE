@@ -192,6 +192,8 @@ const GetListVoucher = () => {
         alert("Áp dụng voucher thành công");
         window.location.href = `https://wowo.htilssu.id.vn/order/${OrderID}`;
         logout();
+      } else if (response.status === 229) {
+        setTimeout(submitApplyVoucher(selectedVoucher._id), 600);
       } else {
         setError("FAIL TO APPLY VOUCHER");
 
