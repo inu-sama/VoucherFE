@@ -132,7 +132,7 @@ const ListVoucher = () => {
   };
 
   useEffect(() => {
-    fetchVouchers();
+    setInterval(fetchVouchers(), 1000);
   }, []);
 
   if (loading) {
