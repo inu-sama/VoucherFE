@@ -261,7 +261,11 @@ const GetListVoucher = () => {
                     return (
                       <div
                         key={voucher._id}
-                        className="w-full text-[#213a57] hover:text-[#fff] bg-[#fff] hover:bg-[#213a57] border-4 border-[#213a57] rounded-xl p-4 cursor-pointer"
+                        className={`${
+                          voucher == selectedVoucher
+                            ? "text-[#fff] bg-[#213a57]"
+                            : "text-[#213a57] bg-[#fff]"
+                        } w-full hover:text-[#fff] hover:bg-[#213a57] border-4 border-[#213a57] rounded-xl p-4 cursor-pointer`}
                         onClick={() => {
                           setSelectedVoucher(voucher);
                           setDiscount(voucher._id);
